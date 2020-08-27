@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <author>dsltyyz</author>
+    <datasource>
+        <url>jdbc:mysql://localhost:3306/dsltyyz</url>
+        <driver-name>com.mysql.cj.jdbc.Driver</driver-name>
+        <username>root</username>
+        <password>root</password>
+    </datasource>
+    <strategy>
+        <parent-package>com.dsltyyz.sms</parent-package>
+        <module-name>app</module-name>
+        <include-table>
+            <table>sms_app</table>
+            <table>sms_app_token</table>
+        </include-table>
+    </strategy>
+
+</root>
