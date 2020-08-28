@@ -1,11 +1,13 @@
 # dsltyyz捆绑包
-    快速开发捆绑包
-    当前版本: 2.0.0-SNAPSHOT
-    开发人员： 
-        [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
+- 快速开发捆绑包
+ - 当前版本: 2.0.0-SNAPSHOT
+ - 开发人员：[yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-[yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
-<yangyuanliang@dsltyyz.com>
+- dsltyyz-bundle ___包依赖及模块___
+- dsltyyz-aliyun ___阿里云组件___
+  - client ___客户端___
+  - common ___对象定义___
+  - config ___条件注入___
 - dsltyyz-common ___公共模块___
   - cache ___缓存___
   - config ___缓存自动注入___
@@ -26,8 +28,9 @@
     - user-defined  ___用户自定义模板包___
 ## 2 搭建介绍
 ### 2.1 环境介绍
-    1.配置JAVA_HOME
-    2.配置M2_HOME
+> 环境检测
+- 配置JAVA_HOME 查看java版本 `java -version`
+- 配置M2_HOME 查看maven版本 `mvn -v`
 ### 2.2 安装介绍
 > 在dsltyyz-bundle目录下 二选一
 - 未搭建私服 执行 `mvn install -Dmaven.test.skip=true `
