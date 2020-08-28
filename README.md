@@ -1,7 +1,8 @@
 # dsltyyz捆绑包
 - 快速开发捆绑包
  - 当前版本: 2.0.0-SNAPSHOT
- - 开发人员: [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
+ - 开发人员: 
+  - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
 - dsltyyz-bundle ___包依赖及模块___
 - dsltyyz-aliyun ___阿里云组件___
