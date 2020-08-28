@@ -44,15 +44,37 @@
     <dsltyyz-bundle.version>2.0.0-SNAPSHOT</dsltyyz-bundle.version>
     ...
 </properties>
+<dependencyManagement>
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>com.dsltyyz.bundle</groupId>
+            <artifactId>dsltyyz-dependencies</artifactId>
+            <version>${dsltyyz-bundle.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        ...
+    </dependencies>
+</dependencyManagement>
 <dependencies>
     ...
     <dependency>
         <groupId>com.dsltyyz.bundle</groupId>
-        <artifactId>dsltyyz-dependencies</artifactId>
-        <version>${dsltyyz-bundle.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <artifactId>dsltyyz-common</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.dsltyyz.bundle</groupId>
+        <artifactId>dsltyyz-aliyun</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.dsltyyz.bundle</groupId>
+        <artifactId>dsltyyz-office</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.dsltyyz.bundle</groupId>
+        <artifactId>dsltyyz-template</artifactId>
     </dependency>
     ...
-</dependencies>
+ </dependencies>
 ~~~
