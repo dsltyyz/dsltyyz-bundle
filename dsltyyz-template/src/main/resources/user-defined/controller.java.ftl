@@ -7,10 +7,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ${package.Service}.${table.serviceName};
-import CommonResponse;
 import ${package.Entity?replace('entity','dto')}.*;
 import ${package.Entity?replace('entity','vo')}.*;
 import com.dsltyyz.bundle.common.page.*;
+import com.dsltyyz.bundle.common.response.*;
 import javax.validation.Valid;
 
 /**

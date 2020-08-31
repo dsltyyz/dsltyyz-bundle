@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
-import PageDTO;
 import java.io.Serializable;
+import com.dsltyyz.bundle.common.page.PageDTO;
 
 /**
  * <p>
