@@ -1,6 +1,6 @@
 package ${package.Entity?replace('entity','dto')};
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,7 +30,7 @@ public class ${entity}PageDTO extends PageDTO implements Serializable {
      */
     @ApiModelProperty(value = "${field.comment}")
     <#if field.propertyType == "LocalDateTime">
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     </#if>
     private ${field.propertyType} ${field.propertyName};
     </#if>
