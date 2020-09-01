@@ -26,9 +26,9 @@ import java.time.LocalDateTime;
 public class ${entity} implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
-
     /**
      * ${field.comment}
      */
@@ -44,6 +44,7 @@ public class ${entity} implements Serializable {
     @TableField("${field.name}")
     </#if>
     private ${field.propertyType} ${field.propertyName};
+
 </#list>
 <#------------  END 字段循环遍历  ---------->
 }

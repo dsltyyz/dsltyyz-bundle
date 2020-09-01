@@ -33,6 +33,7 @@ public class ${entity}PageDTO extends PageDTO implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     </#if>
     private ${field.propertyType} ${field.propertyName};
+
     </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->

@@ -32,6 +32,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     /**
      * 新建
+     *
      * @param dto
      */
     @Override
@@ -43,6 +44,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     /**
      * 更新
+     *
      * @param dto
      */
     @Override
@@ -55,6 +57,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     /**
      * 删除
+     *
      * @param id
      */
     @Override
@@ -66,11 +69,12 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     /**
      * 查询
+     *
      * @param id
      * @return
      */
     @Override
-    public ${entity}VO findById(Long id){
+    public ${entity}VO find${entity}ById(Long id){
         ${entity}VO  vo = new ${entity}VO();
         ${entity} entity =  ${table.mapperName?uncap_first}.selectById(id);
         Assert.notNull(entity, "该ID对应${table.comment!}不存在");
@@ -80,11 +84,12 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     /**
      * 分页查询
+     *
      * @param pageDTO
      * @return
      */
     @Override
-    public PageVO<${entity}VO> findAllByPage(${entity}PageDTO pageDTO){
+    public PageVO<${entity}VO> find${entity}ByPage(${entity}PageDTO pageDTO){
         PageVO<${entity}VO> vo = new PageVO<>();
 
         IPage<${entity}> iPage = new Page<>();

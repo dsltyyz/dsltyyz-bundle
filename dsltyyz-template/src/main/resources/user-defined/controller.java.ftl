@@ -21,7 +21,7 @@ import javax.validation.Valid;
  * @author ${author}
  * @since ${date}
  */
-@Api(value="${table.comment!} controller",tags={"${table.comment!}"})
+@Api(value = "${table.comment!} controller", tags = {"${table.comment!}"})
 @RestController
 @RequestMapping("${package.ModuleName}/${entity?uncap_first}")
 public class ${table.controllerName} {
@@ -29,37 +29,38 @@ public class ${table.controllerName} {
     @Autowired
     private ${table.serviceName} ${table.serviceName?uncap_first};
 
-    @ApiOperation(value="增")
+    @ApiOperation(value = "增")
     @PostMapping(value = "")
     public CommonResponse create(@RequestBody ${entity}DTO dto){
         ${table.serviceName?uncap_first}.save${entity}(dto);
         return new CommonResponse();
     }
 
-    @ApiOperation(value="删")
+    @ApiOperation(value = "删")
     @DeleteMapping(value = "{id}")
     public CommonResponse delete(@PathVariable("id") Long id){
         ${table.serviceName?uncap_first}.delete${entity}(id);
         return new CommonResponse();
     }
 
-    @ApiOperation(value="改")
-    @PutMapping(value = "")
-    public CommonResponse update(@RequestBody ${entity}DTO dto){
+    @ApiOperation(value = "改")
+    @PutMapping(value = "{id}")
+    public CommonResponse update(@PathVariable("id") Long id, @Valid @RequestBody ${entity}DTO dto){
+        dto.setId(id);
         ${table.serviceName?uncap_first}.update${entity}(dto);
         return new CommonResponse();
     }
 
-    @ApiOperation(value="查")
+    @ApiOperation(value = "查")
     @GetMapping(value = "{id}")
     public CommonResponse<${entity}VO> info(@PathVariable("id") Long id){
-        return new CommonResponse<>(${table.serviceName?uncap_first}.findById(id));
+        return new CommonResponse<>(${table.serviceName?uncap_first}.find${entity}ById(id));
     }
 
-    @ApiOperation(value="分页列表")
+    @ApiOperation(value = "分页")
     @GetMapping(value = "")
     public CommonResponse<PageVO<${entity}VO>> page(@Valid ${entity}PageDTO pageDTO){
-        return new CommonResponse<>(${table.serviceName?uncap_first}.findAllByPage(pageDTO));
+        return new CommonResponse<>(${table.serviceName?uncap_first}.find${entity}ByPage(pageDTO));
     }
 
 }

@@ -21,15 +21,19 @@ public class ${entity}DTO implements Serializable {
 
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
-
     /**
      * ${field.comment}
      */
+    <#if field.keyFlag>
+    @ApiModelProperty(value = "${field.comment}", hidden = true)
+    <#else>
     @ApiModelProperty(value = "${field.comment}")
+    </#if>
     <#if field.propertyType == "LocalDateTime">
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     </#if>
     private ${field.propertyType} ${field.propertyName};
+
 </#list>
 <#------------  END 字段循环遍历  ---------->
 }
