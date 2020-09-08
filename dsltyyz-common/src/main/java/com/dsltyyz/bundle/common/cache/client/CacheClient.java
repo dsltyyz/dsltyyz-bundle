@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.cache;
+package com.dsltyyz.bundle.common.cache.client;
 
 /**
  * Description:

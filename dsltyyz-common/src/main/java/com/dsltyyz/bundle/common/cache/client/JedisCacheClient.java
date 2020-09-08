@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.cache;
+package com.dsltyyz.bundle.common.cache.client;
 
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;

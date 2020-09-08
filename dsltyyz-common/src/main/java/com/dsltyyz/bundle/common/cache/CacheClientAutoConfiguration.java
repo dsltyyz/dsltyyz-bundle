@@ -1,7 +1,7 @@
-package com.dsltyyz.bundle.common.config;
+package com.dsltyyz.bundle.common.cache;
 
-import com.dsltyyz.bundle.common.cache.DefaultCacheClient;
-import com.dsltyyz.bundle.common.cache.JedisCacheClient;
+import com.dsltyyz.bundle.common.cache.client.DefaultCacheClient;
+import com.dsltyyz.bundle.common.cache.client.JedisCacheClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
