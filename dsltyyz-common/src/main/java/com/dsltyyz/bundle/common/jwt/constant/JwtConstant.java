@@ -10,4 +10,5 @@ package com.dsltyyz.bundle.common.jwt.constant;
 public interface JwtConstant {
 
     String JWT_USER = "JWT_USER";
+    String JWT_ADMIN = "JWT_ADMIN";
 }

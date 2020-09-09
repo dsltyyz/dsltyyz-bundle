@@ -22,37 +22,37 @@ import java.lang.reflect.UndeclaredThrowableException;
 public class DefaultExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public CommonResponse handlerException(HttpServletRequest request, Exception e) {
+    public CommonResponse handlerException(Exception e) {
         log.error(e.getMessage());
         return new CommonResponse(500L, e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public CommonResponse handlerRuntimeException(HttpServletRequest request, RuntimeException e) {
+    public CommonResponse handlerRuntimeException(RuntimeException e) {
         log.error(e.getMessage());
         return new CommonResponse(501L, "运行时异常");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public CommonResponse handlerIllegalArgumentException(HttpServletRequest request, IllegalArgumentException e) {
+    public CommonResponse handlerIllegalArgumentException(IllegalArgumentException e) {
         log.info(e.getMessage());
         return new CommonResponse(600L, e.getMessage());
     }
 
     @ExceptionHandler(UndeclaredThrowableException.class)
-    public CommonResponse handlerUndeclaredThrowableException(HttpServletRequest request, UndeclaredThrowableException e) {
+    public CommonResponse handlerUndeclaredThrowableException(UndeclaredThrowableException e) {
         log.info(e.getMessage());
         return new CommonResponse(700L, e.getMessage());
     }
 
     @ExceptionHandler(MalformedJwtException.class)
-    public CommonResponse handlerMalformedJwtException(HttpServletRequest request, MalformedJwtException e) {
+    public CommonResponse handlerMalformedJwtException(MalformedJwtException e) {
         log.error(e.getMessage());
         return new CommonResponse(800L, "token非法");
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public CommonResponse handlerExpiredJwtException(HttpServletRequest request, ExpiredJwtException e) {
+    public CommonResponse handlerExpiredJwtException(ExpiredJwtException e) {
         log.error(e.getMessage());
         return new CommonResponse(801L, "token过期");
     }

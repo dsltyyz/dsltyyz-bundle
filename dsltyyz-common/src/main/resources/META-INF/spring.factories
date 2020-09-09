@@ -2,4 +2,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.dsltyyz.bundle.common.cache.CacheClientAutoConfiguration,\
 com.dsltyyz.bundle.common.jwt.JwtAutoConfiguration,\
 com.dsltyyz.bundle.common.token.aop.RequireTokenAspect,\
+com.dsltyyz.bundle.common.token.aop.RequireAuthorizationAspect,\
 com.dsltyyz.bundle.common.exception.DefaultExceptionHandler
