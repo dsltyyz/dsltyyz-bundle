@@ -31,7 +31,7 @@ import java.util.Map;
  * Http请求
  *
  * @author: dsltyyz
- * @date: 2019/11/06
+ * @date: 2020-9-24
  */
 public class HttpUtils {
 
@@ -39,20 +39,13 @@ public class HttpUtils {
      * 发送get请求
      *
      * @param url
+     * @param header
+     * @param params
+     * @param typeReference
      * @return
      */
-    public static <T> T doGet(String url, TypeReference<T> typeReference) {
-        return doGet(url, null, typeReference);
-    }
-
-    /**
-     * 发送get请求
-     *
-     * @param url
-     * @return
-     */
-    public static <T> T doGet(String url, Map<String, Object> params, TypeReference<T> typeReference) {
-        String result = doGet(url, params);
+    public static <T> T doGet(String url, Map<String, String> header, Map<String, Object> params, TypeReference<T> typeReference) {
+        String result = doGet(url, header, params);
         if (null == result) {
             return null;
         }
@@ -63,25 +56,21 @@ public class HttpUtils {
      * 发送get请求
      *
      * @param url
-     * @return
-     */
-    public static String doGet(String url) {
-        return doGet(url, (Map) null);
-    }
-
-    /**
-     * 发送get请求
-     *
-     * @param url
+     * @param header
      * @param params
      * @return
      */
-    public static String doGet(String url, Map<String, Object> params) {
+    public static String doGet(String url, Map<String, String> header, Map<String, Object> params) {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         // 由客户端执行(发送)Get请求
         try {
             // 创建Get请求
             HttpGet httpGet = new HttpGet(url + buildUrlParam(params));
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpGet.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
             // 响应模型
             CloseableHttpResponse response = httpClient.execute(httpGet);
             HttpEntity entity = response.getEntity();
@@ -102,25 +91,21 @@ public class HttpUtils {
      * 发送get请求InputStream
      *
      * @param url
-     * @return
-     */
-    public static InputStream doGetInputStream(String url) {
-        return doGetInputStream(url, null);
-    }
-
-    /**
-     * 发送get请求InputStream
-     *
-     * @param url
+     * @param header
      * @param params
      * @return
      */
-    public static InputStream doGetInputStream(String url, Map<String, Object> params) {
+    public static InputStream doGetInputStream(String url, Map<String, String> header, Map<String, Object> params) {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         // 由客户端执行(发送)Get请求
         try {
             // 创建Get请求
             HttpGet httpGet = new HttpGet(url + buildUrlParam(params));
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpGet.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
             // 响应模型
             CloseableHttpResponse response = httpClient.execute(httpGet);
             return response.getEntity().getContent();
@@ -136,33 +121,13 @@ public class HttpUtils {
      * 发送post请求
      *
      * @param url
-     * @param typeReference
-     * @return
-     */
-    public static <T> T doPost(String url, TypeReference<T> typeReference) {
-        return doPost(url, null, typeReference);
-    }
-
-    /**
-     * 发送post请求
-     *
-     * @param url
-     * @return
-     */
-    public static String doPost(String url) {
-        return doPost(url, (Map) null);
-    }
-
-    /**
-     * 发送post请求
-     *
-     * @param url
+     * @param header
      * @param params
      * @param typeReference
      * @return
      */
-    public static <T> T doPost(String url, Map<String, Object> params, TypeReference<T> typeReference) {
-        String result = doPost(url, params);
+    public static <T> T doPost(String url, Map<String, String> header, Map<String, Object> params, TypeReference<T> typeReference) {
+        String result = doPost(url, header, params);
         if (null == result) {
             return null;
         }
@@ -173,16 +138,22 @@ public class HttpUtils {
      * 发送post请求
      *
      * @param url
+     * @param header
      * @param params
      * @return
      */
-    public static String doPost(String url, Map<String, Object> params) {
+    public static String doPost(String url, Map<String, String> header, Map<String, Object> params) {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
         // 由客户端执行(发送)Post请求
         try {
             // 创建Post请求
             HttpPost httpPost = new HttpPost(url);
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpPost.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
             httpPost.setEntity(buildFormEntity(params));
             // 响应模型
             CloseableHttpResponse response = httpClient.execute(httpPost);
@@ -204,12 +175,13 @@ public class HttpUtils {
      * 发送json数据 post请求
      *
      * @param url
+     * @param header
      * @param object
      * @param typeReference
      * @return
      */
-    public static <T> T doPostJson(String url, Object object, TypeReference<T> typeReference) {
-        String result = doPostJson(url, object);
+    public static <T> T doPostJson(String url, Map<String, String> header, Object object, TypeReference<T> typeReference) {
+        String result = doPostJson(url, header, object);
         if (null == result) {
             return null;
         }
@@ -220,16 +192,22 @@ public class HttpUtils {
      * 发送json数据 post请求
      *
      * @param url
+     * @param header
      * @param object
      * @return
      */
-    public static String doPostJson(String url, Object object) {
+    public static String doPostJson(String url, Map<String, String> header, Object object) {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
         // 由客户端执行(发送)Post请求
         try {
             // 创建Post请求
             HttpPost httpPost = new HttpPost(url);
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpPost.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
             //第三步：给httpPost设置JSON格式的参数
             StringEntity requestEntity = new StringEntity(JSONObject.toJSONString(object), "utf-8");
             requestEntity.setContentEncoding("UTF-8");
@@ -254,14 +232,15 @@ public class HttpUtils {
 
     /**
      * post提交文件流
+     *
      * @param url
+     * @param header
      * @param param
      * @param typeReference
-     * @param <T>
      * @return
      */
-    public static <T> T doPostInputStream(String url, Map<String, InputStream>  param, TypeReference<T> typeReference) {
-        String result = doPostInputStream(url, param);
+    public static <T> T doPostInputStream(String url, Map<String, String> header, Map<String, InputStream> param, TypeReference<T> typeReference) {
+        String result = doPostInputStream(url, header, param);
         if (null == result) {
             return null;
         }
@@ -272,16 +251,22 @@ public class HttpUtils {
      * post提交文件流
      *
      * @param url
+     * @param header
      * @param param
      * @return
      */
-    public static String doPostInputStream(String url, Map<String, InputStream>  param) {
+    public static String doPostInputStream(String url, Map<String, String> header, Map<String, InputStream> param) {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
         // 由客户端执行(发送)Post请求
         try {
             // 创建Post请求
             HttpPost httpPost = new HttpPost(url);
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpPost.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
             for (Map.Entry<String, InputStream> entry : param.entrySet()) {
@@ -330,10 +315,10 @@ public class HttpUtils {
      * @return
      */
     private static String buildUrlParam(Map<String, Object> params) {
-        StringBuilder sb = new StringBuilder("?");
         if (null == params) {
             return "";
         }
+        StringBuilder sb = new StringBuilder("?");
         for (Map.Entry<String, Object> m : params.entrySet()) {
             if (sb.length() != 1) {
                 sb.append("&");
