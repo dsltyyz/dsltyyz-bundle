@@ -5,6 +5,7 @@ import com.dsltyyz.bundle.common.jwt.constant.JwtConstant;
 import com.dsltyyz.bundle.common.jwt.entity.JwtUser;
 import com.dsltyyz.bundle.common.jwt.helper.JwtHelper;
 import com.dsltyyz.bundle.common.token.annotation.RequireAuthorization;
+import com.dsltyyz.bundle.common.token.exception.RequireTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -40,7 +41,9 @@ public class RequireAuthorizationAspect {
         //执行之前
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader(HEADER_AUTHORIZATION);
-        Assert.isTrue(!StringUtils.isEmpty(token), "缺少Authorization");
+        if(StringUtils.isEmpty(token)){
+            throw new RequireTokenException("缺少Authorization参数");
+        }
         JwtUser jwtUser = jwtHelper.parserToken(token);
         ContextHandler.set(JwtConstant.JWT_ADMIN, jwtUser);
 

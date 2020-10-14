@@ -1,6 +1,7 @@
 package com.dsltyyz.bundle.common.exception;
 
 import com.dsltyyz.bundle.common.response.CommonResponse;
+import com.dsltyyz.bundle.common.token.exception.RequireTokenException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,43 @@ import java.lang.reflect.UndeclaredThrowableException;
 @RestControllerAdvice
 public class DefaultExceptionHandler {
 
+    /**************自定义异常 1+*****************/
+
+    /**
+     * JWT token非法
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(MalformedJwtException.class)
+    public CommonResponse handlerMalformedJwtException(MalformedJwtException e) {
+        log.error(e.getMessage());
+        return new CommonResponse(1L, "token非法");
+    }
+
+    /**
+     * JWT token过期
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(ExpiredJwtException.class)
+    public CommonResponse handlerExpiredJwtException(ExpiredJwtException e) {
+        log.error(e.getMessage());
+        return new CommonResponse(2L, "token过期");
+    }
+
+    /**
+     * JWT 缺少验证Token或Authorization
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(RequireTokenException.class)
+    public CommonResponse handlerExpiredJwtException(RequireTokenException e) {
+        log.error(e.getMessage());
+        return new CommonResponse(3L, e.getMessage());
+    }
+
+    /**************常见系统异常 500+*****************/
+
     @ExceptionHandler(Exception.class)
     public CommonResponse handlerException(Exception e) {
         log.error(e.getMessage());
@@ -36,25 +74,13 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public CommonResponse handlerIllegalArgumentException(IllegalArgumentException e) {
         log.info(e.getMessage());
-        return new CommonResponse(600L, e.getMessage());
+        return new CommonResponse(502L, e.getMessage());
     }
 
     @ExceptionHandler(UndeclaredThrowableException.class)
     public CommonResponse handlerUndeclaredThrowableException(UndeclaredThrowableException e) {
         log.info(e.getMessage());
-        return new CommonResponse(700L, e.getMessage());
-    }
-
-    @ExceptionHandler(MalformedJwtException.class)
-    public CommonResponse handlerMalformedJwtException(MalformedJwtException e) {
-        log.error(e.getMessage());
-        return new CommonResponse(800L, "token非法");
-    }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    public CommonResponse handlerExpiredJwtException(ExpiredJwtException e) {
-        log.error(e.getMessage());
-        return new CommonResponse(801L, "token过期");
+        return new CommonResponse(503L, e.getMessage());
     }
 
 }
