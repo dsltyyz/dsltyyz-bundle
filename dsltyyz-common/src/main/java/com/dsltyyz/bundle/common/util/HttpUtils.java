@@ -6,9 +6,7 @@ import com.dsltyyz.bundle.common.constant.HttpStatus;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -35,6 +33,7 @@ import java.util.Map;
  */
 public class HttpUtils {
 
+    /****************GET 方法***************/
     /**
      * 发送get请求
      *
@@ -117,6 +116,7 @@ public class HttpUtils {
         return null;
     }
 
+    /****************POST 方法***************/
     /**
      * 发送post请求
      *
@@ -290,6 +290,174 @@ public class HttpUtils {
         return null;
     }
 
+    /****************PUT 方法***************/
+    /**
+     * 发送put请求
+     *
+     * @param url
+     * @param header
+     * @param params
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPut(String url, Map<String, String> header, Map<String, Object> params, TypeReference<T> typeReference) {
+        String result = doPut(url, header, params);
+        if (null == result) {
+            return null;
+        }
+        return JSONObject.parseObject(result, typeReference);
+    }
+
+    /**
+     * 发送post请求
+     *
+     * @param url
+     * @param header
+     * @param params
+     * @return
+     */
+    public static String doPut(String url, Map<String, String> header, Map<String, Object> params) {
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+        // 由客户端执行(发送)Put请求
+        try {
+            // 创建Put请求
+            HttpPut httpPut = new HttpPut(url);
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpPut.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+            httpPut.setEntity(buildFormEntity(params));
+            // 响应模型
+            CloseableHttpResponse response = httpClient.execute(httpPut);
+            HttpEntity entity = response.getEntity();
+            String result = EntityUtils.toString(entity, "UTF-8");
+            System.out.println(result);
+            if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeHttpClient(httpClient);
+        }
+        return null;
+    }
+
+    /**
+     * 发送json数据 put请求
+     *
+     * @param url
+     * @param header
+     * @param object
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPutJson(String url, Map<String, String> header, Object object, TypeReference<T> typeReference) {
+        String result = doPutJson(url, header, object);
+        if (null == result) {
+            return null;
+        }
+        return JSONObject.parseObject(result, typeReference);
+    }
+
+    /**
+     * 发送json数据 put请求
+     *
+     * @param url
+     * @param header
+     * @param object
+     * @return
+     */
+    public static String doPutJson(String url, Map<String, String> header, Object object) {
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+        // 由客户端执行(发送)Put请求
+        try {
+            // 创建Put请求
+            HttpPut httpPut = new HttpPut(url);
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpPut.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+            //第三步：给httpPut设置JSON格式的参数
+            StringEntity requestEntity = new StringEntity(JSONObject.toJSONString(object), "utf-8");
+            requestEntity.setContentEncoding("UTF-8");
+            httpPut.setHeader("Content-type", "application/json");
+            httpPut.setEntity(requestEntity);
+
+            // 响应模型
+            CloseableHttpResponse response = httpClient.execute(httpPut);
+            HttpEntity entity = response.getEntity();
+            String result = EntityUtils.toString(entity, "UTF-8");
+            System.out.println(result);
+            if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeHttpClient(httpClient);
+        }
+        return null;
+    }
+
+    /****************DELETE 方法***************/
+    /**
+     * 发送delete请求
+     *
+     * @param url
+     * @param header
+     * @param params
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doDelete(String url, Map<String, String> header, Map<String, Object> params, TypeReference<T> typeReference) {
+        String result = doDelete(url, header, params);
+        if (null == result) {
+            return null;
+        }
+        return JSONObject.parseObject(result, typeReference);
+    }
+
+    /**
+     * 发送delete请求
+     *
+     * @param url
+     * @param header
+     * @param params
+     * @return
+     */
+    public static String doDelete(String url, Map<String, String> header, Map<String, Object> params) {
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        // 由客户端执行(发送)Delete请求
+        try {
+            // 创建Delete请求
+            HttpDelete httpDelete = new HttpDelete(url + buildUrlParam(params));
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpDelete.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+            // 响应模型
+            CloseableHttpResponse response = httpClient.execute(httpDelete);
+            HttpEntity entity = response.getEntity();
+            String result = EntityUtils.toString(entity, "UTF-8");
+            System.out.println(result);
+            if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeHttpClient(httpClient);
+        }
+        return null;
+    }
+
+    /****************通用方法***************/
     /**
      * 构建url参数
      *
