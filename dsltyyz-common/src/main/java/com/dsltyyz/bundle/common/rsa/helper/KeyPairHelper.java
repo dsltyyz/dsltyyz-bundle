@@ -3,6 +3,7 @@ package com.dsltyyz.bundle.common.rsa.helper;
 import com.dsltyyz.bundle.common.rsa.properties.KeyPairProperties;
 import com.dsltyyz.bundle.common.util.Base64Utils;
 import com.dsltyyz.bundle.common.util.FileUtils;
+import io.swagger.annotations.ApiModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,7 @@ import java.security.spec.X509EncodedKeySpec;
  * @author: dsltyyz
  * @date: 2019/3/11
  */
+@ApiModel(description = "加密解密工具")
 @Slf4j
 public class KeyPairHelper {
 
