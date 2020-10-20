@@ -23,10 +23,10 @@ public class Excel {
     /**
      * sheet列表
      */
-    List<ExcelSheet> excelSheetList = new ArrayList<>();
+    private List<ExcelSheet> excelSheetList = new ArrayList<>();
 
     /**
      * 是否开启debug模式
      */
-    Boolean debug = false;
+    private Boolean debug = false;
 }
