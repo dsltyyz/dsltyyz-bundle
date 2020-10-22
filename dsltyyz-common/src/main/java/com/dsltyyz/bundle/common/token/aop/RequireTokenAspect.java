@@ -49,9 +49,6 @@ public class RequireTokenAspect {
 
         //下一步主流程
         Object next = point.proceed();
-
-        //返回移除
-        ContextHandler.remove(JwtConstant.JWT_USER);
         //执行之后
         return next;
     }
