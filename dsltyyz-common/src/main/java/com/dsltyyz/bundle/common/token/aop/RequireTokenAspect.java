@@ -42,7 +42,7 @@ public class RequireTokenAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader(HEADER_TOKEN);
         if(StringUtils.isEmpty(token)){
-            throw new RequireTokenException("缺少 Token参数");
+            throw new RequireTokenException("缺少Token参数");
         }
         JwtUser jwtUser = jwtHelper.parserToken(token);
         ContextHandler.set(JwtConstant.JWT_USER, jwtUser);

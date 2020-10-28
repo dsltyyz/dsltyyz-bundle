@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * Description:
- * 检测授权
+ * 检测admin token
  *
  * @author: dsltyyz
  * @date: 2020-9-8
@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequireAuthorization {
+public @interface RequireAdminToken {
 }
