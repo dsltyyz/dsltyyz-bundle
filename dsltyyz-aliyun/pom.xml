@@ -40,20 +40,6 @@
             <artifactId>spring-cloud-starter-alicloud-oss</artifactId>
         </dependency>
 
-        <!--spring context-->
-        <!--<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <optional>true</optional>
-        </dependency>-->
-
-        <!--spring beans-->
-        <!--<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <optional>true</optional>
-        </dependency>-->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
@@ -71,10 +57,12 @@
             <artifactId>fastjson</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!--swagger-->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>1.5.20</version>
+            <version>1.5.21</version>
             <scope>compile</scope>
         </dependency>
 
