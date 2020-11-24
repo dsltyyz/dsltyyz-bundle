@@ -101,7 +101,7 @@ public class CodeGeneratorUtil {
         };
 
         // 定义输出目录
-        String outPath = (projectPath + "/src/main/java/" + strategyXml.getParentPackage()+"/"+strategyXml.getModuleName()).replaceAll("\\.","\\"+File.separator);
+        String outPath = (projectPath + "/src/main/java/" + strategyXml.getParentPackage() + "/" + strategyXml.getModuleName()).replaceAll("\\.", "\\" + File.separator);
         // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
 
@@ -126,7 +126,7 @@ public class CodeGeneratorUtil {
             }
         });
 
-        String voTemplate  = "user-defined/vo.java.ftl";
+        String voTemplate = "user-defined/vo.java.ftl";
         focList.add(new FileOutConfig(voTemplate) {
             @Override
             public String outputFile(TableInfo tableInfo) {
