@@ -10,11 +10,6 @@ package com.dsltyyz.bundle.common.cache.client;
 public interface CacheClient {
 
     /**
-     * 获取实现信息类
-     */
-    void getInfo();
-
-    /**
      * 获取key实体
      *
      * @param key

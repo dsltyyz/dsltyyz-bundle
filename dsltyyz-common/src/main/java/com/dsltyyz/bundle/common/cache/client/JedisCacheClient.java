@@ -21,8 +21,7 @@ public class JedisCacheClient implements CacheClient {
     @Resource
     private RedisTemplate redisTemplate;
 
-    @Override
-    public void getInfo() {
+    public JedisCacheClient() {
         System.out.println("redis缓存客户端已加载");
     }
 
