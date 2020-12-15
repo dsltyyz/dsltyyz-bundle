@@ -25,6 +25,7 @@
         <module>dsltyyz-office</module>
         <module>dsltyyz-common</module>
         <module>dsltyyz-aliyun</module>
+        <module>dsltyyz-wechat</module>
     </modules>
 
     <licenses>

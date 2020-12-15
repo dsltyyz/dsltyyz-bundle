@@ -52,6 +52,14 @@
                 <version>${dsltyyz-bundle.version}</version>
                 <scope>compile</scope>
             </dependency>
+
+            <!--微信组件包-->
+            <dependency>
+                <groupId>com.dsltyyz.bundle</groupId>
+                <artifactId>dsltyyz-wechat</artifactId>
+                <version>${dsltyyz-bundle.version}</version>
+                <scope>compile</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
