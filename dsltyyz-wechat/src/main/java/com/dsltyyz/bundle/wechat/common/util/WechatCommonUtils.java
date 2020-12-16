@@ -27,7 +27,7 @@ public class WechatCommonUtils {
      * @param array
      * @return
      */
-    public static String sha1(String... array) {
+    private static String sha1(String... array) {
         StringBuffer sb = new StringBuffer();
         // 字符串排序
         Arrays.sort(array);
@@ -46,6 +46,20 @@ public class WechatCommonUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 【服务号】【小程序】微信回调检测
+     * @param signature 签名
+     * @param timestamp 时间戳
+     * @param nonce 字符串
+     * @param echostr 输出
+     * @param checkToken 验证token(微信回调配置TOKEN)
+     * @return
+     */
+    public static String callbackCheck(String signature, String timestamp, String nonce, String echostr, String checkToken){
+        String sha1Str = sha1(checkToken, timestamp, nonce);
+        return signature.equals(sha1Str)?echostr:"error";
     }
 
     /**

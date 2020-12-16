@@ -2,6 +2,7 @@ package com.dsltyyz.bundle.wechat.common.model.token;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dsltyyz.bundle.common.util.DateUtils;
+import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +18,7 @@ import java.util.Date;
  */
 @NoArgsConstructor
 @Data
-public class WechatToken {
+public class WechatToken extends WechatResult {
 
     /**
      * 获取到的凭证

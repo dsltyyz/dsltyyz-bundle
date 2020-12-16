@@ -15,20 +15,20 @@ public interface WechatAccessUrl {
      */
     String TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
 
-    /*****************公众号************/
+    /*****************服务号************/
     /**
-     * 【公众号】微信浏览器网页授权
+     * 【服务号】微信浏览器网页授权
      * 默认拥有scope参数中的snsapi_base和snsapi_userinfo
      */
     String AUTHORIZE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
 
     /**
-     * 【公众号】获取模板列表
+     * 【服务号】获取模板列表
      */
     String TEMPLATE_GET_ALL_PRIVATE_TEMPLATE_MESSAGE_URL = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token=ACCESS_TOKEN";
 
     /**
-     * 【公众号】发送模板消息
+     * 【服务号】发送模板消息
      */
     String TEMPLATE_SEND_MESSAGE_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
 
@@ -46,7 +46,7 @@ public interface WechatAccessUrl {
     String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=APPSECRET&code=CODE&grant_type=authorization_code";
 
     /**
-     * 【网站】【公众号】通过access_token和openid获取用户信息
+     * 【网站】【服务号】通过access_token和openid获取用户信息
      *
      */
     String USER_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";

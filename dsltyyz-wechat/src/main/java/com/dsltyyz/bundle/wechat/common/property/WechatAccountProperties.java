@@ -10,7 +10,7 @@ import lombok.Data;
  * @date: 2019/11/19
  */
 @Data
-public class WechatSecurityProperties {
+public class WechatAccountProperties {
 
     /**
      * 应用ID

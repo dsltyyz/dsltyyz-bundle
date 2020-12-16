@@ -132,17 +132,18 @@ public class WechatPayUtils {
      *
      * @param wechatPayConfig 支付配置
      * @param id              订单号
-     * @param fee             金额
+     * @param totalFee        总金额
+     * @param refundFee       退款金额
      * @return
      */
-    public static Map<String, String> applyRefund(WechatPayConfig wechatPayConfig, String id, String fee) {
+    public static Map<String, String> applyRefund(WechatPayConfig wechatPayConfig, String id, String totalFee, String refundFee) {
         try {
             WXPay wxPay = new WXPay(wechatPayConfig);
             HashMap<String, String> data = new HashMap<>();
             data.put("out_trade_no", id);
             data.put("out_refund_no", id);
-            data.put("total_fee", fee);
-            data.put("refund_fee", fee);
+            data.put("total_fee", totalFee);
+            data.put("refund_fee", refundFee);
             data.put("refund_fee_type", WechatPayFeeType.CNY);
             data.put("op_user_id", wechatPayConfig.getMchID());
             return wxPay.refund(data);
@@ -155,9 +156,9 @@ public class WechatPayUtils {
 
 
     /**
-     * 生成公众号支付签名
+     * 生成服务号支付签名
      *
-     * @param appId    公众号id
+     * @param appId    服务号id
      * @param prepayId 预支付id
      * @param key      支付秘钥
      * @return

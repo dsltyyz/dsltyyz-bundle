@@ -6,16 +6,16 @@ import lombok.Data;
 
 /**
  * Description:
- * 微信账号属性
+ * 微信授权属性
  *
  * @author: dsltyyz
  * @date: 2019/11/19
  */
 @Data
-public class WechatOauthProperties extends WechatSecurityProperties{
+public class WechatOauthProperties extends WechatAccountProperties {
 
     /**
-     * 公众号Token
+     * 服务号Token
      */
     private String token;
 

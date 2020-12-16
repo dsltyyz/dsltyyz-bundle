@@ -16,7 +16,7 @@ import lombok.*;
 public class WechatTemplateMiniProgram {
 
     /**
-     * 所需跳转到的小程序appid（该小程序appid必须与发模板消息的公众号是绑定关联关系，暂不支持小游戏）
+     * 所需跳转到的小程序appid（该小程序appid必须与发模板消息的服务号是绑定关联关系，暂不支持小游戏）
      */
     @NonNull
     private String appid;

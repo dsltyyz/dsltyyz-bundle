@@ -1,5 +1,6 @@
 package com.dsltyyz.bundle.wechat.common.model.openid;
 
+import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import lombok.Data;
 
 /**
@@ -10,7 +11,7 @@ import lombok.Data;
  * @date: 2019/11/06
  */
 @Data
-public class WechatOpenId {
+public class WechatOpenId extends WechatResult {
 
     /**
      * 获取到的凭证

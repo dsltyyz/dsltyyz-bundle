@@ -3,15 +3,20 @@ package com.dsltyyz.bundle.wechat.common.util;
 import com.alibaba.fastjson.TypeReference;
 import com.dsltyyz.bundle.common.util.HttpUtils;
 import com.dsltyyz.bundle.wechat.common.constant.WechatAccessUrl;
+import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
+import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
+import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 /**
  * Description:
- * 微信公众号工具类
+ * 微信服务号工具类
  *
  * @author: dsltyyz
  * @date: 2019/11/07
@@ -33,7 +38,32 @@ public class WechatUtils {
     }
 
     /**
-     * 【网站】【公众号】通过code换取网页授权openid
+     * 获取模板列表 未测试
+     *
+     * @param wechatToken 访问口令
+     * @return
+     */
+    public static List<WechatTemplate> getAllPrivateTemplate(WechatToken wechatToken) {
+        String url = WechatAccessUrl.TEMPLATE_GET_ALL_PRIVATE_TEMPLATE_MESSAGE_URL.replace("ACCESS_TOKEN", wechatToken.getAccess_token());
+        return HttpUtils.doGet(url, null, null, new TypeReference<List<WechatTemplate>>() {
+        });
+    }
+
+    /**
+     * 获取模板列表 未测试
+     *
+     * @param wechatToken        访问口令
+     * @param wechatTemplateSend 模板信息
+     * @return
+     */
+    public static WechatResult sendTemplate(WechatToken wechatToken, WechatTemplateSend wechatTemplateSend) {
+        String url = WechatAccessUrl.TEMPLATE_SEND_MESSAGE_URL.replace("ACCESS_TOKEN", wechatToken.getAccess_token());
+        return HttpUtils.doPostJson(url, null, wechatTemplateSend, new TypeReference<WechatResult>() {
+        });
+    }
+
+    /**
+     * 【网站】【服务号】通过code换取网页授权openid
      *
      * @param appId     第三方用户唯一凭证
      * @param appSecret 第三方用户唯一凭证密钥
@@ -47,7 +77,7 @@ public class WechatUtils {
     }
 
     /**
-     * 【网站】【公众号】获取用户信息
+     * 【网站】【服务号】获取用户信息
      *
      * @param token  访问口令
      * @param openid 唯一标识
