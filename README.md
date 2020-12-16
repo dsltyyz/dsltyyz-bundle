@@ -27,6 +27,14 @@
   - util ___工具包___
   - resources ___资源包___
     - user-defined  ___用户自定义模板包___
+- dsltyyz-wechat ___微信模块___
+  - client ___客户端___
+  - common ___通用___
+    - constant ___常量___
+    - model ___模型___
+    - property ___属性___
+    - util ___工具___
+  - config ___配置___ 
 ## 2 搭建介绍
 ### 2.1 环境介绍
 > 环境检测
@@ -74,6 +82,10 @@
     <dependency>
         <groupId>com.dsltyyz.bundle</groupId>
         <artifactId>dsltyyz-template</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.dsltyyz.bundle</groupId>
+        <artifactId>dsltyyz-wechat</artifactId>
     </dependency>
     ...
  </dependencies>
