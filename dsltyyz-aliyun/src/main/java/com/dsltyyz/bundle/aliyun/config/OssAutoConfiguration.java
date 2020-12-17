@@ -11,6 +11,10 @@ import org.springframework.context.annotation.Configuration;
  * Description:
  * 条件注入OssProperties属性和Oss客户端
  *
+ * spring-cloud-starter-alicloud-sms
+ *   OssAutoConfiguration
+ *     spring.cloud.alicloud.oss.enabled
+ *
  * @author: dsltyyz
  * @date: 2020/08/27
  */

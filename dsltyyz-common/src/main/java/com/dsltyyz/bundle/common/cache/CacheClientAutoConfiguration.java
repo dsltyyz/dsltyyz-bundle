@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CacheClientAutoConfiguration {
 
-    @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true")
+    @ConditionalOnProperty(name = "spring.redis.enable", havingValue = "true")
     @Bean("cacheClient")
     public JedisCacheClient jedisCacheClient(){
         return new JedisCacheClient();
