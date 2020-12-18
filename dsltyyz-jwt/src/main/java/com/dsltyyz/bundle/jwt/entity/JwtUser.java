@@ -1,10 +1,8 @@
-package com.dsltyyz.bundle.common.jwt.entity;
+package com.dsltyyz.bundle.jwt.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * Description:
@@ -15,14 +13,20 @@ import lombok.NoArgsConstructor;
  */
 @ApiModel(description = "JWT用户信息")
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Data
 public class JwtUser {
 
+    @NonNull
     @ApiModelProperty(value = "编号")
     public Long id;
 
+    @NonNull
     @ApiModelProperty(value = "用户名")
     public String user;
+
+    @ApiModelProperty(value = "角色")
+    public String[] role = {};
 
 }

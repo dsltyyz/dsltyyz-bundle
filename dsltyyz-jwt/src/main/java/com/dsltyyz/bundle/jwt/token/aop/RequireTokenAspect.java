@@ -1,23 +1,23 @@
-package com.dsltyyz.bundle.common.token.aop;
+package com.dsltyyz.bundle.jwt.token.aop;
 
 import com.dsltyyz.bundle.common.handler.ContextHandler;
-import com.dsltyyz.bundle.common.jwt.constant.JwtConstant;
-import com.dsltyyz.bundle.common.jwt.entity.JwtUser;
-import com.dsltyyz.bundle.common.jwt.helper.JwtHelper;
-import com.dsltyyz.bundle.common.token.annotation.RequireToken;
-import com.dsltyyz.bundle.common.token.exception.RequireTokenException;
+import com.dsltyyz.bundle.jwt.constant.JwtConstant;
+import com.dsltyyz.bundle.jwt.entity.JwtUser;
+import com.dsltyyz.bundle.jwt.helper.JwtHelper;
+import com.dsltyyz.bundle.jwt.token.annotation.RequireToken;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 /**
  * Description:
@@ -41,11 +41,16 @@ public class RequireTokenAspect {
         //执行之前
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader(HEADER_TOKEN);
-        if(StringUtils.isEmpty(token)){
-            throw new RequireTokenException("缺少Token参数");
+        if (StringUtils.isEmpty(token)) {
+            throw new JwtException("缺少Token参数");
         }
         JwtUser jwtUser = jwtHelper.parserToken(token);
         ContextHandler.set(JwtConstant.JWT_USER, jwtUser);
+
+        //需要权限 且 需要权限与用户权限没有交集
+        if (requireToken.value().length != 0 && (jwtUser.getRole().length == 0 || !Arrays.asList(requireToken.value()).retainAll(Arrays.asList(jwtUser.getRole())))) {
+            throw new JwtException("权限不足");
+        }
 
         //下一步主流程
         Object next = point.proceed();

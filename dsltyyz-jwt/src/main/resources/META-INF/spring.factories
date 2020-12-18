@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.dsltyyz.bundle.jwt.config.JwtAutoConfiguration,\
+com.dsltyyz.bundle.jwt.token.aop.RequireTokenAspect,\
+com.dsltyyz.bundle.jwt.token.aop.RequireAdminTokenAspect

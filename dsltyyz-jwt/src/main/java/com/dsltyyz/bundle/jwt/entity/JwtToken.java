@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.jwt.entity;
+package com.dsltyyz.bundle.jwt.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;

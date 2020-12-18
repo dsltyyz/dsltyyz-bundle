@@ -1,8 +1,9 @@
-package com.dsltyyz.bundle.common.jwt.helper;
+package com.dsltyyz.bundle.jwt.helper;
 
-import com.dsltyyz.bundle.common.jwt.entity.JwtToken;
-import com.dsltyyz.bundle.common.jwt.entity.JwtUser;
-import com.dsltyyz.bundle.common.rsa.helper.KeyPairHelper;
+import com.alibaba.fastjson.JSONArray;
+import com.dsltyyz.bundle.jwt.entity.JwtToken;
+import com.dsltyyz.bundle.jwt.entity.JwtUser;
+import com.dsltyyz.bundle.jwt.rsa.helper.KeyPairHelper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -38,6 +39,7 @@ public class JwtHelper {
         Claims claims = Jwts.claims();
         claims.put("id", jwtUser.getId());
         claims.put("user", jwtUser.getUser());
+        claims.put("role", JSONArray.toJSONString(jwtUser.getRole()));
         String token = Jwts.builder()
                 // 设置claims
                 .setClaims(claims)
@@ -63,6 +65,6 @@ public class JwtHelper {
     public JwtUser parserToken(String token) {
         Jws<Claims> claims = Jwts.parser().setSigningKey(keyPairHelper.getPublicKey()).parseClaimsJws(token);
         Claims body = claims.getBody();
-        return new JwtUser(Long.valueOf(body.get("id").toString()), String.valueOf(body.get("user")));
+        return new JwtUser(Long.valueOf(body.get("id").toString()), String.valueOf(body.get("user")), JSONArray.parseArray(body.get("role").toString(), String.class).toArray(new String[0]));
     }
 }

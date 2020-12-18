@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.jwt.constant;
+package com.dsltyyz.bundle.jwt.constant;
 
 /**
  * Description:
@@ -9,6 +9,13 @@ package com.dsltyyz.bundle.common.jwt.constant;
  */
 public interface JwtConstant {
 
+    /**
+     * 用户
+     */
     String JWT_USER = "JWT_USER";
+
+    /**
+     * 超管
+     */
     String JWT_ADMIN = "JWT_ADMIN";
 }

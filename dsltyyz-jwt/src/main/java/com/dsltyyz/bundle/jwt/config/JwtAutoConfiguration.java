@@ -1,8 +1,8 @@
-package com.dsltyyz.bundle.common.jwt;
+package com.dsltyyz.bundle.jwt.config;
 
-import com.dsltyyz.bundle.common.jwt.helper.JwtHelper;
-import com.dsltyyz.bundle.common.rsa.helper.KeyPairHelper;
-import com.dsltyyz.bundle.common.rsa.properties.KeyPairProperties;
+import com.dsltyyz.bundle.jwt.helper.JwtHelper;
+import com.dsltyyz.bundle.jwt.rsa.helper.KeyPairHelper;
+import com.dsltyyz.bundle.jwt.rsa.properties.KeyPairProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

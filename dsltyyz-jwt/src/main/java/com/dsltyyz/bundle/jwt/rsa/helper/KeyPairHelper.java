@@ -1,8 +1,8 @@
-package com.dsltyyz.bundle.common.rsa.helper;
+package com.dsltyyz.bundle.jwt.rsa.helper;
 
-import com.dsltyyz.bundle.common.rsa.properties.KeyPairProperties;
 import com.dsltyyz.bundle.common.util.Base64Utils;
 import com.dsltyyz.bundle.common.util.FileUtils;
+import com.dsltyyz.bundle.jwt.rsa.properties.KeyPairProperties;
 import io.swagger.annotations.ApiModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;

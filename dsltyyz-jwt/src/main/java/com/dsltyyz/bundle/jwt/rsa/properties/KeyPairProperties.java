@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.rsa.properties;
+package com.dsltyyz.bundle.jwt.rsa.properties;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

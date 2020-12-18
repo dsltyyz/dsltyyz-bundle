@@ -1,14 +1,13 @@
 package com.dsltyyz.bundle.common.exception;
 
 import com.dsltyyz.bundle.common.response.CommonResponse;
-import com.dsltyyz.bundle.common.token.exception.RequireTokenException;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.UndeclaredThrowableException;
 
 /**
@@ -26,6 +25,7 @@ public class DefaultExceptionHandler {
 
     /**
      * JWT token非法
+     *
      * @param e
      * @return
      */
@@ -37,6 +37,7 @@ public class DefaultExceptionHandler {
 
     /**
      * JWT token过期
+     *
      * @param e
      * @return
      */
@@ -46,14 +47,9 @@ public class DefaultExceptionHandler {
         return new CommonResponse(2L, "token过期");
     }
 
-    /**
-     * JWT 缺少验证Token或Authorization
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(RequireTokenException.class)
-    public CommonResponse handlerExpiredJwtException(RequireTokenException e) {
-        log.error(e.getMessage());
+    @ExceptionHandler(JwtException.class)
+    public CommonResponse handlerIllegalAccessException(JwtException e) {
+        log.info(e.getMessage());
         return new CommonResponse(3L, e.getMessage());
     }
 

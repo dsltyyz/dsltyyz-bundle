@@ -21,10 +21,18 @@
 
     <dependencyManagement>
         <dependencies>
-            <!--poi工具包-->
+            <!--通用工具包-->
             <dependency>
                 <groupId>com.dsltyyz.bundle</groupId>
                 <artifactId>dsltyyz-common</artifactId>
+                <version>${dsltyyz-bundle.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <!--JWT工具包-->
+            <dependency>
+                <groupId>com.dsltyyz.bundle</groupId>
+                <artifactId>dsltyyz-jwt</artifactId>
                 <version>${dsltyyz-bundle.version}</version>
                 <scope>compile</scope>
             </dependency>
