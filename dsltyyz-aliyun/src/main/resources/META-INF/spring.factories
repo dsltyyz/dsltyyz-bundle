@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.dsltyyz.bundle.aliyun.config.OssAutoConfiguration,\
-com.dsltyyz.bundle.aliyun.config.SmsAutoConfiguration
+com.dsltyyz.bundle.aliyun.config.SmsAutoConfiguration,\
+com.dsltyyz.bundle.aliyun.config.PayAutoConfiguration
