@@ -70,7 +70,7 @@ public class AliyunOssClient {
      * @param dir
      * @return
      */
-    public OssSignatureVO generateOssSignaturePolicy(String dir) {
+    public OssSignatureVO getOssSignature(String dir) {
         try {
             // 生成过期时间
             long expireEndTime = System.currentTimeMillis() + 3600 * 1000;
