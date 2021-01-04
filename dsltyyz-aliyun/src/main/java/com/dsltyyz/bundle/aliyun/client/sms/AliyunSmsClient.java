@@ -28,6 +28,10 @@ public class AliyunSmsClient {
     @Resource
     private SmsProperties smsProperties;
 
+    public AliyunSmsClient(){
+        log.info("阿里云SMS客户端已加载");
+    }
+
     /**
      * 短信发送
      *

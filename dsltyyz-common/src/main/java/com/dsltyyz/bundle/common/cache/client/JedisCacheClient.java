@@ -22,7 +22,7 @@ public class JedisCacheClient implements CacheClient {
     private RedisTemplate redisTemplate;
 
     public JedisCacheClient() {
-        System.out.println("redis缓存客户端已加载");
+        log.info("redis缓存客户端已加载");
     }
 
     @Override

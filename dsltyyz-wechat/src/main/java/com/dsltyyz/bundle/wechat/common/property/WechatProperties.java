@@ -18,12 +18,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class WechatProperties {
 
     /**
-     * 是否调试
-     */
-    @ApiModelProperty(value = "是否调试")
-    private Boolean debug = false;
-
-    /**
      * 授权属性
      */
     @ApiModelProperty(value = "授权属性")

@@ -3,6 +3,7 @@ package com.dsltyyz.bundle.common.util;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.dsltyyz.bundle.common.constant.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -31,6 +32,7 @@ import java.util.Map;
  * @author: dsltyyz
  * @date: 2020-9-24
  */
+@Slf4j
 public class HttpUtils {
 
     /****************GET 方法***************/
@@ -64,6 +66,7 @@ public class HttpUtils {
         // 由客户端执行(发送)Get请求
         try {
             // 创建Get请求
+            log.info(url);
             HttpGet httpGet = new HttpGet(url + buildUrlParam(params));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
@@ -74,7 +77,7 @@ public class HttpUtils {
             CloseableHttpResponse response = httpClient.execute(httpGet);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
-            System.out.println(result);
+            log.info(result);
             if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
                 return result;
             }
@@ -99,6 +102,7 @@ public class HttpUtils {
         // 由客户端执行(发送)Get请求
         try {
             // 创建Get请求
+            log.info(url);
             HttpGet httpGet = new HttpGet(url + buildUrlParam(params));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
@@ -148,6 +152,7 @@ public class HttpUtils {
         // 由客户端执行(发送)Post请求
         try {
             // 创建Post请求
+            log.info(url);
             HttpPost httpPost = new HttpPost(url);
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
@@ -159,7 +164,7 @@ public class HttpUtils {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
-            System.out.println(result);
+            log.info(result);
             if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
                 return result;
             }
@@ -202,6 +207,7 @@ public class HttpUtils {
         // 由客户端执行(发送)Post请求
         try {
             // 创建Post请求
+            log.info(url);
             HttpPost httpPost = new HttpPost(url);
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
@@ -218,7 +224,7 @@ public class HttpUtils {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
-            System.out.println(result);
+            log.info(result);
             if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
                 return result;
             }
@@ -261,6 +267,7 @@ public class HttpUtils {
         // 由客户端执行(发送)Post请求
         try {
             // 创建Post请求
+            log.info(url);
             HttpPost httpPost = new HttpPost(url);
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
@@ -278,7 +285,7 @@ public class HttpUtils {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
-            System.out.println(result);
+            log.info(result);
             if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
                 return result;
             }
@@ -322,6 +329,7 @@ public class HttpUtils {
         // 由客户端执行(发送)Put请求
         try {
             // 创建Put请求
+            log.info(url);
             HttpPut httpPut = new HttpPut(url);
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
@@ -333,7 +341,7 @@ public class HttpUtils {
             CloseableHttpResponse response = httpClient.execute(httpPut);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
-            System.out.println(result);
+            log.info(result);
             if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
                 return result;
             }
@@ -376,6 +384,7 @@ public class HttpUtils {
         // 由客户端执行(发送)Put请求
         try {
             // 创建Put请求
+            log.info(url);
             HttpPut httpPut = new HttpPut(url);
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
@@ -392,7 +401,7 @@ public class HttpUtils {
             CloseableHttpResponse response = httpClient.execute(httpPut);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
-            System.out.println(result);
+            log.info(result);
             if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
                 return result;
             }
@@ -435,6 +444,7 @@ public class HttpUtils {
         // 由客户端执行(发送)Delete请求
         try {
             // 创建Delete请求
+            log.info(url);
             HttpDelete httpDelete = new HttpDelete(url + buildUrlParam(params));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
@@ -445,7 +455,7 @@ public class HttpUtils {
             CloseableHttpResponse response = httpClient.execute(httpDelete);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
-            System.out.println(result);
+            log.info(result);
             if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
                 return result;
             }

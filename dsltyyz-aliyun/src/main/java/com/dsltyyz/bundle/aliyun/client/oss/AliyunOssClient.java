@@ -42,7 +42,7 @@ public class AliyunOssClient {
     private AliCloudProperties aliCloudProperties;
 
     public AliyunOssClient() {
-        System.out.println("阿里云OSS客户端已加载");
+        log.info("阿里云OSS客户端已加载");
     }
 
     /**

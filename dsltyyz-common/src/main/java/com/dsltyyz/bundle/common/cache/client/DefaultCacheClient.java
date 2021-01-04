@@ -18,7 +18,7 @@ public class DefaultCacheClient implements CacheClient {
     private Map<String,Object> cacheMap = new HashMap<>();
 
     public DefaultCacheClient() {
-        System.out.println("默认缓存客户端已加载");
+        log.info("默认缓存客户端已加载");
     }
 
     @Override

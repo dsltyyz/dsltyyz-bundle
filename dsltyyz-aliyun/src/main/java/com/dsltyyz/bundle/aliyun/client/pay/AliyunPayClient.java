@@ -1,7 +1,6 @@
 package com.dsltyyz.bundle.aliyun.client.pay;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.CertAlipayRequest;
@@ -31,7 +30,7 @@ public class AliyunPayClient {
     private PayProperties payProperties;
 
     public AliyunPayClient() {
-        System.out.println("阿里云Pay客户端已加载");
+        log.info("阿里云Pay客户端已加载");
     }
 
     @PostConstruct
