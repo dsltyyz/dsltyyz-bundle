@@ -1,5 +1,9 @@
 package com.dsltyyz.bundle.common.util;
 
+import com.alibaba.fastjson.JSONObject;
+import com.dsltyyz.bundle.common.entity.ReflexParam;
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,9 +11,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Description:
@@ -18,6 +20,7 @@ import java.util.Map;
  * @author: dsltyyz
  * @date: 2019/04/10
  */
+@Slf4j
 public class ReflexUtils {
 
     /**
@@ -125,4 +128,79 @@ public class ReflexUtils {
     public static String setFieldMethod(String field) {
         return "set" + field.substring(0, 1).toUpperCase() + field.substring(1);
     }
+
+    /**
+     * 参数列表转换
+     *
+     * @param paramList
+     * @return
+     */
+    public static List<ReflexParam> convert(List paramList) {
+        List<ReflexParam> list = new ArrayList<>();
+        if (null == paramList || paramList.size() == 0) {
+            return null;
+        }
+        paramList.forEach(o -> list.add(new ReflexParam(o.getClass().getName(), JSONObject.toJSONString(o))));
+        return list;
+    }
+
+    /**
+     * 获取参数Class数组
+     *
+     * @param paramList
+     * @return
+     */
+    private static Class[] parseClass(List<ReflexParam> paramList) {
+        List<Class> list = new ArrayList<>();
+        if (null == paramList || paramList.size() == 0) {
+            return null;
+        }
+        paramList.forEach(param -> {
+            try {
+                list.add(Class.forName(param.getParamClass()));
+            } catch (ClassNotFoundException e) {
+                log.error(e.getMessage());
+            }
+        });
+        Class[] classes = new Class[list.size()];
+        return list.toArray(classes);
+    }
+
+    /**
+     * 获取参数Object数组
+     *
+     * @param paramList
+     * @return
+     */
+    private static Object[] parseObject(List<ReflexParam> paramList) {
+        List list = new ArrayList();
+        if (null == paramList || paramList.size() == 0) {
+            return null;
+        }
+        paramList.forEach(param -> {
+            try {
+                list.add(JSONObject.parseObject(param.getParamValue(), Class.forName(param.getParamClass())));
+            } catch (ClassNotFoundException e) {
+                log.error(e.getMessage());
+            }
+        });
+        return list.toArray();
+    }
+
+    /**
+     * 根据对象方法参数调用
+     * @param object
+     * @param method
+     * @param paramList
+     * @return
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public static Object invoke(Object object, String method, List<ReflexParam> paramList) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Class clazz = object.getClass();
+        Method clazzMethod = clazz.getMethod(method, parseClass(paramList));
+        return  clazzMethod.invoke(object, parseObject(paramList));
+    }
+
 }
