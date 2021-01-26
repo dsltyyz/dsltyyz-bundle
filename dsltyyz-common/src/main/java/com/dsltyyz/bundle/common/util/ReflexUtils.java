@@ -1,5 +1,6 @@
 package com.dsltyyz.bundle.common.util;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dsltyyz.bundle.common.entity.ReflexParam;
 import lombok.extern.slf4j.Slf4j;
@@ -140,7 +141,14 @@ public class ReflexUtils {
         if (null == paramList || paramList.size() == 0) {
             return null;
         }
-        paramList.forEach(o -> list.add(new ReflexParam(o.getClass().getName(), JSONObject.toJSONString(o))));
+        paramList.forEach(o -> {
+            if (o instanceof List) {
+                Object o1 = ((List) o).get(0);
+                list.add(new ReflexParam(o1.getClass().getName(), JSONObject.toJSONString(o), true));
+            } else {
+                list.add(new ReflexParam(o.getClass().getName(), JSONObject.toJSONString(o), false));
+            }
+        });
         return list;
     }
 
@@ -157,7 +165,7 @@ public class ReflexUtils {
         }
         paramList.forEach(param -> {
             try {
-                list.add(Class.forName(param.getParamClass()));
+                list.add(param.getIsCollection() ? List.class : Class.forName(param.getParamClass()));
             } catch (ClassNotFoundException e) {
                 log.error(e.getMessage());
             }
@@ -179,7 +187,7 @@ public class ReflexUtils {
         }
         paramList.forEach(param -> {
             try {
-                list.add(JSONObject.parseObject(param.getParamValue(), Class.forName(param.getParamClass())));
+                list.add(param.getIsCollection() ? JSONArray.parseArray(param.getParamValue(), Class.forName(param.getParamClass())) : JSONObject.parseObject(param.getParamValue(), Class.forName(param.getParamClass())));
             } catch (ClassNotFoundException e) {
                 log.error(e.getMessage());
             }
@@ -189,6 +197,7 @@ public class ReflexUtils {
 
     /**
      * 根据对象方法参数调用
+     *
      * @param object
      * @param method
      * @param paramList
@@ -200,7 +209,7 @@ public class ReflexUtils {
     public static Object invoke(Object object, String method, List<ReflexParam> paramList) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Class clazz = object.getClass();
         Method clazzMethod = clazz.getMethod(method, parseClass(paramList));
-        return  clazzMethod.invoke(object, parseObject(paramList));
+        return clazzMethod.invoke(object, parseObject(paramList));
     }
 
 }

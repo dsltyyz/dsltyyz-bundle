@@ -34,4 +34,10 @@ public class ReflexParam implements Serializable {
     @ApiModelProperty(value = "参数值")
     private String paramValue;
 
+    /**
+     * 是否是集合
+     */
+    @ApiModelProperty(value = "是否是集合")
+    private Boolean isCollection;
+
 }
