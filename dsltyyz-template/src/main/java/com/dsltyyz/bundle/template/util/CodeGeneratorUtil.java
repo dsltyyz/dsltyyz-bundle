@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.dsltyyz.bundle.template.bean.MybatisPlusCodeGeneratorXml;
 import com.dsltyyz.bundle.template.bean.StrategyXml;
 import com.dsltyyz.bundle.template.bean.DataSourceXml;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -26,6 +27,7 @@ import java.util.List;
  * @author: dsltyyz
  * @date: 2019/2/20
  */
+@Slf4j
 public class CodeGeneratorUtil {
 
     private static MybatisPlusCodeGeneratorXml mybatisPlusCodeGeneratorXml = null;

@@ -24,6 +24,18 @@ public class ExcelSheet {
     private String sheetName;
 
     /**
+     * 头配置显示
+     */
+    @ApiModelProperty(value = "头配置显示")
+    private List<ExcelSheetColumnProperty> headPropertyList;
+
+    /**
+     * 头显示数据
+     */
+    @ApiModelProperty(value = "头显示数据")
+    private List headList;
+
+    /**
      * 配置显示
      */
     @ApiModelProperty(value = "配置显示", required = true)

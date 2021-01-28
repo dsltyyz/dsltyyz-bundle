@@ -1,19 +1,18 @@
 package com.dsltyyz.bundle.office.excel.util;
 
+import com.dsltyyz.bundle.common.util.FileUtils;
 import com.dsltyyz.bundle.common.util.ReflexUtils;
 import com.dsltyyz.bundle.common.util.UUIDUtils;
+import com.dsltyyz.bundle.office.excel.entity.Excel;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheet;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheetColumnProperty;
-import com.dsltyyz.bundle.office.excel.entity.Excel;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -159,6 +158,19 @@ public class ExcelUtils {
         response.setHeader("Content-disposition", "attachment; filename=" + new String(fileNameDotExcelType.getBytes("utf-8"), "ISO-8859-1"));
         response.setContentType("application/msexcel");
         exportExcel(excel.getExcelSheetList(), response.getOutputStream(), excelType, excel.getDebug());
+    }
+
+    /**
+     * 导出EXCEL到指定文件
+     *
+     * @param excel
+     * @param file
+     * @throws IOException
+     */
+    public static void exportExcelFile(Excel excel, File file) throws Exception {
+        Assert.notNull(excel, "excel不能为null");
+        FileUtils.checkFileExists(file);
+        exportExcel(excel.getExcelSheetList(), new FileOutputStream(file), XLS_TYPE, excel.getDebug());
     }
 
     /**

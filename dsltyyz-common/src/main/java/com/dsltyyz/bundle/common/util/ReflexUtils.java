@@ -93,7 +93,7 @@ public class ReflexUtils {
         Class<?> clazz = object.getClass();
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            Method method = clazz.getMethod(getFieldMethod(field.getName()));
+            Method method = clazz.getMethod(getFieldMethod(field.getName(), field.getType()));
             Class methodTypeClass = method.getReturnType();
             Object value = method.invoke(object);
             if (Date.class.getSimpleName().equals(methodTypeClass.getSimpleName())) {
@@ -116,8 +116,8 @@ public class ReflexUtils {
      * @param field
      * @return
      */
-    public static String getFieldMethod(String field) {
-        return "get" + field.substring(0, 1).toUpperCase() + field.substring(1);
+    public static String getFieldMethod(String field, Class<?> clazz) {
+        return clazz.equals(Boolean.class)|| clazz.equals(boolean.class)? ("is" + field.substring(0, 1).toUpperCase() + field.substring(1)) : ("get" + field.substring(0, 1).toUpperCase() + field.substring(1));
     }
 
     /**
