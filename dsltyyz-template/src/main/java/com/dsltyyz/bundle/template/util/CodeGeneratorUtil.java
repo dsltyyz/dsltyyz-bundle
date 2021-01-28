@@ -110,7 +110,6 @@ public class CodeGeneratorUtil {
                 // to do nothing
             }
         };
-
         // 定义输出目录
         String outPath = (projectPath + "/src/main/java/" + strategyXml.getParentPackage() + "/" + strategyXml.getModuleName()).replaceAll("\\.", "\\" + File.separator);
         // 自定义输出配置
@@ -197,7 +196,6 @@ public class CodeGeneratorUtil {
         dsc.setPassword(dateSourceXml.getPassword());
 
         ConfigBuilder configBuilder = new ConfigBuilder(null, dsc, null, null, null);
-
         Excel excel = new Excel();
 
         //1.修订日志
@@ -237,7 +235,7 @@ public class CodeGeneratorUtil {
                     new ExcelSheetColumnProperty("数据类型", "type"),
                     new ExcelSheetColumnProperty("主键", "keyFlag"),
                     new ExcelSheetColumnProperty("自增", "keyIdentityFlag"),
-                    new ExcelSheetColumnProperty("填充", "fill"),
+//                    new ExcelSheetColumnProperty("填充", "fill"),
                     new ExcelSheetColumnProperty("备注", "comment")
             ));
             es.setList(tableInfo.getFields());
