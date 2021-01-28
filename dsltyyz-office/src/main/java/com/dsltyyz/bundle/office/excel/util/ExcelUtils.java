@@ -8,6 +8,7 @@ import com.dsltyyz.bundle.office.excel.entity.ExcelSheet;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheetColumnProperty;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.Assert;
 
@@ -192,53 +193,125 @@ public class ExcelUtils {
         }
 
         //设置单元格样式
-        CellStyle greenStyle = workbook.createCellStyle();
-        greenStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
-        greenStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        CellStyle redStyle = workbook.createCellStyle();
-        redStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-        redStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        CellStyle style1 = workbook.createCellStyle();
+        //背景
+        style1.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+        style1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        //边框
+        style1.setBorderBottom(BorderStyle.THIN);
+        style1.setBorderLeft(BorderStyle.THIN);
+        style1.setBorderTop(BorderStyle.THIN);
+        style1.setBorderRight(BorderStyle.THIN);
+        //居中
+        style1.setAlignment(HorizontalAlignment.CENTER);
+        //自动换行
+        style1.setWrapText(true);
 
+        CellStyle style3 = workbook.createCellStyle();
+        style3.setFillForegroundColor(IndexedColors.RED.getIndex());
+        style3.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        //边框
+        style3.setBorderBottom(BorderStyle.THIN);
+        style3.setBorderLeft(BorderStyle.THIN);
+        style3.setBorderTop(BorderStyle.THIN);
+        style3.setBorderRight(BorderStyle.THIN);
+        //居中
+        style1.setAlignment(HorizontalAlignment.CENTER);
+        //自动换行
+        style3.setWrapText(true);
+
+        CellStyle style4 = workbook.createCellStyle();
+        style4.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        style4.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        //边框
+        style4.setBorderBottom(BorderStyle.THIN);
+        style4.setBorderLeft(BorderStyle.THIN);
+        style4.setBorderTop(BorderStyle.THIN);
+        style4.setBorderRight(BorderStyle.THIN);
+        //居中
+        style1.setAlignment(HorizontalAlignment.CENTER);
+        //自动换行
+        style4.setWrapText(true);
+
+        //sheet表单
         for (ExcelSheet excelSheet : excelSheetList) {
             Sheet sheet = workbook.createSheet(excelSheet.getSheetName());
-
-            //创建sheet行数
-            List list = excelSheet.getList();
-            //所有行 = 行业务名称+业务属性+所有数据数目
-            //标题行数 行业务名称
-            int titleRow = 1;
-            //调试模式 行业务名称+业务属性
-            if (debug) {
-                titleRow = 2;
+            for(int i=0;i< excelSheet.getList().size();i++){
+                sheet.setColumnWidth(i, 5000);
             }
-            for (int j = 0; j < list.size() + titleRow; j++) {
+            //创建sheet行数
+            //初始化包含1个调试列字段
+            int totalRow = 1;
+            if (excelSheet.getHeadList() != null) {
+                totalRow = totalRow + excelSheet.getHeadList().size();
+            }
+            if (excelSheet.getPropertyList() != null && excelSheet.getPropertyList().size() > 0) {
+                totalRow = totalRow + 1;
+            }
+            if (excelSheet.getList() != null) {
+                totalRow = totalRow + excelSheet.getList().size();
+            }
+            for (int j = 0; j < totalRow; j++) {
                 sheet.createRow(j);
             }
 
-            //组装头
-            List<ExcelSheetColumnProperty> propertyList = excelSheet.getPropertyList();
-            for (int i = 0; i < propertyList.size(); i++) {
-                ExcelSheetColumnProperty excelSheetColumnProperty = propertyList.get(i);
-                Cell row0Cell = sheet.getRow(0).createCell(i);
-                row0Cell.setCellValue(excelSheetColumnProperty.getColumnName());
-                row0Cell.setCellStyle(greenStyle);
-                //是否显示实体字段名称
-                if (debug) {
-                    Cell row1Cell = sheet.getRow(1).createCell(i);
-                    row1Cell.setCellValue(excelSheetColumnProperty.getColumnProperty());
-                    row1Cell.setCellStyle(redStyle);
+            //记录数据插入行
+            int currentRow = 0;
+            //1.插入头
+            if (excelSheet.getHeadList() != null && excelSheet.getHeadList().size() > 0) {
+                List<String> headList = excelSheet.getHeadList();
+                //组装数据
+                for (int k = 0; k < headList.size(); k++) {
+                    Row row = sheet.getRow(currentRow);
+                    for (int kk = 0; kk < excelSheet.getPropertyList().size(); kk++) {
+                        Cell cell = row.createCell(kk);
+                        cell.setCellValue(headList.get(k));
+                        cell.setCellStyle(style1);
+                    }
+                    CellRangeAddress cellAddresses = new CellRangeAddress(currentRow, currentRow, 0, excelSheet.getPropertyList().size() - 1);
+                    sheet.addMergedRegion(cellAddresses);
+                    currentRow++;
                 }
             }
 
-            //组装数据
-            for (int k = 0; k < list.size(); k++) {
-                Row row = sheet.getRow(k + titleRow);
-                Map<String, String> map = ReflexUtils.objectToMap(list.get(k));
-                for (int kk = 0; kk < propertyList.size(); kk++) {
-                    Cell rowCell = row.createCell(kk);
-                    rowCell.setCellValue(map.get(propertyList.get(kk).getColumnProperty()));
+            //2.列名
+            if (excelSheet.getPropertyList() != null && excelSheet.getPropertyList().size() > 0) {
+                List<ExcelSheetColumnProperty> propertyList = excelSheet.getPropertyList();
+                for (int i = 0; i < propertyList.size(); i++) {
+                    ExcelSheetColumnProperty excelSheetColumnProperty = propertyList.get(i);
+                    Cell row0Cell = sheet.getRow(currentRow).createCell(i);
+                    row0Cell.setCellValue(excelSheetColumnProperty.getColumnName());
+                    row0Cell.setCellStyle(style1);
+                    //是否显示实体字段名称
+                    if (debug) {
+                        Cell row1Cell = sheet.getRow(currentRow + 1).createCell(i);
+                        row1Cell.setCellValue(excelSheetColumnProperty.getColumnProperty());
+                        row1Cell.setCellStyle(style3);
+                    }
+                }
+                currentRow++;
+                if (debug) {
+                    currentRow++;
                 }
             }
+
+            //3.插入数据
+            if (excelSheet.getList() != null && excelSheet.getList().size() > 0) {
+                List list = excelSheet.getList();
+                List<ExcelSheetColumnProperty> properties = excelSheet.getPropertyList();
+                //组装数据
+                for (int k = 0; k < list.size(); k++) {
+                    Row row = sheet.getRow(currentRow);
+                    Map<String, String> map = ReflexUtils.objectToMap(list.get(k));
+                    for (int kk = 0; kk < properties.size(); kk++) {
+                        Cell rowCell = row.createCell(kk);
+                        rowCell.setCellValue(map.get(properties.get(kk).getColumnProperty()));
+                        rowCell.setCellStyle(style4);
+                    }
+                    currentRow++;
+                }
+            }
+
         }
         workbook.write(outputStream);
     }

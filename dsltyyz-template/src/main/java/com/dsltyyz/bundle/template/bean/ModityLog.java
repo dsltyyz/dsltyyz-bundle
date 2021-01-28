@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 /**
  * 修订日志
  * @author dsltyyz
@@ -46,6 +44,6 @@ public class ModityLog {
      * 修订日期
      */
     @ApiModelProperty(value = "修订日期")
-    private Date modifyTime;
+    private String modifyTime;
 
 }
