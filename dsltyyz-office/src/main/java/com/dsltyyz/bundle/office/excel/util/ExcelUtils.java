@@ -229,7 +229,7 @@ public class ExcelUtils {
         style4.setBorderTop(BorderStyle.THIN);
         style4.setBorderRight(BorderStyle.THIN);
         //居中
-        style1.setAlignment(HorizontalAlignment.CENTER);
+        style4.setAlignment(HorizontalAlignment.CENTER);
         //自动换行
         style4.setWrapText(true);
 
