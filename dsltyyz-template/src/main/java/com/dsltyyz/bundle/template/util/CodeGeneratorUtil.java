@@ -203,6 +203,7 @@ public class CodeGeneratorUtil {
         //1.修订日志
         ExcelSheet excelSheet1 = new ExcelSheet();
         excelSheet1.setSheetName("修订日志");
+        excelSheet1.setHeadList(Arrays.asList("修订日志"));
         excelSheet1.setPropertyList(Arrays.asList(
                 new ExcelSheetColumnProperty("版本号", "version"),
                 new ExcelSheetColumnProperty("修订内容", "modifyContent"),
@@ -211,7 +212,7 @@ public class CodeGeneratorUtil {
                 new ExcelSheetColumnProperty("修订日期", "modifyTime")
         ));
         excelSheet1.setList(Arrays.asList(
-                new ModityLog("v1.0", "初始化数据库设计", mybatisPlusCodeGeneratorXml.getAuthor(), mybatisPlusCodeGeneratorXml.getAuthor(), DateUtils.format(new Date(), "yyyy-MM-dd"))
+                new ModityLog("v1.0", "数据库设计", mybatisPlusCodeGeneratorXml.getAuthor(), mybatisPlusCodeGeneratorXml.getAuthor(), DateUtils.format(new Date(), "yyyy-MM-dd"))
         ));
         excel.getExcelSheetList().add(excelSheet1);
 
@@ -220,8 +221,8 @@ public class CodeGeneratorUtil {
         excelSheet2.setSheetName("表目录");
         excelSheet2.setHeadList(Arrays.asList("表目录"));
         excelSheet2.setPropertyList(Arrays.asList(
-                new ExcelSheetColumnProperty("表名", "name"),
-                new ExcelSheetColumnProperty("备注", "comment")
+                new ExcelSheetColumnProperty("表", "name"),
+                new ExcelSheetColumnProperty("名称", "comment")
         ));
         excelSheet2.setList(configBuilder.getTableInfoList());
         excel.getExcelSheetList().add(excelSheet2);

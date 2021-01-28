@@ -236,7 +236,8 @@ public class ExcelUtils {
         //sheet表单
         for (ExcelSheet excelSheet : excelSheetList) {
             Sheet sheet = workbook.createSheet(excelSheet.getSheetName());
-            for(int i=0;i< excelSheet.getList().size();i++){
+            //根据列数目设置宽度
+            for(int i=0;i< excelSheet.getPropertyList().size();i++){
                 sheet.setColumnWidth(i, 5000);
             }
             //创建sheet行数
