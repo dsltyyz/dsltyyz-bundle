@@ -117,7 +117,7 @@ public class ReflexUtils {
      * @return
      */
     public static String getFieldMethod(String field, Class<?> clazz) {
-        return clazz.equals(Boolean.class)|| clazz.equals(boolean.class)? ("is" + field.substring(0, 1).toUpperCase() + field.substring(1)) : ("get" + field.substring(0, 1).toUpperCase() + field.substring(1));
+        return clazz.equals(boolean.class)? ("is" + field.substring(0, 1).toUpperCase() + field.substring(1)) : ("get" + field.substring(0, 1).toUpperCase() + field.substring(1));
     }
 
     /**

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
+import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
@@ -13,21 +14,16 @@ import com.dsltyyz.bundle.office.excel.entity.Excel;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheet;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheetColumnProperty;
 import com.dsltyyz.bundle.office.excel.util.ExcelUtils;
-import com.dsltyyz.bundle.template.bean.DataSourceXml;
-import com.dsltyyz.bundle.template.bean.ModityLog;
-import com.dsltyyz.bundle.template.bean.MybatisPlusCodeGeneratorXml;
-import com.dsltyyz.bundle.template.bean.StrategyXml;
+import com.dsltyyz.bundle.template.bean.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Description:
@@ -194,8 +190,25 @@ public class CodeGeneratorUtil {
         dsc.setDriverName(dateSourceXml.getDriverName());
         dsc.setUsername(dateSourceXml.getUsername());
         dsc.setPassword(dateSourceXml.getPassword());
+        dsc.setDbQuery(new DsltyyzMySqlQuery());
 
         ConfigBuilder configBuilder = new ConfigBuilder(null, dsc, null, null, null);
+        List<DsltyyzTable> list = new ArrayList<>();
+        for (TableInfo tableInfo : configBuilder.getTableInfoList()) {
+            DsltyyzTable dsltyyzTable = new DsltyyzTable();
+            dsltyyzTable.setName(tableInfo.getName());
+            dsltyyzTable.setComment(tableInfo.getComment());
+//            BeanUtils.copyProperties(tableInfo, dsltyyzTable);
+            for (TableField tableField : tableInfo.getFields()) {
+                DsltyyzTableField dsltyyzTableField = new DsltyyzTableField();
+                BeanUtils.copyProperties(tableField, dsltyyzTableField);
+                Map<String, Object> customMap = tableField.getCustomMap();
+                dsltyyzTableField.setNullFlag("YES".equals(customMap.get("Null").toString()));
+                dsltyyzTableField.setDefaultValue(customMap.get("Default")==null?"":customMap.get("Default").toString());
+                dsltyyzTable.getFields().add(dsltyyzTableField);
+            }
+            list.add(dsltyyzTable);
+        }
         Excel excel = new Excel();
 
         //1.修订日志
@@ -222,11 +235,11 @@ public class CodeGeneratorUtil {
                 new ExcelSheetColumnProperty("表", "name"),
                 new ExcelSheetColumnProperty("名称", "comment")
         ));
-        excelSheet2.setList(configBuilder.getTableInfoList());
+        excelSheet2.setList(list);
         excel.getExcelSheetList().add(excelSheet2);
 
         //3.数据库表结构
-        configBuilder.getTableInfoList().forEach(tableInfo -> {
+        list.forEach(tableInfo -> {
             ExcelSheet es = new ExcelSheet();
             es.setSheetName(tableInfo.getName()+"表");
             es.setHeadList(Arrays.asList(tableInfo.getName()+tableInfo.getComment()));
@@ -235,7 +248,8 @@ public class CodeGeneratorUtil {
                     new ExcelSheetColumnProperty("数据类型", "type"),
                     new ExcelSheetColumnProperty("主键", "keyFlag"),
                     new ExcelSheetColumnProperty("自增", "keyIdentityFlag"),
-//                    new ExcelSheetColumnProperty("填充", "fill"),
+                    new ExcelSheetColumnProperty("为空", "nullFlag"),
+                    new ExcelSheetColumnProperty("默认值", "defaultValue"),
                     new ExcelSheetColumnProperty("备注", "comment")
             ));
             es.setList(tableInfo.getFields());
