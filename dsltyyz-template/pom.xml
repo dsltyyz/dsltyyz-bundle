@@ -65,21 +65,20 @@
             <groupId>com.dsltyyz.bundle</groupId>
             <artifactId>dsltyyz-common</artifactId>
             <version>${dsltyyz-bundle.version}</version>
-            <optional>true</optional>
         </dependency>
-
-        <!--基础包-->
+        <!--office-->
         <dependency>
             <groupId>com.dsltyyz.bundle</groupId>
             <artifactId>dsltyyz-office</artifactId>
             <version>${dsltyyz-bundle.version}</version>
-            <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>1.6.2</version>
+            <version>1.5.21</version>
             <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

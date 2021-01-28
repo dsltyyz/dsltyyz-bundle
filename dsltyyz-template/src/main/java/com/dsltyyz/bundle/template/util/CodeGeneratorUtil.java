@@ -217,7 +217,8 @@ public class CodeGeneratorUtil {
 
         //2.数据库表目录
         ExcelSheet excelSheet2 = new ExcelSheet();
-        excelSheet2.setSheetName("数据库表目录");
+        excelSheet2.setSheetName("表目录");
+        excelSheet2.setHeadList(Arrays.asList("表目录"));
         excelSheet2.setPropertyList(Arrays.asList(
                 new ExcelSheetColumnProperty("表名", "name"),
                 new ExcelSheetColumnProperty("备注", "comment")
@@ -228,7 +229,7 @@ public class CodeGeneratorUtil {
         //3.数据库表结构
         configBuilder.getTableInfoList().forEach(tableInfo -> {
             ExcelSheet es = new ExcelSheet();
-            es.setSheetName(tableInfo.getName());
+            es.setSheetName(tableInfo.getName()+"表");
             es.setHeadList(Arrays.asList(tableInfo.getName()+tableInfo.getComment()));
             es.setPropertyList(Arrays.asList(
                     new ExcelSheetColumnProperty("字段", "name"),
