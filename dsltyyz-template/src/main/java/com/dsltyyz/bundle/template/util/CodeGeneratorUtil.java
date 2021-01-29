@@ -198,7 +198,6 @@ public class CodeGeneratorUtil {
             DsltyyzTable dsltyyzTable = new DsltyyzTable();
             dsltyyzTable.setName(tableInfo.getName());
             dsltyyzTable.setComment(tableInfo.getComment());
-//            BeanUtils.copyProperties(tableInfo, dsltyyzTable);
             for (TableField tableField : tableInfo.getFields()) {
                 DsltyyzTableField dsltyyzTableField = new DsltyyzTableField();
                 BeanUtils.copyProperties(tableField, dsltyyzTableField);
