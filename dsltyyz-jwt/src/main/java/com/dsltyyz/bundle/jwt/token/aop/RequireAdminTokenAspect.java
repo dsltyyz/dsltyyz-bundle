@@ -60,7 +60,7 @@ public class RequireAdminTokenAspect {
         }
 
         //防止重复提交
-        String key = EncryptUtils.MD5(token, request.getRequestURI(), 32);
+        String key = EncryptUtils.MD5(token, request.getRequestURI()+request.getMethod(), 32);
         String value = cacheClient.getEntity(key, String.class);
         Assert.isNull(value, "重复提交，请稍后再试");
         //添加标识
