@@ -1,6 +1,8 @@
 package com.dsltyyz.bundle.jwt.token.aop;
 
+import com.dsltyyz.bundle.common.cache.client.CacheClient;
 import com.dsltyyz.bundle.common.handler.ContextHandler;
+import com.dsltyyz.bundle.common.util.EncryptUtils;
 import com.dsltyyz.bundle.jwt.constant.JwtConstant;
 import com.dsltyyz.bundle.jwt.entity.JwtUser;
 import com.dsltyyz.bundle.jwt.helper.JwtHelper;
@@ -11,6 +13,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -36,6 +39,9 @@ public class RequireTokenAspect {
     @Resource
     private JwtHelper jwtHelper;
 
+    @Resource
+    private CacheClient cacheClient;
+
     @Around("@annotation(requireToken)")
     public Object doAround(ProceedingJoinPoint point, RequireToken requireToken) throws Throwable {
         //执行之前
@@ -48,13 +54,25 @@ public class RequireTokenAspect {
         ContextHandler.set(JwtConstant.JWT_USER, jwtUser);
 
         //需要权限 且 需要权限与用户权限没有交集
-        if (requireToken.value().length != 0 && (jwtUser.getRole().length == 0 || !Arrays.asList(requireToken.value()).retainAll(Arrays.asList(jwtUser.getRole())))) {
+        Boolean flag = requireToken.value().length != 0 && (jwtUser.getRole().length == 0 || !Arrays.asList(requireToken.value()).retainAll(Arrays.asList(jwtUser.getRole())));
+        if (flag) {
             throw new JwtException("权限不足");
         }
 
+        //防止重复提交
+        String key = EncryptUtils.MD5(token, request.getRequestURI(), 32);
+        log.info(key);
+        String value = cacheClient.getEntity(key, String.class);
+        Assert.isNull(value, "重复提交，请稍后再试");
+        //添加标识
+        cacheClient.putEntity(key, key);
+
         //下一步主流程
         Object next = point.proceed();
+        //移除标识
+        cacheClient.deleteEntity(key);
         //执行之后
         return next;
     }
+
 }
