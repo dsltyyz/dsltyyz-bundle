@@ -19,6 +19,13 @@
   - response ___通用响应包___
   - util ___通用工具包___
 - dsltyyz-dependencies ___捆绑包版本依赖___
+- dsltyyz-jwt ___Java Web Token___
+  - config ___配置___
+  - constant ___常量___
+  - entity ___实体___
+  - helper ___助手___
+  - rsa ___RSA___
+  - token ___口令验证___
 - dsltyyz-office ___office办公模块___
   - pdf ___PDF工具包___
   - excel ___excel工具包___
@@ -70,6 +77,10 @@
     <dependency>
         <groupId>com.dsltyyz.bundle</groupId>
         <artifactId>dsltyyz-common</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.dsltyyz.bundle</groupId>
+        <artifactId>dsltyyz-jwt</artifactId>
     </dependency>
     <dependency>
         <groupId>com.dsltyyz.bundle</groupId>
