@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.exception;
+package com.dsltyyz.bundle.common.config;
 
 import com.dsltyyz.bundle.common.response.CommonResponse;
 import io.jsonwebtoken.ExpiredJwtException;
