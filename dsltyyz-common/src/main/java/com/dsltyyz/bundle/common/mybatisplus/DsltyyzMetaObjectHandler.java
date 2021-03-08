@@ -1,8 +1,7 @@
-package com.dsltyyz.bundle.common.config;
+package com.dsltyyz.bundle.common.mybatisplus;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -10,8 +9,7 @@ import java.time.LocalDateTime;
  * Mybatis自动填充
  * @author dsltyyz
  */
-@Component
-public class MyMetaObjectHandler implements MetaObjectHandler {
+public class DsltyyzMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {

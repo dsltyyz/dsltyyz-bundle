@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 /**
  * <p>
- * ${table.comment!} 服务实现类
+ * ${table.comment!} Service Impl
  * </p>
  *
  * @author ${author}
@@ -36,7 +36,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      * @param dto
      */
     @Override
-    public void save${entity}(${entity}DTO dto){
+    public void create${entity}(${entity}DTO dto){
         ${entity} ${entity?uncap_first} = new ${entity}();
         BeanUtils.copyProperties(dto, ${entity?uncap_first});
         ${table.mapperName?uncap_first}.insert(${entity?uncap_first});
@@ -74,7 +74,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      * @return
      */
     @Override
-    public ${entity}VO find${entity}ById(Long id){
+    public ${entity}VO get${entity}ById(Long id){
         ${entity}VO  vo = new ${entity}VO();
         ${entity} entity =  ${table.mapperName?uncap_first}.selectById(id);
         Assert.notNull(entity, "该ID对应${table.comment!}不存在");
@@ -89,7 +89,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      * @return
      */
     @Override
-    public PageVO<${entity}VO> find${entity}ByPage(${entity}PageDTO pageDTO){
+    public PageVO<${entity}VO> get${entity}ListByPage(${entity}PageDTO pageDTO){
         PageVO<${entity}VO> vo = new PageVO<>();
 
         IPage<${entity}> iPage = new Page<>();

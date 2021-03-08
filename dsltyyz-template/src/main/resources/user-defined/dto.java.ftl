@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 
 /**
- * <p>
  * ${table.comment!}DTO
- * </p>
  *
  * @author ${author}
  * @since ${date}
@@ -20,10 +18,10 @@ import java.io.Serializable;
 public class ${entity}DTO implements Serializable {
 
 <#-- ----------  BEGIN 字段循环遍历  ---------->
+<#assign list = ["deleted", "version", "create_time", "update_time"]>
 <#list table.fields as field>
-    /**
-     * ${field.comment}
-     */
+    <#-- ----------  排除以下字段  ---------->
+    <#if !list?seq_contains(field.name)>
     <#if field.keyFlag>
     @ApiModelProperty(value = "${field.comment}", hidden = true)
     <#else>
@@ -34,6 +32,7 @@ public class ${entity}DTO implements Serializable {
     </#if>
     private ${field.propertyType} ${field.propertyName};
 
+    </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 }

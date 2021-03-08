@@ -10,9 +10,7 @@ import java.io.Serializable;
 import com.dsltyyz.bundle.common.page.PageDTO;
 
 /**
- * <p>
- * ${table.comment!}分页DTO
- * </p>
+ * ${table.comment!} Page DTO
  *
  * @author ${author}
  * @since ${date}
@@ -23,11 +21,10 @@ import com.dsltyyz.bundle.common.page.PageDTO;
 public class ${entity}PageDTO extends PageDTO implements Serializable {
 
 <#-- ----------  BEGIN 字段循环遍历  ---------->
+<#assign list = ["deleted", "version", "create_time", "update_time"]>
 <#list table.fields as field>
-    <#if !field.keyFlag>
-    /**
-     * ${field.comment}
-     */
+    <#-- ----------  排除以下字段  ---------->
+    <#if !list?seq_contains(field.name) && !field.keyFlag>
     @ApiModelProperty(value = "${field.comment}")
     <#if field.propertyType == "LocalDateTime">
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

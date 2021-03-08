@@ -8,7 +8,7 @@ import ${superServiceClassPackage};
 
 /**
  * <p>
- * ${table.comment!} 服务类
+ * ${table.comment!} Service
  * </p>
  *
  * @author ${author}
@@ -21,7 +21,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
      *
      * @param dto
      */
-    void save${entity}(${entity}DTO dto);
+    void create${entity}(${entity}DTO dto);
 
     /**
      * 更新
@@ -43,7 +43,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
      * @param id
      * @return
      */
-    ${entity}VO find${entity}ById(Long id);
+    ${entity}VO get${entity}ById(Long id);
 
     /**
      * 分页查询
@@ -51,5 +51,5 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
      * @param pageDTO
      * @return
      */
-    PageVO<${entity}VO> find${entity}ByPage(${entity}PageDTO pageDTO);
+    PageVO<${entity}VO> get${entity}ListByPage(${entity}PageDTO pageDTO);
 }

@@ -1,18 +1,16 @@
 package ${package.Mapper};
 
 import ${package.Entity}.${entity};
-import ${superMapperClassPackage};
+import com.dsltyyz.bundle.common.mybatisplus.dao.DsltyyzDAO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * <p>
- * ${table.comment!} Dao 接口
- * </p>
+ * ${table.comment!} Dao
  *
  * @author ${author}
  * @since ${date}
  */
 @Mapper
-public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+public interface ${table.mapperName} extends DsltyyzDAO<${entity}> {
 
 }

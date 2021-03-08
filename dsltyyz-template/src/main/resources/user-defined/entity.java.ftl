@@ -13,9 +13,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
  * ${table.comment!}
- * </p>
  *
  * @author ${author}
  * @since ${date}
@@ -29,9 +27,6 @@ public class ${entity} implements Serializable {
 
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
-    /**
-     * ${field.comment}
-     */
     @ApiModelProperty(value = "${field.comment}")
     <#if field.propertyType == "LocalDateTime">
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -39,6 +34,16 @@ public class ${entity} implements Serializable {
     <#if field.keyFlag>
     <#-- 主键 -->
     @TableId(value = "${field.name}", type = IdType.AUTO)
+    <#elseif field.name == "version">
+    @TableField(value = "version", fill = FieldFill.INSERT)
+    @Version
+    <#elseif field.name == "deleted">
+    @TableField(value="deleted", select = false, fill = FieldFill.INSERT)
+    @TableLogic
+    <#elseif field.name == "create_time">
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    <#elseif field.name == "update_time">
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     <#else>
     <#-- 普通字段 -->
     @TableField("${field.name}")

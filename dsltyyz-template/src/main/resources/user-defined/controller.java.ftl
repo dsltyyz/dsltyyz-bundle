@@ -14,14 +14,12 @@ import com.dsltyyz.bundle.common.response.*;
 import javax.validation.Valid;
 
 /**
- * <p>
- * ${table.comment!} 前端控制器
- * </p>
+ * ${table.comment!} Controller
  *
  * @author ${author}
  * @since ${date}
  */
-@Api(value = "${table.comment!} controller", tags = {"${table.comment!}"})
+@Api(value = "${table.comment!}控制器", tags = {"${table.comment!}"})
 @RestController
 @RequestMapping("${package.ModuleName}/${entity?uncap_first}")
 public class ${table.controllerName} {
@@ -32,7 +30,7 @@ public class ${table.controllerName} {
     @ApiOperation(value = "增")
     @PostMapping(value = "")
     public CommonResponse create(@RequestBody ${entity}DTO dto){
-        ${table.serviceName?uncap_first}.save${entity}(dto);
+        ${table.serviceName?uncap_first}.create${entity}(dto);
         return new CommonResponse();
     }
 
@@ -54,13 +52,13 @@ public class ${table.controllerName} {
     @ApiOperation(value = "查")
     @GetMapping(value = "{id}")
     public CommonResponse<${entity}VO> info(@PathVariable("id") Long id){
-        return new CommonResponse<>(${table.serviceName?uncap_first}.find${entity}ById(id));
+        return new CommonResponse<>(${table.serviceName?uncap_first}.get${entity}ById(id));
     }
 
     @ApiOperation(value = "分页")
     @GetMapping(value = "")
     public CommonResponse<PageVO<${entity}VO>> page(@Valid ${entity}PageDTO pageDTO){
-        return new CommonResponse<>(${table.serviceName?uncap_first}.find${entity}ByPage(pageDTO));
+        return new CommonResponse<>(${table.serviceName?uncap_first}.get${entity}ListByPage(pageDTO));
     }
 
 }
