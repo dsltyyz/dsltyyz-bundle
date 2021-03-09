@@ -10,7 +10,7 @@ import java.util.List;
  * 微信用户
  *
  * @author: dsltyyz
- * @date: 2019/11/07
+ * @since: 2019-11-07
  */
 @Data
 public class WechatUser extends WechatResult {

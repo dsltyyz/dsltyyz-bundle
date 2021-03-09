@@ -9,7 +9,7 @@ import lombok.*;
  * OSS值对象
  *
  * @author: dsltyyz
- * @date: 2019/11/19
+ * @since: 2019-11-19
  */
 @ApiModel(description = "OSS值对象")
 @NoArgsConstructor

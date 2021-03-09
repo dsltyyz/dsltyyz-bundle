@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 加密解密配置
  *
  * @author: dsltyyz
- * @date: 2019/3/11
+ * @since: 2019-3-11
  */
 @ApiModel(description = "加密解密配置")
 @ConfigurationProperties(prefix = "key-pair")

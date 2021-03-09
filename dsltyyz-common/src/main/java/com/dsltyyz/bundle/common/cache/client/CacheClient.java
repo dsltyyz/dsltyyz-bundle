@@ -5,7 +5,7 @@ package com.dsltyyz.bundle.common.cache.client;
  * 缓存客户端
  *
  * @author: dsltyyz
- * @date: 2019/11/25
+ * @since: 2019-11-25
  */
 public interface CacheClient {
 

@@ -19,7 +19,7 @@ import java.util.List;
  * 微信服务号工具类
  *
  * @author: dsltyyz
- * @date: 2019/11/07
+ * @since: 2019-11-07
  */
 @Slf4j
 public class WechatUtils {

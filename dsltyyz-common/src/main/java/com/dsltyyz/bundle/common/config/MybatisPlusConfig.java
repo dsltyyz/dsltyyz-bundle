@@ -30,28 +30,32 @@ public class MybatisPlusConfig {
 
     /**
      * 乐观锁（仅适合高读取，少更新）
+     *
      * @return
      */
     @Bean
-    public OptimisticLockerInterceptor optimisticLockerInterceptor(){
+    public OptimisticLockerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInterceptor();
     }
 
     /**
      * SQL注入器（暂只支持Mysql）
+     *
      * @return
      */
     @Bean
-    public DsltyyzSqlInjector dsltyyzSqlInjector(){
+    public DsltyyzSqlInjector dsltyyzSqlInjector() {
         return new DsltyyzSqlInjector();
     }
 
     /**
      * 自动填充
+     *
      * @return
      */
     @Bean
-    public DsltyyzMetaObjectHandler dsltyyzMetaObjectHandler(){
+    public DsltyyzMetaObjectHandler dsltyyzMetaObjectHandler() {
         return new DsltyyzMetaObjectHandler();
     }
+
 }

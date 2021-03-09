@@ -5,7 +5,7 @@ package com.dsltyyz.bundle.wechat.common.constant;
  * 微信状态定义
  *
  * @author: dsltyyz
- * @date: 2020-12-9
+ * @since: 2020-12-9
  */
 public interface WechatStatus {
 

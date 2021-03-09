@@ -5,7 +5,7 @@ package com.dsltyyz.bundle.wechat.common.constant;
  * 微信支付方式
  *
  * @author: dsltyyz
- * @date: 2019/11/12
+ * @since: 2019-11-12
  */
 public interface WechatPayType {
 

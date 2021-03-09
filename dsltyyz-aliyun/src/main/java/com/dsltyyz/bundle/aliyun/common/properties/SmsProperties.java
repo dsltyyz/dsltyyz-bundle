@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 短信属性
  *
  * @author: dsltyyz
- * @date: 2019/11/19
+ * @since: 2019-11-19
  */
 @ApiModel(description = "短信属性")
 @ConfigurationProperties(prefix = "spring.cloud.alicloud.sms")

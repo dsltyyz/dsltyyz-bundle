@@ -5,7 +5,7 @@ package com.dsltyyz.bundle.common.constant;
  * 图片类型
  *
  * @author: dsltyyz
- * @date: 2019/06/20
+ * @since: 2019-06-20
  */
 public interface ImageType {
 

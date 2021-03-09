@@ -8,7 +8,7 @@ import lombok.Data;
  * 微信openid
  *
  * @author: dsltyyz
- * @date: 2019/11/06
+ * @since: 2019-11-06
  */
 @Data
 public class WechatMiniOpenId extends WechatResult {

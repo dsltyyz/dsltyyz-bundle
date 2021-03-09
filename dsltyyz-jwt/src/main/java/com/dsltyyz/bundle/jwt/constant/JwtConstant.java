@@ -5,7 +5,7 @@ package com.dsltyyz.bundle.jwt.constant;
  * JWT常量
  *
  * @author: dsltyyz
- * @date: 2020-9-8
+ * @since: 2020-9-8
  */
 public interface JwtConstant {
 

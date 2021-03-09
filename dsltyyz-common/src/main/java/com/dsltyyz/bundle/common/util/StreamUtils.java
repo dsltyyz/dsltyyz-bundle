@@ -10,7 +10,7 @@ import java.io.OutputStream;
  * 流工具类
  *
  * @author: dsltyyz
- * @date: 2019/05/29
+ * @since: 2019-05-29
  */
 public class StreamUtils {
 

@@ -7,7 +7,7 @@ import lombok.Data;
  * 微信模板消息
  *
  * @author: dsltyyz
- * @date: 2019/11/07
+ * @since: 2019-11-07
  */
 @Data
 public class WechatTemplate {

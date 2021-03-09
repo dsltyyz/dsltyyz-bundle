@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 编号和名称VO
  *
  * @author: dsltyyz
- * @date: 2020/09/02
+ * @since: 2020-09-02
  */
 @ApiModel(description = "编号和名称VO")
 @Data

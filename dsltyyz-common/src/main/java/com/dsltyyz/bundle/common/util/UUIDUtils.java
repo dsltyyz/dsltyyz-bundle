@@ -7,7 +7,7 @@ import java.util.UUID;
  * UUID 工具类
  *
  * @author: dsltyyz
- * @date: 2019/3/21
+ * @since: 2019-3-21
  */
 public class UUIDUtils {
 

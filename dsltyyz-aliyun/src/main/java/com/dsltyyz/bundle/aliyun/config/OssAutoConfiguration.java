@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  *     spring.cloud.alicloud.oss.enabled
  *
  * @author: dsltyyz
- * @date: 2020/08/27
+ * @since: 2020-08-27
  */
 @Configuration
 @EnableConfigurationProperties(OssProperties.class)

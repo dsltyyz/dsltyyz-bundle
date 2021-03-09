@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * JWT自动配置
  *
  * @author: dsltyyz
- * @date: 2020-9-8
+ * @since: 2020-9-8
  */
 @Configuration
 @EnableConfigurationProperties(KeyPairProperties.class)

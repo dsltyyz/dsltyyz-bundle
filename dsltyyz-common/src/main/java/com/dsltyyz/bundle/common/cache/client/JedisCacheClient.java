@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  * Jedis缓存客户端
  *
  * @author: dsltyyz
- * @date: 2019/11/25
+ * @since: 2019-11-25
  */
 @Slf4j
 public class JedisCacheClient implements CacheClient {

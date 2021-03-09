@@ -7,7 +7,7 @@ import java.security.MessageDigest;
  * 加密工具类
  *
  * @author: dsltyyz
- * @date: 2019/3/2
+ * @since: 2019-3-2
  */
 public class EncryptUtils {
 

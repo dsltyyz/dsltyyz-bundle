@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 通用响应
  *
  * @author: dsltyyz
- * @date: 2019/2/20
+ * @since: 2019-2-20
  */
 @NoArgsConstructor
 @AllArgsConstructor

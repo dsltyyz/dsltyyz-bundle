@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 策略
  *
  * @author: dsltyyz
- * @date: 2019/2/20
+ * @since: 2019-2-20
  */
 @XmlRootElement(name = "strategy")
 @XmlAccessorType(XmlAccessType.FIELD)

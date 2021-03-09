@@ -18,7 +18,7 @@ import java.util.Arrays;
  * 通用工具类
  *
  * @author: dsltyyz
- * @date: 2019/11/07
+ * @since: 2019-11-07
  */
 public class WechatCommonUtils {
 

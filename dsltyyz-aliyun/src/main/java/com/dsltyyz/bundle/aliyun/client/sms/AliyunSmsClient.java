@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * 阿里云短信客户端
  *
  * @author: dsltyyz
- * @date: 2020/08/27
+ * @since: 2020-08-27
  */
 @Slf4j
 public class AliyunSmsClient {

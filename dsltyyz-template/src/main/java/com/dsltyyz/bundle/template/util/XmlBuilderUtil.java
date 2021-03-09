@@ -10,7 +10,7 @@ import java.io.StringReader;
  * XML构建对象工具类
  *
  * @author: dsltyyz
- * @date: 2019/2/20
+ * @since: 2019-2-20
  */
 public class XmlBuilderUtil {
 

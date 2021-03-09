@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * Jwt令牌
  *
  * @author: dsltyyz
- * @date: 2020-9-8
+ * @since: 2020-9-8
  */
 @ApiModel(description = "Jwt令牌")
 @NoArgsConstructor

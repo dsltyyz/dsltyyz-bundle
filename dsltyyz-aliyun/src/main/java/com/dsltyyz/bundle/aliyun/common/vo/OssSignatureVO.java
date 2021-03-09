@@ -9,7 +9,7 @@ import lombok.*;
  * OSS签名VO
  *
  * @author: dsltyyz
- * @date: 2019/11/19
+ * @since: 2019-11-19
  */
 @ApiModel(description = "OSS签名VO")
 @NoArgsConstructor
