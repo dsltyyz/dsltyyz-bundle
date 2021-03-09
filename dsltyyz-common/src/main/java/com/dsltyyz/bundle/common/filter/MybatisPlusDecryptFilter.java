@@ -4,8 +4,8 @@ import com.alibaba.druid.filter.FilterAdapter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.alibaba.druid.proxy.jdbc.DataSourceProxy;
-import com.baomidou.mybatisplus.core.toolkit.AES;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.dsltyyz.bundle.common.util.MpwUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertySource;
@@ -79,23 +79,17 @@ public class MybatisPlusDecryptFilter extends FilterAdapter {
      * @return
      */
     private Properties decryptProperties(DruidDataSource dataSource, String mpwKey) {
-        Properties properties = new Properties();
+        Properties mpwProperties = new Properties();
         // 先解密
         try {
-            if (dataSource.getUrl().startsWith(MPW_PREFIX)) {
-                properties.setProperty(DruidDataSourceFactory.PROP_URL, AES.decrypt(dataSource.getUrl().substring(4), mpwKey));
-            }
-            if (dataSource.getUsername().startsWith(MPW_PREFIX)) {
-                properties.setProperty(DruidDataSourceFactory.PROP_USERNAME, AES.decrypt(dataSource.getUsername().substring(4), mpwKey));
-            }
-            if (dataSource.getPassword().startsWith(MPW_PREFIX)) {
-                properties.setProperty(DruidDataSourceFactory.PROP_PASSWORD, AES.decrypt(dataSource.getPassword().substring(4), mpwKey));
-            }
+            mpwProperties.setProperty(DruidDataSourceFactory.PROP_URL, dataSource.getUrl());
+            mpwProperties.setProperty(DruidDataSourceFactory.PROP_USERNAME, dataSource.getUsername());
+            mpwProperties.setProperty(DruidDataSourceFactory.PROP_PASSWORD, dataSource.getPassword());
         } catch (Exception e) {
             log.info("druid decrypt failed!");
             e.printStackTrace();
         }
-        return properties;
+        return MpwUtils.decrypt(mpwProperties, mpwKey);
     }
 
 

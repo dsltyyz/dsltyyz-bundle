@@ -203,7 +203,7 @@ public class CodeGeneratorUtil {
                 BeanUtils.copyProperties(tableField, dsltyyzTableField);
                 Map<String, Object> customMap = tableField.getCustomMap();
                 dsltyyzTableField.setNullFlag("YES".equals(customMap.get("Null").toString()));
-                dsltyyzTableField.setDefaultValue(customMap.get("Default")==null?"":customMap.get("Default").toString());
+                dsltyyzTableField.setDefaultValue(customMap.get("Default") == null ? "" : customMap.get("Default").toString());
                 dsltyyzTable.getFields().add(dsltyyzTableField);
             }
             list.add(dsltyyzTable);
@@ -240,8 +240,8 @@ public class CodeGeneratorUtil {
         //3.数据库表结构
         list.forEach(tableInfo -> {
             ExcelSheet es = new ExcelSheet();
-            es.setSheetName(tableInfo.getName()+"表");
-            es.setHeadList(Arrays.asList(tableInfo.getName()+tableInfo.getComment()));
+            es.setSheetName(tableInfo.getName() + "表");
+            es.setHeadList(Arrays.asList(tableInfo.getName() + tableInfo.getComment()));
             es.setPropertyList(Arrays.asList(
                     new ExcelSheetColumnProperty("字段", "name"),
                     new ExcelSheetColumnProperty("数据类型", "type"),
@@ -267,9 +267,10 @@ public class CodeGeneratorUtil {
 
     /**
      * 数据库字典
+     *
      * @param clazz
      */
-    public static void databaseDictionary(Class clazz){
+    public static void databaseDictionary(Class clazz) {
         //初始化数据
         if (init()) {
             dictionary(clazz);
