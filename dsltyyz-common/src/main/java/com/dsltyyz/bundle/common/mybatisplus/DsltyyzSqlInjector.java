@@ -10,12 +10,13 @@ import java.util.List;
 
 /**
  * 自定义SQL注入器
+ *
  * @author dsltyyz
  */
 public class DsltyyzSqlInjector extends DefaultSqlInjector {
 
     @Override
-    public List<AbstractMethod> getMethodList(Class<?> mapperClass){
+    public List<AbstractMethod> getMethodList(Class<?> mapperClass) {
         List<AbstractMethod> methodList = super.getMethodList(mapperClass);
         //批量插入
         methodList.add(new InsertBatchSomeColumn());

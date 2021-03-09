@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 /**
  * Mybatis自动填充
+ *
  * @author dsltyyz
  */
 public class DsltyyzMetaObjectHandler implements MetaObjectHandler {
@@ -16,10 +17,10 @@ public class DsltyyzMetaObjectHandler implements MetaObjectHandler {
         //创建时间
         boolean createTimeHasSetter = metaObject.hasSetter("createTime");
         //是否存在这个属性方法
-        if(createTimeHasSetter){
+        if (createTimeHasSetter) {
             Object createTime = getFieldValByName("createTime", metaObject);
             //是否已经赋值
-            if(createTime == null){
+            if (createTime == null) {
                 strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
             }
         }
@@ -27,7 +28,7 @@ public class DsltyyzMetaObjectHandler implements MetaObjectHandler {
         //更新时间
         boolean updateTimeHasSetter = metaObject.hasSetter("updateTime");
         //是否存在这个属性方法
-        if(updateTimeHasSetter) {
+        if (updateTimeHasSetter) {
             Object updateTime = getFieldValByName("updateTime", metaObject);
             //是否已经赋值
             if (updateTime == null) {
@@ -38,14 +39,14 @@ public class DsltyyzMetaObjectHandler implements MetaObjectHandler {
         //是否删除
         boolean deletedHasSetter = metaObject.hasSetter("deleted");
         //是否存在这个属性方法
-        if(deletedHasSetter) {
+        if (deletedHasSetter) {
             strictInsertFill(metaObject, "deleted", Integer.class, new Integer(0));
         }
 
         //乐观锁
         boolean versionHasSetter = metaObject.hasSetter("version");
         //是否存在这个属性方法
-        if(versionHasSetter) {
+        if (versionHasSetter) {
             strictInsertFill(metaObject, "version", Integer.class, new Integer(1));
         }
     }
@@ -54,7 +55,7 @@ public class DsltyyzMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         boolean updateTimeHasSetter = metaObject.hasSetter("updateTime");
         //是否存在这个属性方法
-        if(updateTimeHasSetter) {
+        if (updateTimeHasSetter) {
             Object updateTime = getFieldValByName("updateTime", metaObject);
             //是否已经赋值
             if (updateTime == null) {

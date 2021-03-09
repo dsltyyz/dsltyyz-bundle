@@ -19,13 +19,13 @@ public class CacheClientAutoConfiguration {
 
     @ConditionalOnProperty(name = "spring.redis.enable", havingValue = "true")
     @Bean("cacheClient")
-    public JedisCacheClient jedisCacheClient(){
+    public JedisCacheClient jedisCacheClient() {
         return new JedisCacheClient();
     }
 
     @ConditionalOnMissingBean(name = {"cacheClient"})
     @Bean("cacheClient")
-    public DefaultCacheClient defaultCacheClient(){
+    public DefaultCacheClient defaultCacheClient() {
         return new DefaultCacheClient();
     }
 

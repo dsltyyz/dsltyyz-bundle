@@ -15,7 +15,7 @@ import java.util.Map;
 @Slf4j
 public class DefaultCacheClient implements CacheClient {
 
-    private Map<String,Object> cacheMap = new HashMap<>();
+    private Map<String, Object> cacheMap = new HashMap<>();
 
     public DefaultCacheClient() {
         log.info("默认缓存客户端已加载");
@@ -23,7 +23,7 @@ public class DefaultCacheClient implements CacheClient {
 
     @Override
     public <N> N getEntity(String key, Class<N> clazz) {
-        return (N)cacheMap.get(key);
+        return (N) cacheMap.get(key);
     }
 
     @Override

@@ -9,9 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * <p>
  * mybatis plus 分页配置
- * </p>
  *
  * @author dsltyyz
  * @since 2020-8-28
