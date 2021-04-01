@@ -2,6 +2,7 @@ package com.dsltyyz.bundle.wechat.common.model.openid;
 
 import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Description:
@@ -11,6 +12,7 @@ import lombok.Data;
  * @since: 2019-11-06
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class WechatOpenId extends WechatResult {
 
     /**

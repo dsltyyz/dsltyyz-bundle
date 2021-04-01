@@ -1,7 +1,7 @@
 package ${package.Mapper};
 
 import ${package.Entity}.${entity};
-import com.dsltyyz.bundle.common.mybatisplus.dao.DsltyyzDAO;
+import com.dsltyyz.bundle.template.mybatisplus.dao.DsltyyzDAO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

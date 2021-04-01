@@ -3,6 +3,7 @@ package com.dsltyyz.bundle.wechat.common.property;
 import com.dsltyyz.bundle.wechat.common.constant.WechatOauthDataType;
 import com.dsltyyz.bundle.wechat.common.constant.WechatOauthTransferMode;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Description:
@@ -12,6 +13,7 @@ import lombok.Data;
  * @since: 2019-11-19
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class WechatOauthProperties extends WechatAccountProperties {
 
     /**

@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.mybatisplus;
+package com.dsltyyz.bundle.template.mybatisplus;
 
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;

@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 import java.io.Serializable;
-import com.dsltyyz.bundle.common.page.PageDTO;
+import com.dsltyyz.bundle.template.page.PageDTO;
 
 /**
  * ${table.comment!} Page DTO

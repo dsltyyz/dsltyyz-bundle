@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.mybatisplus;
+package com.dsltyyz.bundle.template.mybatisplus;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;

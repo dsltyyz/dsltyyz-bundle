@@ -1,11 +1,11 @@
-package com.dsltyyz.bundle.common.filter;
+package com.dsltyyz.bundle.template.filter;
 
 import com.alibaba.druid.filter.FilterAdapter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.alibaba.druid.proxy.jdbc.DataSourceProxy;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.dsltyyz.bundle.common.util.MpwUtils;
+import com.dsltyyz.bundle.template.util.MpwUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertySource;
@@ -91,6 +91,5 @@ public class MybatisPlusDecryptFilter extends FilterAdapter {
         }
         return MpwUtils.decrypt(mpwProperties, mpwKey);
     }
-
 
 }

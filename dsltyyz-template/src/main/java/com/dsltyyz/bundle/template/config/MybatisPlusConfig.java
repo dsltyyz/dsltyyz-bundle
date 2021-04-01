@@ -1,9 +1,9 @@
-package com.dsltyyz.bundle.common.config;
+package com.dsltyyz.bundle.template.config;
 
 import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
-import com.dsltyyz.bundle.common.mybatisplus.DsltyyzMetaObjectHandler;
-import com.dsltyyz.bundle.common.mybatisplus.DsltyyzSqlInjector;
+import com.dsltyyz.bundle.template.mybatisplus.DsltyyzMetaObjectHandler;
+import com.dsltyyz.bundle.template.mybatisplus.DsltyyzSqlInjector;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;

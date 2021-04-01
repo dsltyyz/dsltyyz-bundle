@@ -2,10 +2,7 @@ package com.dsltyyz.bundle.wechat.common.model.pay;
 
 import com.dsltyyz.bundle.common.util.HttpUtils;
 import com.github.wxpay.sdk.WXPayConfig;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import java.io.InputStream;
 
@@ -19,6 +16,7 @@ import java.io.InputStream;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class WechatPayConfig implements WXPayConfig {
 
     /**

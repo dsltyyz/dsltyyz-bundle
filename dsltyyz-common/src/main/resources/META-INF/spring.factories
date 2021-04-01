@@ -1,5 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.dsltyyz.bundle.common.cache.CacheClientAutoConfiguration,\
-com.dsltyyz.bundle.common.config.DefaultExceptionHandler,\
-com.dsltyyz.bundle.common.filter.MybatisPlusDecryptFilter,\
-com.dsltyyz.bundle.common.config.MybatisPlusConfig
+com.dsltyyz.bundle.common.config.DefaultExceptionHandler

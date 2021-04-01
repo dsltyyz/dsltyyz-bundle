@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.util;
+package com.dsltyyz.bundle.template.util;
 
 import com.baomidou.mybatisplus.core.toolkit.AES;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;

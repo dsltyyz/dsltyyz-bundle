@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.common.mybatisplus.dao;
+package com.dsltyyz.bundle.template.mybatisplus.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;

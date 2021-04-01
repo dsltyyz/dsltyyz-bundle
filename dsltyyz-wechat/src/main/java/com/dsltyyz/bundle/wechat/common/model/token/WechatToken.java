@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dsltyyz.bundle.common.util.DateUtils;
 import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Calendar;
@@ -18,6 +19,7 @@ import java.util.Date;
  */
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class WechatToken extends WechatResult {
 
     /**

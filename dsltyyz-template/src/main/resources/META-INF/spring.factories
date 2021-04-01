@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.dsltyyz.bundle.template.filter.MybatisPlusDecryptFilter,\
+com.dsltyyz.bundle.template.config.MybatisPlusConfig
