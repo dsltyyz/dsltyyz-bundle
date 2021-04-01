@@ -10,6 +10,7 @@ import com.dsltyyz.bundle.jwt.token.annotation.RequireAdminToken;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ import java.util.Arrays;
 public class RequireAdminTokenAspect {
 
     public static final String HEADER_ADMIN_TOKEN = "AdminToken";
+    public static final String ADMIN_TOKEN_KEY= "AdminTokenKey";
 
     @Resource
     private JwtHelper jwtHelper;
@@ -61,6 +63,8 @@ public class RequireAdminTokenAspect {
 
         //防止重复提交
         String key = EncryptUtils.MD5(token, request.getRequestURI()+request.getMethod(), 32);
+        //标识ADMIN_TOKEN_KEY 出现异常移除
+        ContextHandler.set(ADMIN_TOKEN_KEY, key);
         String value = cacheClient.getEntity(key, String.class);
         Assert.isNull(value, "操作过于频繁，请稍后重试");
         //添加标识
@@ -73,5 +77,11 @@ public class RequireAdminTokenAspect {
         cacheClient.deleteEntity(key);
         //执行之后
         return next;
+    }
+
+    @AfterThrowing("@annotation(requireAdminToken)")
+    public void afterThrowing(RequireAdminToken requireAdminToken){
+        //出现异常 移除标识
+        cacheClient.deleteEntity(ContextHandler.get(ADMIN_TOKEN_KEY).toString());
     }
 }
