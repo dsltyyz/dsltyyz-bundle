@@ -12,7 +12,6 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.dsltyyz.bundle.common.util.DateUtils;
 import com.dsltyyz.bundle.office.excel.entity.Excel;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheet;
-import com.dsltyyz.bundle.office.excel.entity.ExcelSheetColumnProperty;
 import com.dsltyyz.bundle.office.excel.util.ExcelUtils;
 import com.dsltyyz.bundle.template.bean.*;
 import lombok.extern.slf4j.Slf4j;
@@ -214,13 +213,6 @@ public class CodeGeneratorUtil {
         ExcelSheet excelSheet1 = new ExcelSheet();
         excelSheet1.setSheetName("修订日志");
         excelSheet1.setHeadList(Arrays.asList("修订日志"));
-        excelSheet1.setPropertyList(Arrays.asList(
-                new ExcelSheetColumnProperty("版本号", "version"),
-                new ExcelSheetColumnProperty("修订内容", "modifyContent"),
-                new ExcelSheetColumnProperty("修订人", "author"),
-                new ExcelSheetColumnProperty("审核人", "auditor"),
-                new ExcelSheetColumnProperty("修订日期", "modifyTime")
-        ));
         excelSheet1.setList(Arrays.asList(
                 new ModityLog("v1.0", "数据库设计", mybatisPlusCodeGeneratorXml.getAuthor(), mybatisPlusCodeGeneratorXml.getAuthor(), DateUtils.format(new Date(), "yyyy-MM-dd"))
         ));
@@ -230,10 +222,6 @@ public class CodeGeneratorUtil {
         ExcelSheet excelSheet2 = new ExcelSheet();
         excelSheet2.setSheetName("表目录");
         excelSheet2.setHeadList(Arrays.asList("表目录"));
-        excelSheet2.setPropertyList(Arrays.asList(
-                new ExcelSheetColumnProperty("表", "name"),
-                new ExcelSheetColumnProperty("名称", "comment")
-        ));
         excelSheet2.setList(list);
         excel.getExcelSheetList().add(excelSheet2);
 
@@ -242,15 +230,6 @@ public class CodeGeneratorUtil {
             ExcelSheet es = new ExcelSheet();
             es.setSheetName(tableInfo.getName() + "表");
             es.setHeadList(Arrays.asList(tableInfo.getName() + tableInfo.getComment()));
-            es.setPropertyList(Arrays.asList(
-                    new ExcelSheetColumnProperty("字段", "name"),
-                    new ExcelSheetColumnProperty("数据类型", "type"),
-                    new ExcelSheetColumnProperty("主键", "keyFlag"),
-                    new ExcelSheetColumnProperty("自增", "keyIdentityFlag"),
-                    new ExcelSheetColumnProperty("为空", "nullFlag"),
-                    new ExcelSheetColumnProperty("默认值", "defaultValue"),
-                    new ExcelSheetColumnProperty("备注", "comment")
-            ));
             es.setList(tableInfo.getFields());
             excel.getExcelSheetList().add(es);
         });

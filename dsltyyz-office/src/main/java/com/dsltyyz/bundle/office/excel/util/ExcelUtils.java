@@ -3,9 +3,12 @@ package com.dsltyyz.bundle.office.excel.util;
 import com.dsltyyz.bundle.common.util.FileUtils;
 import com.dsltyyz.bundle.common.util.ReflexUtils;
 import com.dsltyyz.bundle.common.util.UUIDUtils;
+import com.dsltyyz.bundle.office.excel.annotation.ExcelColumn;
+import com.dsltyyz.bundle.office.excel.annotation.ExportExcel;
 import com.dsltyyz.bundle.office.excel.entity.Excel;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheet;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheetColumnProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -14,6 +17,7 @@ import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -236,8 +240,12 @@ public class ExcelUtils {
         //sheet表单
         for (ExcelSheet excelSheet : excelSheetList) {
             Sheet sheet = workbook.createSheet(excelSheet.getSheetName());
+            if(excelSheet.getList() == null || excelSheet.getList().size() == 0){
+                continue;
+            }
+            excelSheet.setPropertyList(getExcelSheetColumnPropertyList(excelSheet.getList().get(0)));
             //根据列数目设置宽度
-            for(int i=0;i< excelSheet.getPropertyList().size();i++){
+            for (int i = 0; i < excelSheet.getPropertyList().size(); i++) {
                 sheet.setColumnWidth(i, 5000);
             }
             //创建sheet行数
@@ -275,11 +283,12 @@ public class ExcelUtils {
                 }
             }
 
-            //2.列名
-            if (excelSheet.getPropertyList() != null && excelSheet.getPropertyList().size() > 0) {
-                List<ExcelSheetColumnProperty> propertyList = excelSheet.getPropertyList();
-                for (int i = 0; i < propertyList.size(); i++) {
-                    ExcelSheetColumnProperty excelSheetColumnProperty = propertyList.get(i);
+            //2.插入列名及数据
+            if (excelSheet.getList() != null && excelSheet.getList().size() > 0) {
+                //2.1列名
+                List<ExcelSheetColumnProperty> properties = excelSheet.getPropertyList();
+                for (int i = 0; i < properties.size(); i++) {
+                    ExcelSheetColumnProperty excelSheetColumnProperty = properties.get(i);
                     Cell row0Cell = sheet.getRow(currentRow).createCell(i);
                     row0Cell.setCellValue(excelSheetColumnProperty.getColumnName());
                     row0Cell.setCellStyle(style1);
@@ -294,12 +303,9 @@ public class ExcelUtils {
                 if (debug) {
                     currentRow++;
                 }
-            }
 
-            //3.插入数据
-            if (excelSheet.getList() != null && excelSheet.getList().size() > 0) {
+                //2.2数据
                 List list = excelSheet.getList();
-                List<ExcelSheetColumnProperty> properties = excelSheet.getPropertyList();
                 //组装数据
                 for (int k = 0; k < list.size(); k++) {
                     Row row = sheet.getRow(currentRow);
@@ -317,4 +323,27 @@ public class ExcelUtils {
         workbook.write(outputStream);
     }
 
+    private static List<ExcelSheetColumnProperty> getExcelSheetColumnPropertyList(Object obj) {
+        List<ExcelSheetColumnProperty> list = new ArrayList<>();
+        Class<?> objClass = obj.getClass();
+        boolean flag = objClass.isAnnotationPresent(ExportExcel.class);
+        for (Field field : objClass.getDeclaredFields()) {
+            if (flag) {
+                //字段有ExcelColumn注解，跳过标记为false的字段
+                if(field.isAnnotationPresent(ExcelColumn.class) && !field.getAnnotation(ExcelColumn.class).value()){
+                    continue;
+                }
+                ExcelSheetColumnProperty excelSheetColumnProperty = new ExcelSheetColumnProperty();
+                excelSheetColumnProperty.setColumnProperty(field.getName());
+                ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
+                if (apiModelProperty != null) {
+                    excelSheetColumnProperty.setColumnName(apiModelProperty.value());
+                } else {
+                    excelSheetColumnProperty.setColumnName(field.getName());
+                }
+                list.add(excelSheetColumnProperty);
+            }
+        }
+        return list;
+    }
 }

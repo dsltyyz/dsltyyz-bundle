@@ -41,5 +41,4 @@ public class MybatisPlusCodeGeneratorXml {
     @XmlElement(name = "strategy")
     private StrategyXml strategyXml;
 
-
 }

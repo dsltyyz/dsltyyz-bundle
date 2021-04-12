@@ -24,6 +24,9 @@ import java.util.List;
 @NoArgsConstructor
 public class IncludeTableXml {
 
+    /**
+     * 表名
+     */
     @XmlElement(name = "table")
     private List<String> table;
 }

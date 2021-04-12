@@ -32,7 +32,7 @@ public class ExcelSheet {
     /**
      * 配置显示
      */
-    @ApiModelProperty(value = "配置显示", required = true)
+    @ApiModelProperty(value = "配置显示", hidden = true)
     private List<ExcelSheetColumnProperty> propertyList;
 
     /**

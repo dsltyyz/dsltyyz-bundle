@@ -23,15 +23,27 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NoArgsConstructor
 public class DataSourceXml {
 
+    /**
+     * 访问链接
+     */
     @XmlElement(name = "url")
     private String url;
 
+    /**
+     * 驱动名称
+     */
     @XmlElement(name = "driver-name")
     private String driverName;
 
+    /**
+     * 用户
+     */
     @XmlElement(name = "username")
     private String username;
 
+    /**
+     * 密码
+     */
     @XmlElement(name = "password")
     private String password;
 }

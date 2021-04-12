@@ -1,5 +1,7 @@
 package com.dsltyyz.bundle.template.bean;
 
+import com.dsltyyz.bundle.office.excel.annotation.ExcelColumn;
+import com.dsltyyz.bundle.office.excel.annotation.ExportExcel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -13,27 +15,20 @@ import java.util.List;
  * 表
  * @author dsltyyz
  */
+@ExportExcel
 @ApiModel(description = "表")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DsltyyzTable {
 
-    /**
-     * 名称
-     */
     @ApiModelProperty(value = "名称")
     private String name;
 
-    /**
-     * 备注
-     */
     @ApiModelProperty(value = "备注")
     private String comment;
 
-    /**
-     * 版本号
-     */
+    @ExcelColumn(false)
     @ApiModelProperty(value = "字段")
     private List<DsltyyzTableField> fields = new ArrayList<>();
 }
