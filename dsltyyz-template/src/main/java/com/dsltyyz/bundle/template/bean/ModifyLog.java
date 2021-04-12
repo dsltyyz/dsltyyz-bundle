@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModityLog {
+public class ModifyLog {
 
     @ApiModelProperty(value = "版本号")
     private String version;

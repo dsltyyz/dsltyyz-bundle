@@ -214,7 +214,7 @@ public class CodeGeneratorUtil {
         excelSheet1.setSheetName("修订日志");
         excelSheet1.setHeadList(Arrays.asList("修订日志"));
         excelSheet1.setList(Arrays.asList(
-                new ModityLog("v1.0", "数据库设计", mybatisPlusCodeGeneratorXml.getAuthor(), mybatisPlusCodeGeneratorXml.getAuthor(), DateUtils.format(new Date(), "yyyy-MM-dd"))
+                new ModifyLog("v1.0", "数据库设计", mybatisPlusCodeGeneratorXml.getAuthor(), mybatisPlusCodeGeneratorXml.getAuthor(), DateUtils.format(new Date(), "yyyy-MM-dd"))
         ));
         excel.getExcelSheetList().add(excelSheet1);
 
