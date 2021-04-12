@@ -9,15 +9,21 @@
   - client ___客户端___
   - common ___对象定义___
   - config ___条件注入___
+  - resources ___资源包___
+      - META-INF ___初始化配置___
 - dsltyyz-common ___公共模块___
   - cache ___缓存___
   - config ___缓存自动注入___
   - constant ___常量定义包___
+  - entity ___实体包___
   - factory ___CompositePropertySourceFactory处理@PropertySource支持yaml文件___
   - handler ___处理包___
-  - page ___通用分页DTO/VO___
+  - properties ___属性包___
   - response ___通用响应包___
   - util ___通用工具包___
+  - vo ___值对象___
+  - resources ___资源包___
+      - META-INF ___初始化配置___
 - dsltyyz-dependencies ___捆绑包版本依赖___
 - dsltyyz-jwt ___Java Web Token___
   - config ___配置___
@@ -26,13 +32,23 @@
   - helper ___助手___
   - rsa ___RSA___
   - token ___口令验证___
+  - resources ___资源包___
+      - META-INF ___初始化配置___
 - dsltyyz-office ___office办公模块___
-  - pdf ___PDF工具包___
   - excel ___excel工具包___
+    - annotation ___注解___
+    - entity ___实体___
+    - util ___工具类___
+  - pdf ___PDF工具包___
 - dsltyyz-template ___代码模板模块___
   - bean ___对象包___
+  - config ___配置___
+  - filter ___适配___
+  - mybatisplus ___Mybatis Plus配置___
+  - page ___通用分页DTO/VO___
   - util ___工具包___
   - resources ___资源包___
+    - META-INF ___初始化配置___
     - user-defined  ___用户自定义模板包___
 - dsltyyz-wechat ___微信模块___
   - client ___客户端___
@@ -42,6 +58,8 @@
     - property ___属性___
     - util ___工具___
   - config ___配置___ 
+  - resources ___资源包___
+      - META-INF ___初始化配置___
 ## 2 搭建介绍
 ### 2.1 环境介绍
 > 环境检测
