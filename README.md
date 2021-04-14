@@ -44,7 +44,7 @@
   - bean ___对象包___
   - config ___配置___
   - filter ___适配___
-  - mybatisplus ___Mybatis Plus配置___
+  - mybatisplus ___Mybatis Plus拓展配置___
   - page ___通用分页DTO/VO___
   - util ___工具包___
   - resources ___资源包___

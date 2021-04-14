@@ -179,6 +179,19 @@ public class ExcelUtils {
     }
 
     /**
+     * 导出EXCEL输入流
+     *
+     * @param excel
+     * @throws IOException
+     */
+    public static InputStream exportExcelStream(Excel excel) throws Exception {
+        Assert.notNull(excel, "excel不能为null");
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
+        exportExcel(excel.getExcelSheetList(), bs, XLS_TYPE, excel.getDebug());
+        return new ByteArrayInputStream(bs.toByteArray());
+    }
+
+    /**
      * 导出Excel到输出流 多sheet
      *
      * @param excelSheetList 需要导出的sheet列表
