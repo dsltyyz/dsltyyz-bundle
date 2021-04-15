@@ -31,9 +31,6 @@ public class CommonResponse<T> implements Serializable {
     @ApiModelProperty(value = "数据")
     private T data;
 
-    @ApiModelProperty(value = "资源链接")
-    private String resourceUrl;
-
     public CommonResponse(Long status, String msg) {
         this.status = status;
         this.msg = msg;
@@ -43,9 +40,5 @@ public class CommonResponse<T> implements Serializable {
         this.data = data;
     }
 
-    public CommonResponse(T data, String resourceUrl) {
-        this.data = data;
-        this.resourceUrl = resourceUrl;
-    }
 }
 
