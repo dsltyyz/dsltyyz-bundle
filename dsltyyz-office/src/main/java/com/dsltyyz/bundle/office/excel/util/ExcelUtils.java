@@ -18,6 +18,7 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -160,7 +161,7 @@ public class ExcelUtils {
             excelType = XLS_TYPE;
         }
         response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-disposition", "attachment; filename=" + new String(fileNameDotExcelType.getBytes("utf-8"), "ISO-8859-1"));
+        response.setHeader("Content-disposition", "attachment; filename=" + URLEncoder.encode(fileNameDotExcelType,"UTF-8"));
         response.setContentType("application/msexcel");
         exportExcel(excel.getExcelSheetList(), response.getOutputStream(), excelType, excel.getDebug());
     }
