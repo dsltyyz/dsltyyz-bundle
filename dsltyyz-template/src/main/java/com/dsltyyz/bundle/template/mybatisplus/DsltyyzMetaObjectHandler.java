@@ -56,11 +56,8 @@ public class DsltyyzMetaObjectHandler implements MetaObjectHandler {
         boolean updateTimeHasSetter = metaObject.hasSetter("updateTime");
         //是否存在这个属性方法
         if (updateTimeHasSetter) {
-            Object updateTime = getFieldValByName("updateTime", metaObject);
-            //是否已经赋值
-            if (updateTime == null) {
-                strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-            }
+            //强行更新
+            strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
         }
     }
 }
