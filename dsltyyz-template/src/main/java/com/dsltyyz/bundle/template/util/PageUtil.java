@@ -50,7 +50,7 @@ public class PageUtil {
                     } else {
                         orderItem.setColumn(declaredField.getAnnotation(TableField.class).value());
                     }
-                } catch (NoSuchFieldException e) {
+                } catch (Exception e) {
                     return;
                 }
             });
