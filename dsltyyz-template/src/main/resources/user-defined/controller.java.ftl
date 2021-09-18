@@ -33,27 +33,31 @@ public class ${table.controllerName} {
         ${table.serviceName?uncap_first}.create${entity}(dto);
         return new CommonResponse();
     }
+<#list table.fields as field>
+    <#if field.keyFlag>
 
     @ApiOperation(value = "删")
-    @DeleteMapping(value = "{id}")
-    public CommonResponse delete(@PathVariable("id") Long id){
-        ${table.serviceName?uncap_first}.delete${entity}(id);
+    @DeleteMapping(value = "{${field.propertyName}}")
+    public CommonResponse delete(@PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}){
+        ${table.serviceName?uncap_first}.delete${entity}(${field.propertyName});
         return new CommonResponse();
     }
 
     @ApiOperation(value = "改")
-    @PutMapping(value = "{id}")
-    public CommonResponse update(@PathVariable("id") Long id, @Valid @RequestBody ${entity}DTO dto){
-        dto.setId(id);
+    @PutMapping(value = "{${field.propertyName}}")
+    public CommonResponse update(@PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}, @Valid @RequestBody ${entity}DTO dto){
+        dto.set${field.propertyName?cap_first}(${field.propertyName});
         ${table.serviceName?uncap_first}.update${entity}(dto);
         return new CommonResponse();
     }
 
     @ApiOperation(value = "查")
-    @GetMapping(value = "{id}")
-    public CommonResponse<${entity}VO> info(@PathVariable("id") Long id){
-        return new CommonResponse<>(${table.serviceName?uncap_first}.get${entity}ById(id));
+    @GetMapping(value = "{${field.propertyName}}")
+    public CommonResponse<${entity}VO> info(@PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}){
+        return new CommonResponse<>(${table.serviceName?uncap_first}.get${entity}ById(${field.propertyName}));
     }
+    </#if>
+</#list>
 
     @ApiOperation(value = "分页")
     @GetMapping(value = "")

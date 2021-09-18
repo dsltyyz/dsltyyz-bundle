@@ -4,6 +4,7 @@ import ${package.Entity}.*;
 import ${package.Entity?replace('entity','dto')}.*;
 import ${package.Entity?replace('entity','vo')}.*;
 import com.dsltyyz.bundle.template.page.*;
+import com.dsltyyz.bundle.template.util.PageUtil;
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
@@ -42,6 +43,8 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         ${table.mapperName?uncap_first}.insert(${entity?uncap_first});
     }
 
+<#list table.fields as field>
+    <#if field.keyFlag>
     /**
      * 更新
      *
@@ -49,7 +52,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      */
     @Override
     public void update${entity}(${entity}DTO dto){
-        ${entity} ${entity?uncap_first} =  ${table.mapperName?uncap_first}.selectById(dto.getId());
+        ${entity} ${entity?uncap_first} =  ${table.mapperName?uncap_first}.selectById(dto.get${field.propertyName?cap_first}());
         Assert.notNull(${entity?uncap_first}, "该ID对应${table.comment!}不存在");
         BeanUtils.copyProperties(dto, ${entity?uncap_first});
         ${table.mapperName?uncap_first}.updateById(${entity?uncap_first});
@@ -58,30 +61,32 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     /**
      * 删除
      *
-     * @param id
+     * @param ${field.propertyName}
      */
     @Override
-    public void delete${entity}(Long id){
-        ${entity} ${entity?uncap_first} =  ${table.mapperName?uncap_first}.selectById(id);
+    public void delete${entity}(${field.propertyType} ${field.propertyName}){
+        ${entity} ${entity?uncap_first} =  ${table.mapperName?uncap_first}.selectById(${field.propertyName});
         Assert.notNull(${entity?uncap_first}, "该ID对应${table.comment!}不存在");
-        ${table.mapperName?uncap_first}.deleteById(id);
+        ${table.mapperName?uncap_first}.deleteById(${field.propertyName});
     }
 
     /**
      * 查询
      *
-     * @param id
+     * @param ${field.propertyName}
      * @return
      */
     @Override
-    public ${entity}VO get${entity}ById(Long id){
+    public ${entity}VO get${entity}ById(${field.propertyType} ${field.propertyName}){
         ${entity}VO  vo = new ${entity}VO();
-        ${entity} entity =  ${table.mapperName?uncap_first}.selectById(id);
+        ${entity} entity =  ${table.mapperName?uncap_first}.selectById(${field.propertyName});
         Assert.notNull(entity, "该ID对应${table.comment!}不存在");
         BeanUtils.copyProperties(entity, vo);
         return vo;
     }
 
+    </#if>
+</#list>
     /**
      * 分页查询
      *
@@ -93,11 +98,12 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         PageVO<${entity}VO> vo = new PageVO<>();
 
         IPage<${entity}> iPage = new Page<>();
+        //排序字段转换
+        PageUtil.convertOrderItem(pageDTO, ${entity}.class);
         BeanUtils.copyProperties(pageDTO, iPage);
 
         QueryWrapper<${entity}> queryWrapper = new QueryWrapper<>();
         //条件筛选
-        //排序
         iPage = ${table.mapperName?uncap_first}.selectPage(iPage, queryWrapper);
         BeanUtils.copyProperties(iPage, vo);
         vo.setRecords(new ArrayList<>());

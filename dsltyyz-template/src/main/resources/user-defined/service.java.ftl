@@ -30,21 +30,25 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
      */
     void update${entity}(${entity}DTO dto);
 
+<#list table.fields as field>
+    <#if field.keyFlag>
     /**
      * 删除
      *
-     * @param id
+     * @param ${field.propertyName}
      */
-    void delete${entity}(Long id);
+    void delete${entity}(${field.propertyType} ${field.propertyName});
 
     /**
      * 查询
      *
-     * @param id
+     * @param ${field.propertyName}
      * @return
      */
-    ${entity}VO get${entity}ById(Long id);
+    ${entity}VO get${entity}ById(${field.propertyType} ${field.propertyName});
 
+    </#if>
+</#list>
     /**
      * 分页查询
      *
