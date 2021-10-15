@@ -22,6 +22,14 @@ public interface DsltyyzDAO<T> extends BaseMapper<T> {
     int insertBatchSomeColumn(@Param("list") List<T> List);
 
     /**
+     * 如果要自动填充，@{@code Param}(xx) xx参数名必须是 list/collection/array 3个的其中之一
+     *
+     * @param List
+     * @return
+     */
+    int updateBatch(@Param("list") List<T> List);
+
+    /**
      * 逻辑删除时 更新实体中@TableField(fill = FieldFill.UPDATE)字段
      *
      * @param entity

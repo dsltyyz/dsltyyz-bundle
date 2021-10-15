@@ -20,6 +20,8 @@ public class DsltyyzSqlInjector extends DefaultSqlInjector {
         List<AbstractMethod> methodList = super.getMethodList(mapperClass);
         //批量插入
         methodList.add(new InsertBatchSomeColumn());
+        //批量更新
+        methodList.add(new UpdateBatchMethod());
         //删除填充
         methodList.add(new LogicDeleteByIdWithFill());
         //更新
