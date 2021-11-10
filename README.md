@@ -15,6 +15,7 @@
   - cache ___缓存___
   - config ___缓存自动注入___
   - constant ___常量定义包___
+  - data ___数据格式包___
   - entity ___实体包___
   - factory ___CompositePropertySourceFactory处理@PropertySource支持yaml文件___
   - handler ___处理包___
