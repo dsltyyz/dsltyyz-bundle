@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 /**
  * 数据加密解密处理类
+ *
  * @author dsltyyz
  */
 public class DataEncryptHandler extends BaseTypeHandler<Object> {
@@ -22,17 +23,20 @@ public class DataEncryptHandler extends BaseTypeHandler<Object> {
 
     @Override
     public Object getNullableResult(ResultSet resultSet, String s) throws SQLException {
-        return AesUtils.decrypt(resultSet.getString(s));
+        String value = resultSet.getString(s);
+        return value == null ? null : AesUtils.decrypt(value);
     }
 
     @Override
     public Object getNullableResult(ResultSet resultSet, int i) throws SQLException {
-        return AesUtils.decrypt(resultSet.getString(i));
+        String value = resultSet.getString(i);
+        return value == null ? null : AesUtils.decrypt(value);
     }
 
     @Override
     public Object getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
-        return AesUtils.decrypt(callableStatement.getString(i));
+        String value = callableStatement.getString(i);
+        return value == null ? null : AesUtils.decrypt(value);
     }
 
 }
