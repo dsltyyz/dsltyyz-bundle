@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.dsltyyz.bundle.common.cache.CacheClientAutoConfiguration,\
-com.dsltyyz.bundle.common.config.DefaultExceptionHandler
+com.dsltyyz.bundle.common.config.DefaultExceptionHandler,\
+com.dsltyyz.bundle.common.data.DataIntrospectorAutoConfiguration
