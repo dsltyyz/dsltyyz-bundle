@@ -16,6 +16,7 @@ import java.util.Properties;
 public class MpwUtils {
 
     private static String MPW_PREFIX = "mpw:";
+    private static String MPW_KEY = "mpw.key";
 
     /**
      * 加密MPW
@@ -39,13 +40,13 @@ public class MpwUtils {
         Assert.notNull(key, "不能为空");
         Assert.isTrue(key.length() == 16, "key长度为16");
         System.out.println("MPW加密");
-        System.out.println("--mpw.key=" + key);
+        System.out.println("--" + MPW_KEY + "=" + key);
         properties.forEach((k, v) -> {
             if (StringUtils.isNotBlank(v.toString())) {
                 String value = AES.encrypt(v.toString(), key);
                 System.out.println(k + ": " + MPW_PREFIX + value);
                 mpwProperties.put(k, MPW_PREFIX + value);
-            }else{
+            } else {
                 System.out.println(k + ": " + v);
                 mpwProperties.put(k, v);
             }

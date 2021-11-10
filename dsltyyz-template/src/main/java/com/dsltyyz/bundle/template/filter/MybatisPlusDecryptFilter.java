@@ -26,7 +26,7 @@ import java.util.Properties;
 @Slf4j
 public class MybatisPlusDecryptFilter extends FilterAdapter {
 
-    private static String MPW_PREFIX = "mpw:";
+    private static String MPW_PREFIX_KEY = "mpw.key";
 
     /**
      * 获取命令行中的key
@@ -55,7 +55,7 @@ public class MybatisPlusDecryptFilter extends FilterAdapter {
         for (PropertySource<?> ps : configurableEnvironment.getPropertySources()) {
             if (ps instanceof SimpleCommandLinePropertySource) {
                 SimpleCommandLinePropertySource source = (SimpleCommandLinePropertySource) ps;
-                mpwKey = source.getProperty("mpw.key");
+                mpwKey = source.getProperty(MPW_PREFIX_KEY);
                 break;
             }
         }
