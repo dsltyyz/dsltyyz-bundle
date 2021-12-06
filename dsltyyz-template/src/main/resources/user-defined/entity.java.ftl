@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  */
 @ApiModel(description = "${table.comment!}")
 @Data
-@TableName("${table.name}")
+@TableName(value = "${table.name}", autoResultMap = true)
 public class ${entity} implements Serializable {
 
     private static final long serialVersionUID = 1L;
