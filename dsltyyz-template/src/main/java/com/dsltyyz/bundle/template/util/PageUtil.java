@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.dsltyyz.bundle.template.page.PageDTO;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -45,10 +46,12 @@ public class PageUtil {
                 try {
                     Field declaredField = entityClass.getDeclaredField(orderItem.getColumn());
                     boolean annotationPresent = declaredField.isAnnotationPresent(TableId.class);
-                    if (annotationPresent) {
+                    if (declaredField.isAnnotationPresent(TableId.class)) {
                         orderItem.setColumn(declaredField.getAnnotation(TableId.class).value());
-                    } else {
+                    } else if(declaredField.isAnnotationPresent(TableField.class)){
                         orderItem.setColumn(declaredField.getAnnotation(TableField.class).value());
+                    }else{
+                        orderItem.setColumn(underscoreName(orderItem.getColumn()));
                     }
                 } catch (Exception e) {
                     return;
@@ -87,6 +90,21 @@ public class PageUtil {
             }
         }
         return result.toString();
+    }
+
+    public static Map<String, String> convertClassToMap(Class entityClass){
+        Map<String, String> map = new HashMap<>();
+        Field[] declaredFields = entityClass.getDeclaredFields();
+        for(Field declaredField:declaredFields){
+            if (declaredField.isAnnotationPresent(TableId.class)) {
+                map.put(declaredField.getName(), declaredField.getAnnotation(TableId.class).value());
+            } else if(declaredField.isAnnotationPresent(TableField.class)){
+                map.put(declaredField.getName(), declaredField.getAnnotation(TableField.class).value());
+            }else{
+                map.put(declaredField.getName(), underscoreName(declaredField.getName()));
+            }
+        }
+        return map;
     }
 
 }
