@@ -63,6 +63,8 @@
         <httpclient.version>4.5.6</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <poi.version>4.1.0</poi.version>
+        <docx4j.version>6.1.2</docx4j.version>
+        <docx4j-ext.version>8.3.3</docx4j-ext.version>
         <pdfbox.version>2.0.9</pdfbox.version>
         <wxpay.version>0.0.3</wxpay.version>
         <zxing.version>3.4.0</zxing.version>

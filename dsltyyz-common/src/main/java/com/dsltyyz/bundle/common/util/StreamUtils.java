@@ -1,9 +1,6 @@
 package com.dsltyyz.bundle.common.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * Description:
@@ -16,11 +13,12 @@ public class StreamUtils {
 
     /**
      * 输出流转输入流
+     *
      * @param outputStream
      * @return
      */
     public static InputStream outputStreamToInputStream(OutputStream outputStream) {
-        if(null==outputStream){
+        if (null == outputStream) {
             throw new IllegalArgumentException("null==outputStream");
         }
         ByteArrayOutputStream out = (ByteArrayOutputStream) outputStream;
@@ -29,19 +27,59 @@ public class StreamUtils {
 
     /**
      * 输入流转输出流
+     *
      * @param inputStream
      * @return
      */
     public static OutputStream inputStreamToOutputStream(InputStream inputStream) {
-        if(null==inputStream){
+        if (null == inputStream) {
             throw new IllegalArgumentException("null==inputStream");
         }
         ByteArrayInputStream in = (ByteArrayInputStream) inputStream;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         int temp = 0;
-        while((temp = in.read()) != -1){
+        while ((temp = in.read()) != -1) {
             out.write(temp);
         }
         return out;
     }
+
+    /**
+     * 从输入流获取字符串
+     *
+     * @param inputStream
+     * @return
+     */
+    public static String inputStreamToString(InputStream inputStream) {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuffer stringBuffer = new StringBuffer();
+        String oneLine = "";
+        try {
+            while ((oneLine = bufferedReader.readLine()) != null) {
+                stringBuffer.append(oneLine);
+            }
+            return stringBuffer.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static FileInputStream inputStreamToFileInputStream(InputStream inputStream){
+        try {
+            File tempFile = File.createTempFile("temp", "tmp");
+            FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
+            int len = -1;
+            byte[] buffer = new byte[1024];
+            while ((len = inputStream.read(buffer)) != -1) {
+                fileOutputStream.write(buffer,0, len);
+            }
+            fileOutputStream.close();
+            return new FileInputStream(tempFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

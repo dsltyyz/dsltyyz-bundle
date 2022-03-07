@@ -28,6 +28,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- freemarker 模板引擎 -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+
         <!--poi-->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -42,14 +48,11 @@
             <artifactId>poi-scratchpad</artifactId>
         </dependency>
 
-        <!--pdf-->
         <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>fontbox</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-words</artifactId>
+            <version>21.1</version>
+            <classifier>jdk17</classifier>
         </dependency>
 
         <dependency>
