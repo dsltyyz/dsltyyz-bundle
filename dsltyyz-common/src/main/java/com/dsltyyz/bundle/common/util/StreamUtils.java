@@ -82,4 +82,30 @@ public class StreamUtils {
         return null;
     }
 
+    /**
+     * BASE64转输入流
+     * @param base64
+     * @return
+     */
+    public static InputStream base64ToInputStream(String base64){
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        base64ToOutputStream(base64, out);
+        return  new ByteArrayInputStream(out.toByteArray());
+    }
+
+    /**
+     * BASE64转输出流
+     * @param base64
+     * @param outputStream
+     */
+    public static void base64ToOutputStream(String base64, OutputStream outputStream){
+        byte[] decode = Base64Utils.decode(base64);
+        try {
+            outputStream.write(decode);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
