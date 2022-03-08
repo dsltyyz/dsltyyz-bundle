@@ -41,10 +41,10 @@ public class CodeGeneratorUtil {
      *
      * @return
      */
-    private static Boolean init() {
+    private static Boolean init(String configFile) {
         try {
             // 读取XML文件
-            Resource resource = new ClassPathResource("code-generator.xml");
+            Resource resource = new ClassPathResource(configFile);
             BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream(), "utf-8"));
             StringBuffer buffer = new StringBuffer();
             String line = "";
@@ -172,7 +172,16 @@ public class CodeGeneratorUtil {
      */
     public static void autorun(Class clazz) {
         //初始化数据
-        if (init()) {
+        autorun(clazz, "code-generator.xml");
+    }
+
+    /**
+     * 代码生成
+     */
+    public static void autorun(Class clazz, String configFile) {
+        //初始化数据
+        //configFile参考resources/code-generator.xml.example
+        if (init(configFile)) {
             generator(clazz);
         }
     }
@@ -250,8 +259,13 @@ public class CodeGeneratorUtil {
      * @param clazz
      */
     public static void databaseDictionary(Class clazz) {
+        databaseDictionary(clazz,"code-generator.xml");
+    }
+
+    public static void databaseDictionary(Class clazz, String configFile) {
         //初始化数据
-        if (init()) {
+        //configFile参考resources/code-generator.xml.example
+        if (init(configFile)) {
             dictionary(clazz);
         }
     }
