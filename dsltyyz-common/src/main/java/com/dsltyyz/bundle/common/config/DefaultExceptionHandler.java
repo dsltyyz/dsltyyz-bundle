@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -77,6 +78,12 @@ public class DefaultExceptionHandler {
     public CommonResponse handlerUndeclaredThrowableException(UndeclaredThrowableException e) {
         log.info(e.getMessage());
         return new CommonResponse(503L, e.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public CommonResponse handlerHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        log.info(e.getMessage());
+        return new CommonResponse(504L, e.getMessage());
     }
 
 }
