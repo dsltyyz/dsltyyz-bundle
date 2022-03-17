@@ -1,8 +1,5 @@
 package com.dsltyyz.bundle.common.cache.client;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -27,19 +24,14 @@ public class JedisCacheClient implements CacheClient {
     }
 
     @Override
-    public <N> N getEntity(String key, TypeReference<N> typeReference) {
-        Object o = redisTemplate.opsForValue().get(key);
-        if(o==null){
-            return null;
-        }
-        return JSONObject.parseObject(o.toString(), typeReference);
+    public <N> N getEntity(String key, Class<N> nClass) {
+        return (N)redisTemplate.opsForValue().get(key);
 
     }
 
     @Override
     public <N> void putEntity(String key, N n) {
-        //反射获取对象的Class
-        redisTemplate.opsForValue().set(key, JSON.toJSONString(n));
+        redisTemplate.opsForValue().set(key, n);
     }
 
     @Override

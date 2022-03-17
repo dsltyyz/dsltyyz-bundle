@@ -1,7 +1,5 @@
 package com.dsltyyz.bundle.common.cache.client;
 
-import com.alibaba.fastjson.TypeReference;
-
 /**
  * Description:
  * 缓存客户端
@@ -15,10 +13,10 @@ public interface CacheClient {
      * 获取key实体
      *
      * @param key
-     * @param typeReference
+     * @param nClass
      * @return
      */
-    <N> N getEntity(String key, TypeReference<N> typeReference);
+    <N> N getEntity(String key, Class<N> nClass);
 
     /**
      * 添加key实体
