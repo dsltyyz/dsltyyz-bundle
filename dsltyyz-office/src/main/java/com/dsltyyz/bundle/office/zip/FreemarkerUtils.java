@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.office.docx;
+package com.dsltyyz.bundle.office.zip;
 
 
 import com.dsltyyz.bundle.common.util.StreamUtils;

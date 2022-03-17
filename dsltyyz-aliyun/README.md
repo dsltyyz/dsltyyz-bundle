@@ -80,9 +80,14 @@ public class OssController {
 
     @ApiOperation(value = "文件上传")
     @PostMapping(value = "file")
-    public CommonResponse<OssVO> uploadFile(@RequestPart("file") MultipartFile file, @RequestParam(name = "dir", defaultValue = "default") String dir) throws Exception {
+    public CommonResponse<OssVO> uploadFile(@RequestPart("file") MultipartFile file, @RequestParam(name = "dir", defaultValue = "default") String dir, @RequestParam(name = "key",required = false) String key) throws Exception {
         String name = file.getOriginalFilename();
-        String key = (dir + "/" + UUIDUtils.getUUIDByLength(16) + name.substring(name.lastIndexOf("."))).replaceAll("//", "/");
+        if(StringUtils.isEmpty(key)){
+            key = (dir + "/" + UUIDUtils.getUUIDByLength(16) + name.substring(name.lastIndexOf("."))).replaceAll("//", "/");
+        }else{
+            key = dir + "/" + key;
+        }
+
         Future<OssVO> future = aliyunOssClient.putObject(key, file.getInputStream());
         OssVO ossVO = future.get();
         ossVO.setName(name);

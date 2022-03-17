@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.office.docx;
+package com.dsltyyz.bundle.office.zip;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,10 +9,10 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- * docx文件工具类
+ * zip文件工具类
  * @author dsltyyz
  */
-public class DocxUtils {
+public class ZipFileUtils {
 
     /**
      * 处理docx模板

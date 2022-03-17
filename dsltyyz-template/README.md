@@ -61,6 +61,7 @@ public class CodeGenerator {
 
     public static void main(String[] args) {
         CodeGeneratorUtil.autorun(CodeGenerator.class);
+        #CodeGeneratorUtil.autorun(CodeGenerator.class, "配置文件资源路径");
     }
 
 }
@@ -78,6 +79,7 @@ public class DictionaryGenerator {
 
     public static void main(String[] args) {
         CodeGeneratorUtil.databaseDictionary(DictionaryGenerator.class);
+        #CodeGeneratorUtil.databaseDictionary(DictionaryGenerator.class, "配置文件资源路径");
     }
 
 }
@@ -114,4 +116,23 @@ public class MpwGenerator {
     }
 
 }
+~~~
+#### 3 其他相关配置 application.yml
+~~~
+spring:
+  datasource:
+    druid:
+      #mybatis-plus-decrypt 自定义解密
+      filters: mybatis-plus-decrypt,stat,wall,log4j
+        ...
+mybatis-plus:
+  #mapper xml文件扫描位置
+  mapper-locations: classpath*:mapper/*.xml
+  #实体包
+  type-aliases-package: 当前项目路径.**.entity
+  #枚举包
+  type-enums-package: com.dsltyyz.bundle.template.enums;当前项目路径.**.enums
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 ~~~

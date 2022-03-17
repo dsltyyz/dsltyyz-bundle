@@ -33,7 +33,9 @@
 ~~~
 spring:
   redis:
+    #开启redis作为缓存
     enable: true
+    database: 0
     host: 127.0.0.1
     port: 6379
     password: dsltyyz
@@ -49,4 +51,12 @@ spring:
 ~~~
     @Resource
     private CacheClient cacheClient;
+~~~
+### 2.3 数据处理
+~~~
+    @ApiModelProperty(value = "创建时间")
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //DataFormat等同于JsonFormat 可以自行定义
+    @DataFormat(value = DateDataHelper.class, param = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 ~~~
