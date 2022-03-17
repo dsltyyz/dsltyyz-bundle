@@ -5,25 +5,37 @@ import com.alibaba.fastjson.TypeReference;
 import com.dsltyyz.bundle.common.constant.HttpStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.security.cert.X509Certificate;
+import java.util.*;
 
 /**
  * Description:
@@ -34,6 +46,8 @@ import java.util.Map;
  */
 @Slf4j
 public class HttpUtils {
+
+    private static final String HTTPS = "https";
 
     /****************GET 方法***************/
     /**
@@ -62,7 +76,7 @@ public class HttpUtils {
      * @return
      */
     public static String doGet(String url, Map<String, String> header, Map<String, Object> params) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = getHttpclient(url);
         // 由客户端执行(发送)Get请求
         try {
             // 创建Get请求
@@ -74,7 +88,7 @@ public class HttpUtils {
                 }
             }
             // 响应模型
-            CloseableHttpResponse response = httpClient.execute(httpGet);
+            HttpResponse response = httpClient.execute(httpGet);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
             log.info(result);
@@ -83,8 +97,6 @@ public class HttpUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeHttpClient(httpClient);
         }
         return null;
     }
@@ -98,7 +110,7 @@ public class HttpUtils {
      * @return
      */
     public static InputStream doGetInputStream(String url, Map<String, String> header, Map<String, Object> params) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = getHttpclient(url);
         // 由客户端执行(发送)Get请求
         try {
             // 创建Get请求
@@ -110,12 +122,10 @@ public class HttpUtils {
                 }
             }
             // 响应模型
-            CloseableHttpResponse response = httpClient.execute(httpGet);
+            HttpResponse response = httpClient.execute(httpGet);
             return response.getEntity().getContent();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeHttpClient(httpClient);
         }
         return null;
     }
@@ -147,7 +157,7 @@ public class HttpUtils {
      * @return
      */
     public static String doPost(String url, Map<String, String> header, Map<String, Object> params) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Post请求
         try {
@@ -161,7 +171,7 @@ public class HttpUtils {
             }
             httpPost.setEntity(buildFormEntity(params));
             // 响应模型
-            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
             log.info(result);
@@ -170,8 +180,6 @@ public class HttpUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeHttpClient(httpClient);
         }
         return null;
     }
@@ -202,7 +210,7 @@ public class HttpUtils {
      * @return
      */
     public static String doPostJson(String url, Map<String, String> header, Object object) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Post请求
         try {
@@ -221,7 +229,7 @@ public class HttpUtils {
             httpPost.setEntity(requestEntity);
 
             // 响应模型
-            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
             log.info(result);
@@ -230,8 +238,6 @@ public class HttpUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeHttpClient(httpClient);
         }
         return null;
     }
@@ -262,7 +268,7 @@ public class HttpUtils {
      * @return
      */
     public static String doPostInputStream(String url, Map<String, String> header, Map<String, InputStream> param) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Post请求
         try {
@@ -282,7 +288,7 @@ public class HttpUtils {
             httpPost.setEntity(builder.build());
 
             // 响应模型
-            CloseableHttpResponse response = httpClient.execute(httpPost);
+            HttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
             log.info(result);
@@ -291,8 +297,6 @@ public class HttpUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeHttpClient(httpClient);
         }
         return null;
     }
@@ -324,7 +328,7 @@ public class HttpUtils {
      * @return
      */
     public static String doPut(String url, Map<String, String> header, Map<String, Object> params) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Put请求
         try {
@@ -338,7 +342,7 @@ public class HttpUtils {
             }
             httpPut.setEntity(buildFormEntity(params));
             // 响应模型
-            CloseableHttpResponse response = httpClient.execute(httpPut);
+            HttpResponse response = httpClient.execute(httpPut);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
             log.info(result);
@@ -347,8 +351,6 @@ public class HttpUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeHttpClient(httpClient);
         }
         return null;
     }
@@ -379,7 +381,7 @@ public class HttpUtils {
      * @return
      */
     public static String doPutJson(String url, Map<String, String> header, Object object) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Put请求
         try {
@@ -398,7 +400,7 @@ public class HttpUtils {
             httpPut.setEntity(requestEntity);
 
             // 响应模型
-            CloseableHttpResponse response = httpClient.execute(httpPut);
+            HttpResponse response = httpClient.execute(httpPut);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
             log.info(result);
@@ -407,8 +409,6 @@ public class HttpUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeHttpClient(httpClient);
         }
         return null;
     }
@@ -440,7 +440,7 @@ public class HttpUtils {
      * @return
      */
     public static String doDelete(String url, Map<String, String> header, Map<String, Object> params) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = getHttpclient(url);
         // 由客户端执行(发送)Delete请求
         try {
             // 创建Delete请求
@@ -452,7 +452,7 @@ public class HttpUtils {
                 }
             }
             // 响应模型
-            CloseableHttpResponse response = httpClient.execute(httpDelete);
+            HttpResponse response = httpClient.execute(httpDelete);
             HttpEntity entity = response.getEntity();
             String result = EntityUtils.toString(entity, "UTF-8");
             log.info(result);
@@ -461,8 +461,6 @@ public class HttpUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeHttpClient(httpClient);
         }
         return null;
     }
@@ -537,6 +535,47 @@ public class HttpUtils {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    public static HttpClient getHttpclient(String url){
+        Assert.isTrue(!StringUtils.isEmpty(url), "请求URL不能为空");
+        HttpClient httpClient = new DefaultHttpClient();
+        if(url.indexOf(HTTPS)>-1){
+            sslClient(httpClient);
+        }
+        return httpClient;
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void sslClient(HttpClient httpClient) {
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            X509TrustManager x509TrustManager = new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] x509Certificates, String s){
+                    // ignore
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] x509Certificates, String s){
+                    // ignore
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+            };
+            sslContext.init(null, new TrustManager[]{x509TrustManager}, null);
+            SSLSocketFactory ssf = new SSLSocketFactory(sslContext);
+            ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            ClientConnectionManager ccm = httpClient.getConnectionManager();
+            SchemeRegistry registry = ccm.getSchemeRegistry();
+            registry.register(new Scheme("https", 443, ssf));
+        } catch (Exception e) {
+            throw new IllegalStateException("Create SSLContext error", e);
         }
     }
 
