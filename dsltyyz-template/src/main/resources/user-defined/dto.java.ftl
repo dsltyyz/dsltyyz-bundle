@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import com.dsltyyz.bundle.common.util.DateUtils;
+import com.dsltyyz.bundle.template.enums.*;
 
 /**
  * ${table.comment!}DTO
@@ -28,9 +30,9 @@ public class ${entity}DTO implements Serializable {
     @ApiModelProperty(value = "${field.comment}")
     </#if>
     <#if field.propertyType == "LocalDateTime">
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = DateUtils.PATTERN_DATETIME)
     </#if>
-    private ${field.propertyType} ${field.propertyName};
+    private <#if field.name == "status">CommonStatus<#else>${field.propertyType}</#if> ${field.propertyName};
 
     </#if>
 </#list>

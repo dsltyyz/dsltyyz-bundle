@@ -12,6 +12,8 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import com.dsltyyz.bundle.common.util.DateUtils;
+import com.dsltyyz.bundle.template.enums.*;
 
 /**
  * ${table.comment!}
@@ -30,7 +32,7 @@ public class ${entity} implements Serializable {
 <#list table.fields as field>
     @ApiModelProperty(value = "${field.comment}")
     <#if field.propertyType == "LocalDateTime">
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateUtils.PATTERN_DATETIME)
     </#if>
     <#if field.keyFlag>
     <#-- 主键 -->
@@ -49,7 +51,7 @@ public class ${entity} implements Serializable {
     <#-- 普通字段 -->
     @TableField("${field.name}")
     </#if>
-    private ${field.propertyType} ${field.propertyName};
+    private <#if field.name == "status">CommonStatus${field.propertyType}</#if> ${field.propertyName};
 
 </#list>
 <#------------  END 字段循环遍历  ---------->

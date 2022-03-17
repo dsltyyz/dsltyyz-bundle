@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import com.dsltyyz.bundle.template.page.PageDTO;
+import com.dsltyyz.bundle.common.util.DateUtils;
+import com.dsltyyz.bundle.template.enums.*;
 
 /**
  * ${table.comment!} Page DTO
@@ -27,9 +29,9 @@ public class ${entity}PageDTO extends PageDTO implements Serializable {
     <#if !list?seq_contains(field.name) && !field.keyFlag>
     @ApiModelProperty(value = "${field.comment}")
     <#if field.propertyType == "LocalDateTime">
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = DateUtils.PATTERN_DATETIME)
     </#if>
-    private ${field.propertyType} ${field.propertyName};
+    private <#if field.name == "status">CommonStatus<#else>${field.propertyType}</#if> ${field.propertyName};
 
     </#if>
 </#list>

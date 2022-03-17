@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import com.dsltyyz.bundle.common.util.DateUtils;
+import com.dsltyyz.bundle.template.enums.*;
 
 /**
  * <p>
@@ -26,9 +28,9 @@ public class ${entity}VO implements Serializable {
     <#if !list?seq_contains(field.name)>
     @ApiModelProperty(value = "${field.comment}")
     <#if field.propertyType == "LocalDateTime">
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateUtils.PATTERN_DATETIME)
     </#if>
-    private ${field.propertyType} ${field.propertyName};
+    private <#if field.name == "status">CommonStatus<#else>${field.propertyType}</#if> ${field.propertyName};
 
     </#if>
 </#list>
