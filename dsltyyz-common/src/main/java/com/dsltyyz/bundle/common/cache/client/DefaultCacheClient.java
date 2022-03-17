@@ -1,5 +1,7 @@
 package com.dsltyyz.bundle.common.cache.client;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -22,8 +24,12 @@ public class DefaultCacheClient implements CacheClient {
     }
 
     @Override
-    public <N> N getEntity(String key, Class<N> clazz) {
-        return (N) cacheMap.get(key);
+    public <N> N getEntity(String key, TypeReference<N> typeReference) {
+        Object o = cacheMap.get(key);
+        if(o==null){
+            return null;
+        }
+        return JSONObject.parseObject(o.toString(), typeReference);
     }
 
     @Override

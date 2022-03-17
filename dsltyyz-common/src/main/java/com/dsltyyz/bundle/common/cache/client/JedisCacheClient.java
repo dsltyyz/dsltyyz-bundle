@@ -1,8 +1,8 @@
 package com.dsltyyz.bundle.common.cache.client;
 
-import com.dyuproject.protostuff.LinkedBuffer;
-import com.dyuproject.protostuff.ProtostuffIOUtil;
-import com.dyuproject.protostuff.runtime.RuntimeSchema;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -27,43 +27,28 @@ public class JedisCacheClient implements CacheClient {
     }
 
     @Override
-    public <N> N getEntity(String key, Class<N> clazz) {
-        //根据key获取value
-        byte[] bytes = redisTemplate.getConnectionFactory().getConnection().get(key.getBytes());
-        //value不为空
-        if (null != bytes) {
-            //protostuff根据Class类获取当前实体对象
-            RuntimeSchema<N> schema = RuntimeSchema.createFrom(clazz);
-            N n = schema.newMessage();
-            //数据组装进对象
-            ProtostuffIOUtil.mergeFrom(bytes, n, schema);
-            return n;
+    public <N> N getEntity(String key, TypeReference<N> typeReference) {
+        Object o = redisTemplate.opsForValue().get(key);
+        if(o==null){
+            return null;
         }
-        return null;
+        return JSONObject.parseObject(o.toString(), typeReference);
+
     }
 
     @Override
     public <N> void putEntity(String key, N n) {
         //反射获取对象的Class
-        Class clazz = n.getClass();
-        //protostuff根据Class类获取当前实体对象
-        RuntimeSchema<N> schema = RuntimeSchema.createFrom(clazz);
-        byte[] bytes = ProtostuffIOUtil.toByteArray(n, schema, LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
-        redisTemplate.opsForValue().set(key.getBytes(), bytes);
+        redisTemplate.opsForValue().set(key, JSON.toJSONString(n));
     }
 
     @Override
     public <N> void putEntity(String key, N n, Long expiredSeconds) {
-        //反射获取对象的Class
-        Class clazz = n.getClass();
-        //protostuff根据Class类获取当前实体对象
-        RuntimeSchema<N> schema = RuntimeSchema.createFrom(clazz);
-        byte[] bytes = ProtostuffIOUtil.toByteArray(n, schema, LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
-        redisTemplate.opsForValue().set(key.getBytes(), bytes, expiredSeconds, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(key, n, expiredSeconds, TimeUnit.SECONDS);
     }
 
     @Override
     public void deleteEntity(String key) {
-        redisTemplate.delete(key.getBytes());
+        redisTemplate.delete(key);
     }
 }
