@@ -20,7 +20,6 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -30,12 +29,14 @@ import org.springframework.util.StringUtils;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description:
@@ -55,12 +56,12 @@ public class HttpUtils {
      *
      * @param url
      * @param header
-     * @param params
+     * @param pathParams
      * @param typeReference
      * @return
      */
-    public static <T> T doGet(String url, Map<String, String> header, Map<String, Object> params, TypeReference<T> typeReference) {
-        String result = doGet(url, header, params);
+    public static <T> T doGet(String url, Map<String, String> header, Map<String, Object> pathParams, TypeReference<T> typeReference) {
+        String result = doGet(url, header, pathParams);
         if (null == result) {
             return null;
         }
@@ -72,16 +73,16 @@ public class HttpUtils {
      *
      * @param url
      * @param header
-     * @param params
+     * @param pathParams
      * @return
      */
-    public static String doGet(String url, Map<String, String> header, Map<String, Object> params) {
+    public static String doGet(String url, Map<String, String> header, Map<String, Object> pathParams) {
         HttpClient httpClient = getHttpclient(url);
         // 由客户端执行(发送)Get请求
         try {
             // 创建Get请求
             log.info(url);
-            HttpGet httpGet = new HttpGet(url + buildUrlParam(params));
+            HttpGet httpGet = new HttpGet(url + buildUrlParam(pathParams));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
                     httpGet.setHeader(entry.getKey(), entry.getValue());
@@ -106,16 +107,16 @@ public class HttpUtils {
      *
      * @param url
      * @param header
-     * @param params
+     * @param pathParams
      * @return
      */
-    public static InputStream doGetInputStream(String url, Map<String, String> header, Map<String, Object> params) {
+    public static InputStream doGetInputStream(String url, Map<String, String> header, Map<String, Object> pathParams) {
         HttpClient httpClient = getHttpclient(url);
         // 由客户端执行(发送)Get请求
         try {
             // 创建Get请求
             log.info(url);
-            HttpGet httpGet = new HttpGet(url + buildUrlParam(params));
+            HttpGet httpGet = new HttpGet(url + buildUrlParam(pathParams));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
                     httpGet.setHeader(entry.getKey(), entry.getValue());
@@ -131,6 +132,7 @@ public class HttpUtils {
     }
 
     /****************POST 方法***************/
+
     /**
      * 发送post请求
      *
@@ -141,7 +143,21 @@ public class HttpUtils {
      * @return
      */
     public static <T> T doPost(String url, Map<String, String> header, Map<String, Object> params, TypeReference<T> typeReference) {
-        String result = doPost(url, header, params);
+        return doPost(url, header, null, params, typeReference);
+    }
+
+    /**
+     * 发送post请求
+     *
+     * @param url
+     * @param header
+     * @param pathParams
+     * @param params
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPost(String url, Map<String, String> header, Map<String, Object> pathParams, Map<String, Object> params, TypeReference<T> typeReference) {
+        String result = doPost(url, header, pathParams, params);
         if (null == result) {
             return null;
         }
@@ -153,17 +169,18 @@ public class HttpUtils {
      *
      * @param url
      * @param header
+     * @param pathParams
      * @param params
      * @return
      */
-    public static String doPost(String url, Map<String, String> header, Map<String, Object> params) {
+    public static String doPost(String url, Map<String, String> header, Map<String, Object> pathParams, Map<String, Object> params) {
         HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Post请求
         try {
             // 创建Post请求
             log.info(url);
-            HttpPost httpPost = new HttpPost(url);
+            HttpPost httpPost = new HttpPost(url + buildUrlParam(pathParams));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
                     httpPost.setHeader(entry.getKey(), entry.getValue());
@@ -194,7 +211,21 @@ public class HttpUtils {
      * @return
      */
     public static <T> T doPostJson(String url, Map<String, String> header, Object object, TypeReference<T> typeReference) {
-        String result = doPostJson(url, header, object);
+       return doPostJson(url, header, null, object, typeReference);
+    }
+
+    /**
+     * 发送json数据 post请求
+     *
+     * @param url
+     * @param header
+     * @param pathParams
+     * @param object
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPostJson(String url, Map<String, String> header, Map<String, Object> pathParams, Object object, TypeReference<T> typeReference) {
+        String result = doPostJson(url, header, pathParams, object);
         if (null == result) {
             return null;
         }
@@ -206,17 +237,18 @@ public class HttpUtils {
      *
      * @param url
      * @param header
+     * @param pathParams
      * @param object
      * @return
      */
-    public static String doPostJson(String url, Map<String, String> header, Object object) {
+    public static String doPostJson(String url, Map<String, String> header, Map<String, Object> pathParams, Object object) {
         HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Post请求
         try {
             // 创建Post请求
             log.info(url);
-            HttpPost httpPost = new HttpPost(url);
+            HttpPost httpPost = new HttpPost(url+ buildUrlParam(pathParams));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
                     httpPost.setHeader(entry.getKey(), entry.getValue());
@@ -252,7 +284,21 @@ public class HttpUtils {
      * @return
      */
     public static <T> T doPostInputStream(String url, Map<String, String> header, Map<String, InputStream> param, TypeReference<T> typeReference) {
-        String result = doPostInputStream(url, header, param);
+      return doPostInputStream(url, header, null, param, typeReference);
+    }
+
+    /**
+     * post提交文件流
+     *
+     * @param url
+     * @param header
+     * @param param
+     * @param pathParams
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPostInputStream(String url, Map<String, String> header, Map<String, Object> pathParams, Map<String, InputStream> param, TypeReference<T> typeReference) {
+        String result = doPostInputStream(url, header, pathParams, param);
         if (null == result) {
             return null;
         }
@@ -264,17 +310,18 @@ public class HttpUtils {
      *
      * @param url
      * @param header
+     * @param pathParams
      * @param param
      * @return
      */
-    public static String doPostInputStream(String url, Map<String, String> header, Map<String, InputStream> param) {
+    public static String doPostInputStream(String url, Map<String, String> header, Map<String, Object> pathParams, Map<String, InputStream> param) {
         HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Post请求
         try {
             // 创建Post请求
             log.info(url);
-            HttpPost httpPost = new HttpPost(url);
+            HttpPost httpPost = new HttpPost(url+buildUrlParam(pathParams));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
                     httpPost.setHeader(entry.getKey(), entry.getValue());
@@ -312,7 +359,21 @@ public class HttpUtils {
      * @return
      */
     public static <T> T doPut(String url, Map<String, String> header, Map<String, Object> params, TypeReference<T> typeReference) {
-        String result = doPut(url, header, params);
+        return doPut(url, header, null, params, typeReference);
+    }
+
+    /**
+     * 发送put请求
+     *
+     * @param url
+     * @param header
+     * @param pathParams
+     * @param params
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPut(String url, Map<String, String> header, Map<String, Object> pathParams, Map<String, Object> params, TypeReference<T> typeReference) {
+        String result = doPut(url, header, pathParams, params);
         if (null == result) {
             return null;
         }
@@ -324,17 +385,18 @@ public class HttpUtils {
      *
      * @param url
      * @param header
+     * @param pathParams
      * @param params
      * @return
      */
-    public static String doPut(String url, Map<String, String> header, Map<String, Object> params) {
+    public static String doPut(String url, Map<String, String> header, Map<String, Object> pathParams, Map<String, Object> params) {
         HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Put请求
         try {
             // 创建Put请求
             log.info(url);
-            HttpPut httpPut = new HttpPut(url);
+            HttpPut httpPut = new HttpPut(url+buildUrlParam(pathParams));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
                     httpPut.setHeader(entry.getKey(), entry.getValue());
@@ -365,7 +427,21 @@ public class HttpUtils {
      * @return
      */
     public static <T> T doPutJson(String url, Map<String, String> header, Object object, TypeReference<T> typeReference) {
-        String result = doPutJson(url, header, object);
+        return doPutJson(url, header, null, object, typeReference);
+    }
+
+    /**
+     * 发送json数据 put请求
+     *
+     * @param url
+     * @param header
+     * @param pathParams
+     * @param object
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPutJson(String url, Map<String, String> header, Map<String, Object> pathParams, Object object, TypeReference<T> typeReference) {
+        String result = doPutJson(url, header, pathParams, object);
         if (null == result) {
             return null;
         }
@@ -377,17 +453,18 @@ public class HttpUtils {
      *
      * @param url
      * @param header
+     * @param pathParams
      * @param object
      * @return
      */
-    public static String doPutJson(String url, Map<String, String> header, Object object) {
+    public static String doPutJson(String url, Map<String, String> header, Map<String, Object> pathParams, Object object) {
         HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Put请求
         try {
             // 创建Put请求
             log.info(url);
-            HttpPut httpPut = new HttpPut(url);
+            HttpPut httpPut = new HttpPut(url+buildUrlParam(pathParams));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
                     httpPut.setHeader(entry.getKey(), entry.getValue());
@@ -419,12 +496,12 @@ public class HttpUtils {
      *
      * @param url
      * @param header
-     * @param params
+     * @param pathParams
      * @param typeReference
      * @return
      */
-    public static <T> T doDelete(String url, Map<String, String> header, Map<String, Object> params, TypeReference<T> typeReference) {
-        String result = doDelete(url, header, params);
+    public static <T> T doDelete(String url, Map<String, String> header, Map<String, Object> pathParams, TypeReference<T> typeReference) {
+        String result = doDelete(url, header, pathParams);
         if (null == result) {
             return null;
         }
@@ -439,13 +516,13 @@ public class HttpUtils {
      * @param params
      * @return
      */
-    public static String doDelete(String url, Map<String, String> header, Map<String, Object> params) {
+    public static String doDelete(String url, Map<String, String> header, Map<String, Object> pathParams) {
         HttpClient httpClient = getHttpclient(url);
         // 由客户端执行(发送)Delete请求
         try {
             // 创建Delete请求
             log.info(url);
-            HttpDelete httpDelete = new HttpDelete(url + buildUrlParam(params));
+            HttpDelete httpDelete = new HttpDelete(url + buildUrlParam(pathParams));
             if (null != header) {
                 for (Map.Entry<String, String> entry : header.entrySet()) {
                     httpDelete.setHeader(entry.getKey(), entry.getValue());
@@ -522,27 +599,11 @@ public class HttpUtils {
         return String.valueOf(object);
     }
 
-    /**
-     * 关闭HttpClient
-     *
-     * @param httpClient
-     */
-    private static void closeHttpClient(CloseableHttpClient httpClient) {
-        try {
-            // 释放资源
-            if (httpClient != null) {
-                httpClient.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @SuppressWarnings("deprecation")
-    public static HttpClient getHttpclient(String url){
+    public static HttpClient getHttpclient(String url) {
         Assert.isTrue(!StringUtils.isEmpty(url), "请求URL不能为空");
         HttpClient httpClient = new DefaultHttpClient();
-        if(url.indexOf(HTTPS)>-1){
+        if (url.indexOf(HTTPS) > -1) {
             sslClient(httpClient);
         }
         return httpClient;
@@ -554,12 +615,12 @@ public class HttpUtils {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             X509TrustManager x509TrustManager = new X509TrustManager() {
                 @Override
-                public void checkClientTrusted(X509Certificate[] x509Certificates, String s){
+                public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
                     // ignore
                 }
 
                 @Override
-                public void checkServerTrusted(X509Certificate[] x509Certificates, String s){
+                public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
                     // ignore
                 }
 
