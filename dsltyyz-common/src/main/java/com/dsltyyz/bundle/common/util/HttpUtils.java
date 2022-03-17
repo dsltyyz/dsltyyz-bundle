@@ -256,7 +256,6 @@ public class HttpUtils {
             }
             //第三步：给httpPost设置JSON格式的参数
             StringEntity requestEntity = new StringEntity(JSONObject.toJSONString(object), "utf-8");
-            requestEntity.setContentEncoding("UTF-8");
             httpPost.setHeader("Content-type", "application/json");
             httpPost.setEntity(requestEntity);
 
@@ -472,7 +471,6 @@ public class HttpUtils {
             }
             //第三步：给httpPut设置JSON格式的参数
             StringEntity requestEntity = new StringEntity(JSONObject.toJSONString(object), "utf-8");
-            requestEntity.setContentEncoding("UTF-8");
             httpPut.setHeader("Content-type", "application/json");
             httpPut.setEntity(requestEntity);
 
@@ -513,7 +511,7 @@ public class HttpUtils {
      *
      * @param url
      * @param header
-     * @param params
+     * @param pathParams
      * @return
      */
     public static String doDelete(String url, Map<String, String> header, Map<String, Object> pathParams) {
