@@ -51,7 +51,7 @@ public class ${entity} implements Serializable {
     <#-- 普通字段 -->
     @TableField("${field.name}")
     </#if>
-    private <#if field.name == "status">CommonStatus${field.propertyType}</#if> ${field.propertyName};
+    private <#if field.name == "status">CommonStatus<#else>${field.propertyType}</#if> ${field.propertyName};
 
 </#list>
 <#------------  END 字段循环遍历  ---------->
