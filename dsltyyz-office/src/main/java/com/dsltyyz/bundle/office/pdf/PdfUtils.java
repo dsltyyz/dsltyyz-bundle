@@ -36,7 +36,4 @@ public class PdfUtils {
         }
     }
 
-//    public static void main(String[] args) throws FileNotFoundException {
-//        convertPdf(new FileInputStream(new File("D://template.docx")), new FileOutputStream(new File("D://template.pdf")) );
-//    }
 }

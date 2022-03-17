@@ -27,6 +27,15 @@ public interface CacheClient {
     <N> void putEntity(String key, N n);
 
     /**
+     * 添加key实体 并设置过期时间
+     *
+     * @param key
+     * @param n
+     * @param expiredSeconds
+     */
+    <N> void putEntity(String key, N n, Long expiredSeconds);
+
+    /**
      * 删除key实体
      *
      * @param key

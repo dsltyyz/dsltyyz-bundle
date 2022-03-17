@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Description:
@@ -48,11 +49,21 @@ public class JedisCacheClient implements CacheClient {
         //protostuff根据Class类获取当前实体对象
         RuntimeSchema<N> schema = RuntimeSchema.createFrom(clazz);
         byte[] bytes = ProtostuffIOUtil.toByteArray(n, schema, LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
-        redisTemplate.getConnectionFactory().getConnection().set(key.getBytes(), bytes);
+        redisTemplate.opsForValue().set(key.getBytes(), bytes);
+    }
+
+    @Override
+    public <N> void putEntity(String key, N n, Long expiredSeconds) {
+        //反射获取对象的Class
+        Class clazz = n.getClass();
+        //protostuff根据Class类获取当前实体对象
+        RuntimeSchema<N> schema = RuntimeSchema.createFrom(clazz);
+        byte[] bytes = ProtostuffIOUtil.toByteArray(n, schema, LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
+        redisTemplate.opsForValue().set(key.getBytes(), bytes, expiredSeconds, TimeUnit.SECONDS);
     }
 
     @Override
     public void deleteEntity(String key) {
-        redisTemplate.getConnectionFactory().getConnection().del(key.getBytes());
+        redisTemplate.delete(key.getBytes());
     }
 }

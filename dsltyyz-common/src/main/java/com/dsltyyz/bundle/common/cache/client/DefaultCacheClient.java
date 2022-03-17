@@ -32,6 +32,11 @@ public class DefaultCacheClient implements CacheClient {
     }
 
     @Override
+    public <N> void putEntity(String key, N n, Long expiredSeconds) {
+        putEntity(key, n);
+    }
+
+    @Override
     public void deleteEntity(String key) {
         cacheMap.remove(key);
     }
