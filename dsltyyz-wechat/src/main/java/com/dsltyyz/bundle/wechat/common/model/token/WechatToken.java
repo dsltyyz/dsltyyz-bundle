@@ -1,14 +1,12 @@
 package com.dsltyyz.bundle.wechat.common.model.token;
 
-import com.alibaba.fastjson.JSONObject;
-import com.dsltyyz.bundle.common.util.DateUtils;
 import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.io.Serializable;
 
 /**
  * Description:
@@ -18,9 +16,10 @@ import java.util.Date;
  * @since: 2019-11-06
  */
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class WechatToken extends WechatResult {
+public class WechatToken extends WechatResult implements Serializable {
 
     /**
      * 获取到的凭证
@@ -32,33 +31,4 @@ public class WechatToken extends WechatResult {
      */
     private Integer expires_in;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 过期时间
-     */
-    private Date expirationTime;
-
-    public WechatToken(String access_token, Integer expires_in) {
-        this.access_token = access_token;
-        this.expires_in = expires_in;
-        this.createTime = new Date();
-        this.expirationTime = DateUtils.calc(this.createTime, Calendar.SECOND, this.expires_in);
-    }
-
-    public WechatToken(JSONObject jsonObject) {
-        this(jsonObject.getString("access_token"), jsonObject.getInteger("expires_in"));
-    }
-
-    /**
-     * 判断是否过期
-     *
-     * @return
-     */
-    public boolean isExpired() {
-        return this.expirationTime.before(new Date());
-    }
 }

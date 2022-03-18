@@ -2,6 +2,8 @@ package com.dsltyyz.bundle.wechat.common.model.template;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * Description:
  * 微信数据
@@ -13,7 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Data
-public class WechatData {
+public class WechatData implements Serializable {
 
     /**
      * 头

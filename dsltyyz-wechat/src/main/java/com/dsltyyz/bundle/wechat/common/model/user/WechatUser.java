@@ -4,6 +4,7 @@ import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class WechatUser extends WechatResult {
+public class WechatUser extends WechatResult implements Serializable {
 
     /**
      * 用户是否订阅该服务号标识，值为0时，代表此用户没有关注该服务号，拉取不到其余信息。

@@ -13,7 +13,6 @@ import lombok.*;
  */
 @ApiModel(description = "OSS签名VO")
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Data
 public class OssSignatureVO {
@@ -46,9 +45,4 @@ public class OssSignatureVO {
     @ApiModelProperty(value = "主机")
     private String host;
 
-    /**
-     * 主键
-     */
-    @ApiModelProperty(value = "主键")
-    private String key;
 }

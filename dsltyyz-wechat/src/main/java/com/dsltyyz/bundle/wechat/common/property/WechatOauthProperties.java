@@ -5,6 +5,8 @@ import com.dsltyyz.bundle.wechat.common.constant.WechatOauthTransferMode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 /**
  * Description:
  * 微信授权属性
@@ -14,7 +16,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class WechatOauthProperties extends WechatAccountProperties {
+public class WechatOauthProperties extends WechatAccountProperties implements Serializable {
 
     /**
      * 服务号Token

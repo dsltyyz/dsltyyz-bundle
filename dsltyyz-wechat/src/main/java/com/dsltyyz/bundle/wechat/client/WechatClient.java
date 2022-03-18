@@ -6,6 +6,8 @@ import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
 import com.dsltyyz.bundle.wechat.common.model.pay.WechatPayConfig;
 import com.dsltyyz.bundle.wechat.common.model.pay.WechatPayOrder;
+import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
+import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhoneInfo;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
@@ -40,29 +42,31 @@ public class WechatClient {
      */
     public WechatToken getWechatToken() {
         WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
-        if (null != wechatToken && !wechatToken.isExpired()) {
+        if (null != wechatToken) {
             return wechatToken;
         }
         wechatToken = WechatUtils.getAccessToken(wechatProperties.getOauth().getAppId(), wechatProperties.getOauth().getAppSecret());
-        cacheClient.putEntity(wechatProperties.getOauth().getAppId(), wechatToken);
+        cacheClient.putEntity(wechatProperties.getOauth().getAppId(), wechatToken, Long.valueOf(wechatToken.getExpires_in()));
         return wechatToken;
     }
 
     /**
      * 【服务器】获取该服务号下所有消息模板
+     *
      * @return
      */
-    public List<WechatTemplate> getAllPrivateTemplate(){
+    public List<WechatTemplate> getAllPrivateTemplate() {
         WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
         return WechatUtils.getAllPrivateTemplate(wechatToken);
     }
 
     /**
      * 【服务器】发送消息模板
+     *
      * @param wechatTemplateSend
      * @return
      */
-    public WechatResult sendTemplate(WechatTemplateSend wechatTemplateSend){
+    public WechatResult sendTemplate(WechatTemplateSend wechatTemplateSend) {
         WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
         return WechatUtils.sendTemplate(wechatToken, wechatTemplateSend);
     }
@@ -102,6 +106,18 @@ public class WechatClient {
         return WechatUtils.getMiniOpenId(wechatProperties.getOauth().getAppId(), wechatProperties.getOauth().getAppSecret(), jsCode);
     }
 
+    /**
+     * 【小程序】通过code换取手机信息
+     *
+     * @param code 请求码
+     * @return
+     */
+    public WechatPhoneInfo getUserPhoneInfo(String code) {
+        WechatToken wechatToken = getWechatToken();
+        WechatPhone userPhone = WechatUtils.getUserPhone(wechatToken.getAccess_token(), code);
+        return userPhone != null ? userPhone.getPhone_info() : null;
+    }
+
     /***************支付**************/
     /**
      * 统一下单JSAPI
@@ -117,7 +133,6 @@ public class WechatClient {
     /**
      * 统一下单Native
      *
-     *
      * @param wechatPayOrder
      * @return
      */
@@ -129,8 +144,8 @@ public class WechatClient {
     /**
      * 申请退款(全额)
      *
-     * @param id        订单ID
-     * @param totalFee  总费用（分）
+     * @param id       订单ID
+     * @param totalFee 总费用（分）
      * @return
      */
     public Map<String, String> applyRefund(String id, String totalFee) {

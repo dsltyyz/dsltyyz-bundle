@@ -2,6 +2,8 @@ package com.dsltyyz.bundle.wechat.common.model.template;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * Description:
  * 微信模板消息
@@ -10,7 +12,7 @@ import lombok.Data;
  * @since: 2019-11-07
  */
 @Data
-public class WechatTemplate {
+public class WechatTemplate implements Serializable {
 
     /**
      * 模板ID

@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.io.Serializable;
+
 /**
  * Description:
  * 微信属性
@@ -15,7 +17,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ApiModel(description = "OSS属性")
 @ConfigurationProperties("wechat")
 @Data
-public class WechatProperties {
+public class WechatProperties implements Serializable {
 
     /**
      * 授权属性

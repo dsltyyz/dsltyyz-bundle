@@ -5,6 +5,7 @@ import com.github.wxpay.sdk.WXPayConfig;
 import lombok.*;
 
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * Description:
@@ -17,7 +18,7 @@ import java.io.InputStream;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class WechatPayConfig implements WXPayConfig {
+public class WechatPayConfig implements WXPayConfig, Serializable {
 
     /**
      * 公众账号ID

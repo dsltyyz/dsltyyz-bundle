@@ -57,4 +57,8 @@ public interface WechatAccessUrl {
      */
     String CODE2SESSION_URL = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=APPSECRET&js_code=JSCODE&grant_type=authorization_code";
 
+    /**
+     * 【小程序】获取用户手机号
+     */
+    String USER_PHONE_URL = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=ACCESS_TOKEN";
 }

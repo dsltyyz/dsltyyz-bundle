@@ -2,6 +2,8 @@ package com.dsltyyz.bundle.wechat.common.model.template;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * Description:
  * 微信数据值
@@ -13,7 +15,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Data
-public class WechatTemplateMiniProgram {
+public class WechatTemplateMiniProgram implements Serializable {
 
     /**
      * 所需跳转到的小程序appid（该小程序appid必须与发模板消息的服务号是绑定关联关系，暂不支持小游戏）

@@ -4,6 +4,8 @@ import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 /**
  * Description:
  * 微信openid
@@ -13,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class WechatOpenId extends WechatResult {
+public class WechatOpenId extends WechatResult implements Serializable {
 
     /**
      * 获取到的凭证

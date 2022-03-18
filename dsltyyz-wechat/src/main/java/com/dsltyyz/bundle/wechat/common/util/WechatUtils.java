@@ -6,13 +6,16 @@ import com.dsltyyz.bundle.wechat.common.constant.WechatAccessUrl;
 import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
+import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description:
@@ -38,7 +41,7 @@ public class WechatUtils {
     }
 
     /**
-     * 获取模板列表 未测试
+     * 【服务器】获取模板列表 未测试
      *
      * @param wechatToken 访问口令
      * @return
@@ -50,7 +53,7 @@ public class WechatUtils {
     }
 
     /**
-     * 获取模板列表 未测试
+     * 【服务器】获取模板列表 未测试
      *
      * @param wechatToken        访问口令
      * @param wechatTemplateSend 模板信息
@@ -91,15 +94,31 @@ public class WechatUtils {
 
     /**
      * 【小程序】通过code换取openid
-     * @param appId 第三方用户唯一凭证
+     *
+     * @param appId     第三方用户唯一凭证
      * @param appSecret 第三方用户唯一凭证密钥
-     * @param jsCode 请求码
+     * @param jsCode    请求码
      * @return
      */
-    public static WechatMiniOpenId getMiniOpenId(String appId, String appSecret, String jsCode){
+    public static WechatMiniOpenId getMiniOpenId(String appId, String appSecret, String jsCode) {
         String url = WechatAccessUrl.CODE2SESSION_URL.replace("APPID", appId).replace("APPSECRET", appSecret).replace("JSCODE", jsCode);
         return HttpUtils.doGet(url, null, null, new TypeReference<WechatMiniOpenId>() {
         });
     }
 
+
+    /**
+     * 获取用户手机号
+     *
+     * @param token
+     * @param code
+     * @return
+     */
+    public static WechatPhone getUserPhone(String token, String code) {
+        String url = WechatAccessUrl.USER_PHONE_URL.replace("ACCESS_TOKEN", token);
+        Map<String, Object> param = new HashMap<>();
+        param.put("code", code);
+        return HttpUtils.doPostJson(url, null, null, param, new TypeReference<WechatPhone>() {
+        });
+    }
 }

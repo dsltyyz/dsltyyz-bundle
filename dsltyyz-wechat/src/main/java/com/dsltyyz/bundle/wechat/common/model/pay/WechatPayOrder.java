@@ -1,6 +1,11 @@
 package com.dsltyyz.bundle.wechat.common.model.pay;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
+import java.io.Serializable;
 
 /**
  * Description:
@@ -12,7 +17,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class WechatPayOrder {
+public class WechatPayOrder implements Serializable {
 
     /**
      * 订单id

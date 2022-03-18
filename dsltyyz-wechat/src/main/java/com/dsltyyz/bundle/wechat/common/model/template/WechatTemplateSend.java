@@ -2,6 +2,8 @@ package com.dsltyyz.bundle.wechat.common.model.template;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * Description:
  * 发送模板消息
@@ -13,7 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Data
-public class WechatTemplateSend {
+public class WechatTemplateSend implements Serializable {
 
     /**
      * 接收者openid
