@@ -35,6 +35,10 @@ wechat:
   oauth:
     app-id: 公众号ID
     app-secret: 公众号秘钥
+  pay:
+    mch-id: 商户ID
+    key: 商户KEY
+    cert-url: 商户证书URL
 ~~~
 #### 2.1.3 示例
 ~~~
