@@ -29,6 +29,7 @@
 ### 2.1 配置 
 #### 2.1.1 配置参数获取
 微信公众平台 https://mp.weixin.qq.com/
+微信支付 https://pay.weixin.qq.com/index.php/core/home/login?return_url=%2F
 #### 2.1.2 配置说明 application.yml
 ~~~
 wechat:
