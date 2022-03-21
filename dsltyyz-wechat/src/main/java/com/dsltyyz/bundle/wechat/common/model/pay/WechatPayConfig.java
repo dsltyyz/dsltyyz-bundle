@@ -3,6 +3,7 @@ package com.dsltyyz.bundle.wechat.common.model.pay;
 import com.dsltyyz.bundle.common.util.HttpUtils;
 import com.github.wxpay.sdk.WXPayConfig;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -63,6 +64,8 @@ public class WechatPayConfig implements WXPayConfig, Serializable {
         this.appID = appID;
         this.mchID = mchID;
         this.key = key;
-        this.certStream = HttpUtils.doGetInputStream(certUrl, null, null);
+        if(!StringUtils.isEmpty(certUrl)){
+            this.certStream = HttpUtils.doGetInputStream(certUrl, null, null);
+        }
     }
 }

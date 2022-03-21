@@ -15,17 +15,42 @@ import java.io.Serializable;
 public class WechatPayProperties implements Serializable {
 
     /**
-     * 商家ID
+     * 新支付版本
+     */
+    public static final String V3 = "v3";
+
+    /**
+     * 旧支付版本
+     */
+    public static final String V2 = "v2";
+
+    /**
+     * 商户号
      */
     private String mchId;
 
     /**
-     * 商户密钥
+     * 商户API私钥
      */
-    private String key;
+    private String mchPrivateKey;
 
     /**
-     * 证书路径
+     * 支付版本 默认V3
+     */
+    private String version = V3;
+
+    /**
+     * 版本为非V3 微信支付平台证书路径
      */
     private String certUrl;
+
+    /**
+     * 版本为V3 商户API证书的证书序列号
+     */
+    private String mchSerialNo;
+
+    /**
+     * 版本为V3 apiV3秘钥
+     */
+    private String apiV3Key;
 }

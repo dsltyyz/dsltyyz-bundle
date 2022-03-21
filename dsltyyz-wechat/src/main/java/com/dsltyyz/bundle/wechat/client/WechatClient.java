@@ -12,8 +12,10 @@ import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
+import com.dsltyyz.bundle.wechat.common.property.WechatPayProperties;
 import com.dsltyyz.bundle.wechat.common.property.WechatProperties;
 import com.dsltyyz.bundle.wechat.common.util.WechatPayUtils;
+import com.dsltyyz.bundle.wechat.common.util.WechatPayV3Utils;
 import com.dsltyyz.bundle.wechat.common.util.WechatUtils;
 
 import javax.annotation.Resource;
@@ -126,8 +128,12 @@ public class WechatClient {
      * @return
      */
     public Map<String, String> unifiedOrderByJsApi(WechatPayOrder wechatPayOrder) {
-        WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getKey(), wechatProperties.getPay().getCertUrl());
-        return WechatPayUtils.unifiedOrderByJsApi(wechatPayConfig, wechatPayOrder);
+        if(WechatPayProperties.V3.equals(wechatProperties.getPay().getVersion())){
+            return WechatPayV3Utils.unifiedOrderByJsApi(wechatProperties, wechatPayOrder);
+        }else {
+            WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
+            return WechatPayUtils.unifiedOrderByJsApi(wechatPayConfig, wechatPayOrder);
+        }
     }
 
     /**
@@ -137,8 +143,40 @@ public class WechatClient {
      * @return
      */
     public String unifiedOrderByNative(WechatPayOrder wechatPayOrder) {
-        WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getKey(), wechatProperties.getPay().getCertUrl());
-        return WechatPayUtils.unifiedOrderByNative(wechatPayConfig, wechatPayOrder);
+        if(WechatPayProperties.V3.equals(wechatProperties.getPay().getVersion())){
+            return WechatPayV3Utils.unifiedOrderByNative(wechatProperties, wechatPayOrder);
+        }else {
+            WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
+            return WechatPayUtils.unifiedOrderByNative(wechatPayConfig, wechatPayOrder);
+        }
+    }
+
+    /**
+     * 查询订单
+     * @param id 商户系统内部订单号
+     * @return
+     */
+    public Map<String, String> getUnifiedOrderById(String id){
+        if(WechatPayProperties.V3.equals(wechatProperties.getPay().getVersion())){
+            return WechatPayV3Utils.getUnifiedOrderById(wechatProperties, id);
+        }else {
+            WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
+            return WechatPayUtils.getUnifiedOrderById(wechatPayConfig, id);
+        }
+    }
+
+    /**
+     * 查询订单
+     * @param outTradeNo 商户系统内部订单号
+     * @return
+     */
+    public Map<String, String> getUnifiedOrderByOutTradeNo(String outTradeNo){
+        if(WechatPayProperties.V3.equals(wechatProperties.getPay().getVersion())){
+            return WechatPayV3Utils.getUnifiedOrderByOutTradeNo(wechatProperties, outTradeNo);
+        }else {
+            WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
+            return WechatPayUtils.getUnifiedOrderByOutTradeNo(wechatPayConfig, outTradeNo);
+        }
     }
 
     /**
@@ -149,7 +187,12 @@ public class WechatClient {
      * @return
      */
     public Map<String, String> applyRefund(String id, String totalFee) {
-        return applyRefund(id, totalFee, totalFee);
+        if(WechatPayProperties.V3.equals(wechatProperties.getPay().getVersion())){
+            return WechatPayV3Utils.applyRefund(wechatProperties, id, totalFee, totalFee);
+        }else {
+            WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
+            return WechatPayUtils.applyRefund(wechatPayConfig, id, totalFee, totalFee);
+        }
     }
 
     /**
@@ -161,8 +204,12 @@ public class WechatClient {
      * @return
      */
     public Map<String, String> applyRefund(String id, String totalFee, String refuseFee) {
-        WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getKey(), wechatProperties.getPay().getCertUrl());
-        return WechatPayUtils.applyRefund(wechatPayConfig, id, totalFee, refuseFee);
+        if(WechatPayProperties.V3.equals(wechatProperties.getPay().getVersion())){
+            return WechatPayV3Utils.applyRefund(wechatProperties, id, totalFee, refuseFee);
+        }else {
+            WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
+            return WechatPayUtils.applyRefund(wechatPayConfig, id, totalFee, refuseFee);
+        }
     }
 
 }

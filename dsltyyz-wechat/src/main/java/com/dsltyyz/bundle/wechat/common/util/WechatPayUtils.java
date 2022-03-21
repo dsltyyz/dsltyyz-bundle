@@ -111,14 +111,34 @@ public class WechatPayUtils {
      * 查看订单信息
      *
      * @param wechatPayConfig
-     * @param id
+     * @param id 微信的订单号
      * @return
      */
     public static Map<String, String> getUnifiedOrderById(WechatPayConfig wechatPayConfig, String id) {
         try {
             WXPay wxPay = new WXPay(wechatPayConfig);
             HashMap<String, String> data = new HashMap<>();
-            data.put("out_trade_no", id);
+            data.put("transaction_id", id);
+            return wxPay.orderQuery(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 查看订单信息
+     *
+     * @param wechatPayConfig
+     * @param outTradeNo 商户系统内部订单号
+     * @return
+     */
+    public static Map<String, String> getUnifiedOrderByOutTradeNo(WechatPayConfig wechatPayConfig, String outTradeNo) {
+        try {
+            WXPay wxPay = new WXPay(wechatPayConfig);
+            HashMap<String, String> data = new HashMap<>();
+            data.put("out_trade_no", outTradeNo);
             return wxPay.orderQuery(data);
         } catch (Exception e) {
             e.printStackTrace();

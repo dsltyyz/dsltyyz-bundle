@@ -37,8 +37,11 @@ wechat:
     app-secret: 公众号秘钥
   pay:
     mch-id: 商户ID
-    key: 商户KEY
-    cert-url: 商户证书URL
+    mch-private-key: 商户KEY
+    version: v3 #默认
+    mch-serial-no: 版本为V3 商户API证书的证书序列号
+    api-v3-key: 版本为V3 apiV3秘钥
+    cert-url: 版本为v2 微信支付平台证书URL
 ~~~
 #### 2.1.3 示例
 ~~~
