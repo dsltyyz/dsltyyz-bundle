@@ -63,6 +63,11 @@ public class FileUtils {
         return null;
     }
 
+    /**
+     * 输入流转临时文件
+     * @param inputStream
+     * @return
+     */
     public static File inputStreamToTempFile(InputStream inputStream) {
         try {
             File tempFile = File.createTempFile("temp", "tmp");
