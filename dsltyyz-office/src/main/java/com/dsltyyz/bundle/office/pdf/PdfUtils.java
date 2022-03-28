@@ -2,7 +2,7 @@ package com.dsltyyz.bundle.office.pdf;
 
 import com.aspose.words.Document;
 import com.aspose.words.SaveFormat;
-import com.dsltyyz.bundle.common.util.StreamUtils;
+import com.dsltyyz.bundle.common.util.FileUtils;
 
 import java.io.*;
 
@@ -25,14 +25,21 @@ public class PdfUtils {
      */
     public static void convertPdf(InputStream inputStream, OutputStream outputStream){
         //aspose require FileInputStream
-        if(!(inputStream instanceof FileInputStream)){
-            inputStream = StreamUtils.inputStreamToFileInputStream(inputStream);
-        }
+        File temp = null;
         try{
+            if(!(inputStream instanceof FileInputStream)){
+                temp = FileUtils.inputStreamToTempFile(inputStream);
+                inputStream = new FileInputStream(temp);
+            }
             Document document = new Document(inputStream);
             document.save(outputStream, SaveFormat.PDF);
         }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            //有临时文件 直接删除
+            if(temp!=null){
+                temp.delete();
+            }
         }
     }
 

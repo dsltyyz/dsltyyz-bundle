@@ -62,4 +62,21 @@ public class FileUtils {
         }
         return null;
     }
+
+    public static File inputStreamToTempFile(InputStream inputStream) {
+        try {
+            File tempFile = File.createTempFile("temp", "tmp");
+            FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
+            int len = -1;
+            byte[] buffer = new byte[1024];
+            while ((len = inputStream.read(buffer)) != -1) {
+                fileOutputStream.write(buffer, 0, len);
+            }
+            fileOutputStream.close();
+            return tempFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
