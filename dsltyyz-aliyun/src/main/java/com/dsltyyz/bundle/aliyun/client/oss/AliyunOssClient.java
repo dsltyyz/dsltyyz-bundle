@@ -3,13 +3,10 @@ package com.dsltyyz.bundle.aliyun.client.oss;
 import com.alibaba.alicloud.context.AliCloudProperties;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.common.utils.BinaryUtil;
-import com.aliyun.oss.model.GetObjectRequest;
-import com.aliyun.oss.model.MatchMode;
-import com.aliyun.oss.model.OSSObject;
-import com.aliyun.oss.model.PolicyConditions;
+import com.aliyun.oss.model.*;
 import com.dsltyyz.bundle.aliyun.common.properties.OssProperties;
-import com.dsltyyz.bundle.aliyun.common.vo.OssVO;
 import com.dsltyyz.bundle.aliyun.common.vo.OssSignatureVO;
+import com.dsltyyz.bundle.aliyun.common.vo.OssVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -138,8 +135,22 @@ public class AliyunOssClient {
             GetObjectRequest getObjectRequest = new GetObjectRequest(ossProperties.getBucketName(), key);
             return ossClient.getObject(getObjectRequest);
         } catch (Exception e) {
-            log.info("Put Object [{}] to bucket [{}] Error:{}", key, ossProperties.getBucketName(), e.getMessage());
+            log.info("Get Object [{}] to bucket [{}] Error:{}", key, ossProperties.getBucketName(), e.getMessage());
             return null;
+        }
+    }
+
+    /**
+     * 删除OSS对象
+     *
+     * @param key
+     * @return
+     */
+    public void deleteObject(String key) {
+        try {
+            ossClient.deleteObject(ossProperties.getBucketName(), key);
+        } catch (Exception e) {
+            log.info("Delete Object [{}] to bucket [{}] Error:{}", key, ossProperties.getBucketName(), e.getMessage());
         }
     }
 }
