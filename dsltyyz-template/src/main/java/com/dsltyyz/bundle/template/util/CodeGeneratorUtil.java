@@ -1,5 +1,6 @@
 package com.dsltyyz.bundle.template.util;
 
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
@@ -10,6 +11,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.dsltyyz.bundle.common.util.DateUtils;
+import com.dsltyyz.bundle.common.util.YamlUtils;
 import com.dsltyyz.bundle.office.excel.entity.Excel;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheet;
 import com.dsltyyz.bundle.office.excel.util.ExcelUtils;
@@ -18,9 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
@@ -34,14 +39,56 @@ import java.util.*;
 @Slf4j
 public class CodeGeneratorUtil {
 
-    private static MybatisPlusCodeGeneratorXml mybatisPlusCodeGeneratorXml = null;
+    public static final String YML_SUFFIX = ".yml";
+    public static final String YAML_SUFFIX = ".yaml";
+    public static final String XML_SUFFIX = ".xml";
+    public static final String FILE_NAME = "code-generator";
+
+    private static MybatisPlusCodeGeneratorXml mybatisPlusCodeGeneratorConfig = null;
+
+    private static String autoFindConfigFile() {
+        //1.查找默认yml文件
+        Resource resourceYml = new ClassPathResource(FILE_NAME + YML_SUFFIX);
+        if (resourceYml.exists()) {
+            return FILE_NAME + YML_SUFFIX;
+        }
+        //2.查找默认xml文件
+        Resource resourceXml = new ClassPathResource(FILE_NAME + XML_SUFFIX);
+        if (resourceXml.exists()) {
+            return FILE_NAME + XML_SUFFIX;
+        }
+        return null;
+    }
+
+    private static Boolean init(String configFile) {
+        Assert.isTrue(!StringUtils.isEmpty(configFile), "配置文件不能为空");
+        Assert.isTrue(configFile.endsWith(XML_SUFFIX) || configFile.endsWith(YML_SUFFIX) || configFile.endsWith(YAML_SUFFIX), "配置文件类型不正确");
+        Resource resource= new ClassPathResource(configFile);
+        Assert.isTrue(resource.exists(), "配置文件不存在");
+        if (configFile.endsWith(XML_SUFFIX)) {
+            return initXml(configFile);
+        } else if (configFile.endsWith(YML_SUFFIX) || configFile.endsWith(YAML_SUFFIX)) {
+            return initYaml(configFile);
+        }
+        return false;
+    }
+
+    private static Boolean initYaml(String configFile) {
+        try {
+            mybatisPlusCodeGeneratorConfig = YamlUtils.getObject(new ClassPathResource(configFile).getInputStream(), new TypeReference<MybatisPlusCodeGeneratorXml>(){});
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     /**
      * 初始化数据
      *
      * @return
      */
-    private static Boolean init(String configFile) {
+    private static Boolean initXml(String configFile) {
         try {
             // 读取XML文件
             Resource resource = new ClassPathResource(configFile);
@@ -52,7 +99,7 @@ public class CodeGeneratorUtil {
                 buffer.append(line);
             }
             br.close();
-            mybatisPlusCodeGeneratorXml = XmlBuilderUtil.xmlStrToObject(MybatisPlusCodeGeneratorXml.class, buffer.toString());
+            mybatisPlusCodeGeneratorConfig = XmlBuilderUtil.xmlStrToObject(MybatisPlusCodeGeneratorXml.class, buffer.toString());
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +119,7 @@ public class CodeGeneratorUtil {
         String path = clazz.getResource(File.separator).getPath();
         String projectPath = path.substring(0, path.indexOf("/target"));
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor(mybatisPlusCodeGeneratorXml.getAuthor());
+        gc.setAuthor(mybatisPlusCodeGeneratorConfig.getAuthor());
 
         //重新定义类命名
         gc.setMapperName("%sDAO");
@@ -81,19 +128,19 @@ public class CodeGeneratorUtil {
         mpg.setGlobalConfig(gc);
 
         //配置数据源
-        DataSourceXml dateSourceXml = mybatisPlusCodeGeneratorXml.getDateSourceXml();
+        DataSourceXml dataSource = mybatisPlusCodeGeneratorConfig.getDataSource();
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl(dateSourceXml.getUrl());
-        dsc.setDriverName(dateSourceXml.getDriverName());
-        dsc.setUsername(dateSourceXml.getUsername());
-        dsc.setPassword(dateSourceXml.getPassword());
+        dsc.setUrl(dataSource.getUrl());
+        dsc.setDriverName(dataSource.getDriverName());
+        dsc.setUsername(dataSource.getUsername());
+        dsc.setPassword(dataSource.getPassword());
         mpg.setDataSource(dsc);
 
         // 包配置
-        StrategyXml strategyXml = mybatisPlusCodeGeneratorXml.getStrategyXml();
+        StrategyXml strategy = mybatisPlusCodeGeneratorConfig.getStrategy();
         PackageConfig pc = new PackageConfig();
-        pc.setParent(strategyXml.getParentPackage());
-        pc.setModuleName(strategyXml.getModuleName());
+        pc.setParent(strategy.getParentPackage());
+        pc.setModuleName(strategy.getModuleName());
         pc.setEntity("domain.entity");
         pc.setMapper("dao");
         mpg.setPackageInfo(pc);
@@ -106,7 +153,7 @@ public class CodeGeneratorUtil {
             }
         };
         // 定义输出目录
-        String outPath = (projectPath + "/src/main/java/" + strategyXml.getParentPackage() + "/" + strategyXml.getModuleName()).replaceAll("\\.", "\\" + File.separator);
+        String outPath = (projectPath + "/src/main/java/" + strategy.getParentPackage() + "/" + strategy.getModuleName()).replaceAll("\\.", "\\" + File.separator);
         // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
 
@@ -154,31 +201,40 @@ public class CodeGeneratorUtil {
         mpg.setTemplate(templateConfig);
 
         // 策略配置
-        StrategyConfig strategy = new StrategyConfig();
-        strategy.setNaming(NamingStrategy.underline_to_camel);
-        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setEntityLombokModel(true);
-        strategy.setRestControllerStyle(true);
-        strategy.setControllerMappingHyphenStyle(true);
-        String[] array = new String[strategyXml.getIncludeTableXML().getTable().size()];
-        strategy.setInclude(strategyXml.getIncludeTableXML().getTable().toArray(array));
-        mpg.setStrategy(strategy);
+        StrategyConfig strategyConfig = new StrategyConfig();
+        strategyConfig.setNaming(NamingStrategy.underline_to_camel);
+        strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);
+        strategyConfig.setEntityLombokModel(true);
+        strategyConfig.setRestControllerStyle(true);
+        strategyConfig.setControllerMappingHyphenStyle(true);
+        String[] array = new String[strategy.getIncludeTable().getTable().size()];
+        strategyConfig.setInclude(strategy.getIncludeTable().getTable().toArray(array));
+        mpg.setStrategy(strategyConfig);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
     }
 
     /**
      * 代码生成
+     *
+     * @param clazz 项目执行代码生成类
      */
-    public static void autorun(Class clazz) {
+    public static void autoRun(Class clazz) {
         //初始化数据
-        autorun(clazz, "code-generator.xml");
+        autoRun(clazz, autoFindConfigFile());
     }
+
 
     /**
      * 代码生成
+     *
+     * @param clazz      项目执行代码生成类
+     * @param configFile 配置文件
+     *                   参考jar下
+     *                   XML resources/code-generator.xml.example
+     *                   YML resources/code-generator.yml.example
      */
-    public static void autorun(Class clazz, String configFile) {
+    public static void autoRun(Class clazz, String configFile) {
         //初始化数据
         //configFile参考resources/code-generator.xml.example
         if (init(configFile)) {
@@ -192,12 +248,12 @@ public class CodeGeneratorUtil {
      */
     private static void dictionary(Class clazz) {
         //配置数据源
-        DataSourceXml dateSourceXml = mybatisPlusCodeGeneratorXml.getDateSourceXml();
+        DataSourceXml dataSource = mybatisPlusCodeGeneratorConfig.getDataSource();
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl(dateSourceXml.getUrl());
-        dsc.setDriverName(dateSourceXml.getDriverName());
-        dsc.setUsername(dateSourceXml.getUsername());
-        dsc.setPassword(dateSourceXml.getPassword());
+        dsc.setUrl(dataSource.getUrl());
+        dsc.setDriverName(dataSource.getDriverName());
+        dsc.setUsername(dataSource.getUsername());
+        dsc.setPassword(dataSource.getPassword());
         dsc.setDbQuery(new DsltyyzMySqlQuery());
 
         ConfigBuilder configBuilder = new ConfigBuilder(null, dsc, null, null, null);
@@ -223,7 +279,7 @@ public class CodeGeneratorUtil {
         excelSheet1.setSheetName("修订日志");
         excelSheet1.setHeadList(Arrays.asList("修订日志"));
         excelSheet1.setList(Arrays.asList(
-                new ModifyLog("v1.0", "数据库设计", mybatisPlusCodeGeneratorXml.getAuthor(), mybatisPlusCodeGeneratorXml.getAuthor(), DateUtils.format(new Date(), "yyyy-MM-dd"))
+                new ModifyLog("v1.0", "数据库设计", mybatisPlusCodeGeneratorConfig.getAuthor(), mybatisPlusCodeGeneratorConfig.getAuthor(), DateUtils.format(new Date(), "yyyy-MM-dd"))
         ));
         excel.getExcelSheetList().add(excelSheet1);
 
@@ -256,12 +312,21 @@ public class CodeGeneratorUtil {
     /**
      * 数据库字典
      *
-     * @param clazz
+     * @param clazz 项目执行代码生成类
      */
     public static void databaseDictionary(Class clazz) {
-        databaseDictionary(clazz,"code-generator.xml");
+        databaseDictionary(clazz, autoFindConfigFile());
     }
 
+    /**
+     * 数据库字典
+     *
+     * @param clazz      项目执行代码生成类
+     * @param configFile 配置文件
+     *                   参考jar下
+     *                   XML resources/code-generator.xml.example
+     *                   YML resources/code-generator.yml.example
+     */
     public static void databaseDictionary(Class clazz, String configFile) {
         //初始化数据
         //configFile参考resources/code-generator.xml.example
@@ -269,4 +334,5 @@ public class CodeGeneratorUtil {
             dictionary(clazz);
         }
     }
+
 }

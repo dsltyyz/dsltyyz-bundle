@@ -1,5 +1,6 @@
 package com.dsltyyz.bundle.template.bean;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,18 +28,21 @@ public class MybatisPlusCodeGeneratorXml {
      * 创建人
      */
     @XmlElement(name = "author")
+    @JSONField(name = "author")
     private String author;
 
     /**
      * 数据源
      */
-    @XmlElement(name = "datasource")
-    private DataSourceXml dateSourceXml;
+    @XmlElement(name = "data-source")
+    @JSONField(name = "data-source")
+    private DataSourceXml dataSource;
 
     /**
      * 策略
      */
     @XmlElement(name = "strategy")
-    private StrategyXml strategyXml;
+    @JSONField(name = "strategy")
+    private StrategyXml strategy;
 
 }

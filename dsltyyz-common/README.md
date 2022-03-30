@@ -1,6 +1,6 @@
 # dsltyyz-common
 - 公共包
-  - 当前版本: 2.1.0-SNAPSHOT
+  - 当前版本: 2.2.0-SNAPSHOT
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍

@@ -1,0 +1,13 @@
+author: dsltyyz
+data-source:
+  url: jdbc:mysql://localhost:3306/dsltyyz
+  driver-name: com.mysql.cj.jdbc.Driver
+  username: root
+  password: root
+strategy:
+  parent-package: com.dsltyyz.sms
+  module-name: app
+  include-table:
+    table:
+      - sms_app
+      - sms_app_token

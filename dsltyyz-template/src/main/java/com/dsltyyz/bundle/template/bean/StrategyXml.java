@@ -1,5 +1,6 @@
 package com.dsltyyz.bundle.template.bean;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,18 +28,21 @@ public class StrategyXml {
      * 父包
      */
     @XmlElement(name = "parent-package")
+    @JSONField(name = "parent-package")
     private String parentPackage;
 
     /**
      * 模块名称
      */
     @XmlElement(name = "module-name")
+    @JSONField(name = "module-name")
     private String moduleName;
 
     /**
      * 模块名称
      */
     @XmlElement(name = "include-table")
-    private IncludeTableXml includeTableXML;
+    @JSONField(name = "include-table")
+    private IncludeTableXml includeTable;
 
 }
