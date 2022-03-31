@@ -28,7 +28,24 @@
 ~~~
 ### 2.1 代码生成
     基于springboot+mybatisplus+druid+msql+swagger代码生成
-#### 2.1.1 配置文件 code-generator.xml
+#### 2.1.1 配置文件 支持yml>xml
+##### code-generator.yml
+~~~
+author: dsltyyz
+data-source:
+  url: jdbc:mysql://localhost:3306/dsltyyz
+  driver-name: com.mysql.cj.jdbc.Driver
+  username: root
+  password: root
+strategy:
+  parent-package: com.dsltyyz.sms
+  module-name: app
+  include-table:
+    table:
+      - sms_app
+      - sms_app_token
+~~~
+##### code-generator.xml
 ~~~
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
