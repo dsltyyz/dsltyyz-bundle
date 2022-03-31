@@ -56,7 +56,8 @@ public class StreamUtils {
         String oneLine = "";
         try {
             while ((oneLine = bufferedReader.readLine()) != null) {
-                stringBuffer.append(oneLine);
+                //按行读取 数据追加换行符
+                stringBuffer.append(oneLine).append("\n");
             }
             bufferedReader.close();
             return stringBuffer.toString();
