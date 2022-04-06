@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -22,7 +20,6 @@ import java.util.Properties;
  * @author dsltyyz
  * @since 2021-3-9
  */
-@Component
 @Slf4j
 public class MybatisPlusDecryptFilter extends FilterAdapter {
 
@@ -30,9 +27,10 @@ public class MybatisPlusDecryptFilter extends FilterAdapter {
 
     /**
      * 获取命令行中的key
+     * dynamic-datasource-spring-boot-starter 无法注入ConfigurableEnvironment
+     * 采用环境监听MybatisPlusEnvironmentListener静态赋值
      */
-    @Resource
-    private ConfigurableEnvironment configurableEnvironment;
+    public static ConfigurableEnvironment configurableEnvironment;
 
     public MybatisPlusDecryptFilter() {
         log.info("MybatisPlus加密解析Druid拦截器构造");

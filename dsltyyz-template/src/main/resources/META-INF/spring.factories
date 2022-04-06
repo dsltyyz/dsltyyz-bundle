@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.dsltyyz.bundle.template.filter.MybatisPlusDecryptFilter,\
 com.dsltyyz.bundle.template.config.MybatisPlusConfig
+org.springframework.boot.SpringApplicationRunListener=\
+com.dsltyyz.bundle.template.listener.MybatisPlusEnvironmentListener
