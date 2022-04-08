@@ -153,6 +153,8 @@ public class CodeGeneratorUtil {
                     .enableSkipView();
                     //Mapper文件替换问DAO文件
                     builder.mapperBuilder().formatMapperFileName("%sDAO");
+                    //IService文件替换为SERVICE文件
+                    builder.serviceBuilder().formatServiceFileName("%sService");
                 })
                 //引擎默认输出到other 重写输出 不同的模板输出到不同的包
                 .templateEngine(new FreemarkerTemplateEngine(){
