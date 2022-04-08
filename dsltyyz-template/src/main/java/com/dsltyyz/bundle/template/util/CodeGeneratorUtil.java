@@ -122,7 +122,7 @@ public class CodeGeneratorUtil {
                 .packageConfig(builder -> {
                     builder.parent(strategy.getParentPackage())
                             .moduleName(strategy.getModuleName())
-                            .entity("domain/entity")
+                            .entity("domain.entity")
                             .mapper("dao");
                 })
                 //模板配置
@@ -137,21 +137,32 @@ public class CodeGeneratorUtil {
                 })
                 //自定义注入配置
                 .injectionConfig(builder -> {
+                    Map<String, String> outputMap = new HashMap<>();
                     builder.beforeOutputFile((tableInfo, stringObjectMap) -> {
-                        stringObjectMap.put(outPath + "/domain/dto/" + tableInfo.getEntityName() + "DTO" + StringPool.DOT_JAVA, "user-defined/dto.java.ftl");
-                        stringObjectMap.put(outPath + "/domain/dto/" + tableInfo.getEntityName() + "PageDTO" + StringPool.DOT_JAVA, "user-defined/pagedto.java.ftl");
-                        stringObjectMap.put(outPath + "/domain/dto/" + tableInfo.getEntityName() + "VO" + StringPool.DOT_JAVA, "user-defined/vo.java.ftl");
-                    }).build();
+                        //文件全路径
+                        outputMap.put(outPath + "/domain/dto/" + tableInfo.getEntityName() + "DTO" + StringPool.DOT_JAVA, "user-defined/dto.java.ftl");
+                        outputMap.put(outPath + "/domain/dto/" + tableInfo.getEntityName() + "PageDTO" + StringPool.DOT_JAVA, "user-defined/pagedto.java.ftl");
+                        outputMap.put(outPath + "/domain/vo/" + tableInfo.getEntityName() + "VO" + StringPool.DOT_JAVA, "user-defined/vo.java.ftl");
+                    })
+                    .customFile(outputMap)
+                    .build();
                 })
                 //自定义策略配置
                 .strategyConfig(builder -> {
                     builder.addInclude(strategy.getIncludeTable().getTable())
-                    .enableCapitalMode()
                     .enableSkipView();
                     //Mapper文件替换问DAO文件
-                    builder.mapperBuilder().formatMapperFileName("%DAO");
+                    builder.mapperBuilder().formatMapperFileName("%sDAO");
                 })
-                .templateEngine(new FreemarkerTemplateEngine())
+                //引擎默认输出到other 重写输出 不同的模板输出到不同的包
+                .templateEngine(new FreemarkerTemplateEngine(){
+                    @Override
+                    protected void outputCustomFile(Map<String, String> customFile, TableInfo tableInfo, Map<String, Object> objectMap) {
+                        customFile.forEach((key, value) -> {
+                            outputFile(new File(key), objectMap, value);
+                        });
+                    }
+                })
                 .execute();
         ;
     }
