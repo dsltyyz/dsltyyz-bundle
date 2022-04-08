@@ -1,6 +1,6 @@
 # dsltyyz捆绑包
 - 快速开发捆绑包
-  - 当前版本: 2.2.0-SNAPSHOT
+  - 当前版本: 2.3.0-SNAPSHOT
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
@@ -77,7 +77,7 @@
 ~~~
 <properties>
     ...
-    <dsltyyz-bundle.version>2.2.0-SNAPSHOT</dsltyyz-bundle.version>
+    <dsltyyz-bundle.version>2.3.0-SNAPSHOT</dsltyyz-bundle.version>
     ...
 </properties>
 <dependencyManagement>

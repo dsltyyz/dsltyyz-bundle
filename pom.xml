@@ -6,7 +6,7 @@
 
     <groupId>com.dsltyyz.bundle</groupId>
     <artifactId>dsltyyz-bundle</artifactId>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>2.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>dsltyyz-bundle</name>
@@ -51,11 +51,11 @@
         <java.version>1.8</java.version>
 
         <!--包-->
-        <dsltyyz-bundle.version>2.2.0-SNAPSHOT</dsltyyz-bundle.version>
+        <dsltyyz-bundle.version>2.3.0-SNAPSHOT</dsltyyz-bundle.version>
 
         <!--组件-->
         <lombok.version>1.18.6</lombok.version>
-        <mybatis-plus.version>3.4.0</mybatis-plus.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <springfox-boot.version>3.0.0</springfox-boot.version>
         <xstream.version>1.4.10</xstream.version>
         <jwt.version>0.9.1</jwt.version>

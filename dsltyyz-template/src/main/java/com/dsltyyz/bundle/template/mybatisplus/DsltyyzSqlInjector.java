@@ -2,9 +2,9 @@ package com.dsltyyz.bundle.template.mybatisplus;
 
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.extension.injector.methods.AlwaysUpdateSomeColumnById;
 import com.baomidou.mybatisplus.extension.injector.methods.InsertBatchSomeColumn;
-import com.baomidou.mybatisplus.extension.injector.methods.LogicDeleteByIdWithFill;
 
 import java.util.List;
 
@@ -16,14 +16,12 @@ import java.util.List;
 public class DsltyyzSqlInjector extends DefaultSqlInjector {
 
     @Override
-    public List<AbstractMethod> getMethodList(Class<?> mapperClass) {
-        List<AbstractMethod> methodList = super.getMethodList(mapperClass);
+    public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {
+        List<AbstractMethod> methodList = super.getMethodList(mapperClass, tableInfo);
         //批量插入
         methodList.add(new InsertBatchSomeColumn());
         //批量更新
         methodList.add(new UpdateBatchMethod());
-        //删除填充
-        methodList.add(new LogicDeleteByIdWithFill());
         //更新
         methodList.add(new AlwaysUpdateSomeColumnById());
         return methodList;
