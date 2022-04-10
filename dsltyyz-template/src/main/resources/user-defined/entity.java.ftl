@@ -19,7 +19,7 @@ import com.dsltyyz.bundle.template.enums.*;
  * ${table.comment!}
  *
  * @author ${author}
- * @since ${date}
+ * @date ${date}
  */
 @ApiModel(description = "${table.comment!}")
 @Data

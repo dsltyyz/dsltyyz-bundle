@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * Excel Sheet 列对应属性
  *
  * @author: dsltyyz
- * @since: 2019-04-10
+ * @date: 2019-04-10
  */
 @ApiModel(description = "Excel工作表列对应属性")
 @NoArgsConstructor

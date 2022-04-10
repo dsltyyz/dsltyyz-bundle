@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 微信数据
  *
  * @author: dsltyyz
- * @since: 2019-11-07
+ * @date: 2019-11-07
  */
 @AllArgsConstructor
 @NoArgsConstructor

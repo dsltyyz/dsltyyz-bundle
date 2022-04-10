@@ -5,7 +5,7 @@ package com.dsltyyz.bundle.wechat.common.constant;
  * 微信访问地址
  * https://developers.weixin.qq.com/doc/
  * @author: dsltyyz
- * @since: 2020-12-9
+ * @date: 2020-12-9
  */
 public interface WechatAccessUrl {
 

@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 支付属性
  *
  * @author: dsltyyz
- * @since: 2019-11-19
+ * @date: 2019-11-19
  */
 @AllArgsConstructor
 @NoArgsConstructor

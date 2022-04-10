@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Mybatis Plus 代码生成器XML配置类
  *
  * @author: dsltyyz
- * @since: 2019-2-20
+ * @date: 2019-2-20
  */
 @XmlRootElement(name = "root")
 @XmlAccessorType(XmlAccessType.FIELD)

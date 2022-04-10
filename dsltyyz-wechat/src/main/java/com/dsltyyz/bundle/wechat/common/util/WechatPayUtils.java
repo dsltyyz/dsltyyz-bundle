@@ -18,7 +18,7 @@ import java.util.Map;
  * https://pay.weixin.qq.com/wiki/doc/api/index.html
  *
  * @author: dsltyyz
- * @since: 2019-11-12
+ * @date: 2019-11-12
  */
 @Slf4j
 public class WechatPayUtils {

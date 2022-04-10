@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * 条件注入PayProperties属性和Pay客户端
  *
  * @author: dsltyyz
- * @since: 2020-08-27
+ * @date: 2020-08-27
  */
 @Configuration
 @EnableConfigurationProperties(PayProperties.class)

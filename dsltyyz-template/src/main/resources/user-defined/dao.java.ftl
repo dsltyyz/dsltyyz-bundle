@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * ${table.comment!} Dao
  *
  * @author ${author}
- * @since ${date}
+ * @date ${date}
  */
 @Mapper
 public interface ${table.mapperName} extends DsltyyzDAO<${entity}> {

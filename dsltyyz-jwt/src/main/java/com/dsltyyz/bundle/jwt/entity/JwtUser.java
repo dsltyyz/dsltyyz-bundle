@@ -9,7 +9,7 @@ import lombok.*;
  * JWT用户信息
  *
  * @author: dsltyyz
- * @since: 2020-9-8
+ * @date: 2020-9-8
  */
 @ApiModel(description = "JWT用户信息")
 @NoArgsConstructor

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  *     spring.cloud.alicloud.sms.enable
  *
  * @author: dsltyyz
- * @since: 2020-08-27
+ * @date: 2020-08-27
  */
 @Configuration
 @EnableConfigurationProperties(SmsProperties.class)

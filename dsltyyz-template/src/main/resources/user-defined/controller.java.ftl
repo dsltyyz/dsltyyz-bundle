@@ -17,7 +17,7 @@ import javax.validation.Valid;
  * ${table.comment!} Controller
  *
  * @author ${author}
- * @since ${date}
+ * @date ${date}
  */
 @Api(value = "${table.comment!}控制器", tags = {"${table.comment!}"})
 @RestController

@@ -9,7 +9,7 @@ import lombok.Data;
  * 主题属性
  *
  * @author: dsltyyz
- * @since: 2019-04-08
+ * @date: 2019-04-08
  */
 @ApiModel(description = "主题属性")
 @Data

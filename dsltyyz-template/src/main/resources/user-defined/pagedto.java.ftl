@@ -15,7 +15,7 @@ import com.dsltyyz.bundle.template.enums.*;
  * ${table.comment!} Page DTO
  *
  * @author ${author}
- * @since ${date}
+ * @date ${date}
  */
 @ApiModel(description = "${table.comment!}分页DTO")
 @EqualsAndHashCode(callSuper = true)

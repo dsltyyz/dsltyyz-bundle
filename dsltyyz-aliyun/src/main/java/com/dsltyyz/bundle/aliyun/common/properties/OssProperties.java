@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * OSS属性
  *
  * @author: dsltyyz
- * @since: 2019-11-19
+ * @date: 2019-11-19
  */
 @ApiModel(description = "OSS属性")
 @ConfigurationProperties("spring.cloud.alicloud.oss")

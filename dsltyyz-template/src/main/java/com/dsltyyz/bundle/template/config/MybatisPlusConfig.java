@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * mybatis plus 分页配置
  *
  * @author dsltyyz
- * @since 2020-8-28
+ * @date 2020-8-28
  */
 @EnableTransactionManagement
 @Configuration

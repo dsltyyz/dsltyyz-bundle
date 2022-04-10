@@ -12,7 +12,7 @@ import ${superServiceClassPackage};
  * </p>
  *
  * @author ${author}
- * @since ${date}
+ * @date ${date}
  */
 public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
 

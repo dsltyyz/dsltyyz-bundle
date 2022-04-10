@@ -5,7 +5,7 @@ package com.dsltyyz.bundle.common.constant;
  * 通用状态定义
  *
  * @author: dsltyyz
- * @since: 2019-3-21
+ * @date: 2019-3-21
  */
 public interface HttpStatus {
 

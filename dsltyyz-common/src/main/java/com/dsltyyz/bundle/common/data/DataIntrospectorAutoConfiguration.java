@@ -13,7 +13,7 @@ import java.util.TimeZone;
  * 自动加载缓存客户端
  *
  * @author: dsltyyz
- * @since: 2019-11-19
+ * @date: 2019-11-19
  */
 @Configuration
 public class DataIntrospectorAutoConfiguration {

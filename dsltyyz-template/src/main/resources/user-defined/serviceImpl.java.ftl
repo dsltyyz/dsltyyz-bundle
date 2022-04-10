@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * </p>
  *
  * @author ${author}
- * @since ${date}
+ * @date ${date}
  */
 @Service
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {

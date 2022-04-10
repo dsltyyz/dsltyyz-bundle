@@ -12,7 +12,7 @@ import java.util.List;
  * 微信用户
  *
  * @author: dsltyyz
- * @since: 2019-11-07
+ * @date: 2019-11-07
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

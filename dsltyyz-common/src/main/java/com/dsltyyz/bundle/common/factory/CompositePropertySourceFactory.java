@@ -15,7 +15,7 @@ import java.util.Properties;
  * 复合读取属性源工厂
  *
  * @author: dsltyyz
- * @since: 2019-11-22
+ * @date: 2019-11-22
  */
 public class CompositePropertySourceFactory extends DefaultPropertySourceFactory {
 

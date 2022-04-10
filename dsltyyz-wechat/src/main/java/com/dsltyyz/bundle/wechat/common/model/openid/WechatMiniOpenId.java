@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 微信openid
  *
  * @author: dsltyyz
- * @since: 2019-11-06
+ * @date: 2019-11-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

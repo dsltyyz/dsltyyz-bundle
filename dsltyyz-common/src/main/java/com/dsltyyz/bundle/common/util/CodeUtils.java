@@ -7,7 +7,7 @@ import java.util.Random;
  * 验证码工具类
  *
  * @author: dsltyyz
- * @since: 2019-3-2
+ * @date: 2019-3-2
  */
 public class CodeUtils {
     //大写
