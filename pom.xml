@@ -55,7 +55,7 @@
 
         <!--组件-->
         <lombok.version>1.18.6</lombok.version>
-        <mybatis-plus.version>3.4.0</mybatis-plus.version>
+        <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <springfox-boot.version>3.0.0</springfox-boot.version>
         <xstream.version>1.4.10</xstream.version>
         <jwt.version>0.9.1</jwt.version>

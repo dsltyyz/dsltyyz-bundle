@@ -1,7 +1,7 @@
 package com.dsltyyz.bundle.template.config;
 
-import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.dsltyyz.bundle.template.mybatisplus.DsltyyzMetaObjectHandler;
 import com.dsltyyz.bundle.template.mybatisplus.DsltyyzSqlInjector;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +22,8 @@ public class MybatisPlusConfig {
      * 分页插件
      */
     @Bean
-    public PaginationInterceptor paginationInterceptor() {
-        return new PaginationInterceptor();
+    public PaginationInnerInterceptor paginationInnerInterceptor() {
+        return new PaginationInnerInterceptor();
     }
 
     /**
@@ -32,8 +32,8 @@ public class MybatisPlusConfig {
      * @return
      */
     @Bean
-    public OptimisticLockerInterceptor optimisticLockerInterceptor() {
-        return new OptimisticLockerInterceptor();
+    public OptimisticLockerInnerInterceptor optimisticLockerInnerInterceptor() {
+        return new OptimisticLockerInnerInterceptor();
     }
 
     /**
