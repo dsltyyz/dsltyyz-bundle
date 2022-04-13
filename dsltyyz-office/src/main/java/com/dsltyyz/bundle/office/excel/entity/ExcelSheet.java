@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,17 +28,17 @@ public class ExcelSheet {
      * 头显示数据
      */
     @ApiModelProperty(value = "头显示数据")
-    private List<String> headList;
+    private List<String> headList = new ArrayList<>();
 
     /**
      * 配置显示
      */
     @ApiModelProperty(value = "配置显示", hidden = true)
-    private List<ExcelSheetColumnProperty> propertyList;
+    private List<ExcelSheetColumnProperty> propertyList = new ArrayList<>();
 
     /**
      * 显示数据
      */
     @ApiModelProperty(value = "显示数据", required = true)
-    private List list;
+    private List list = new ArrayList<>();
 }

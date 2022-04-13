@@ -1,28 +1,33 @@
 package com.dsltyyz.bundle.office.excel.util;
 
+import com.dsltyyz.bundle.common.util.DateUtils;
 import com.dsltyyz.bundle.common.util.FileUtils;
 import com.dsltyyz.bundle.common.util.ReflexUtils;
 import com.dsltyyz.bundle.common.util.UUIDUtils;
 import com.dsltyyz.bundle.office.excel.annotation.ExcelColumn;
+import com.dsltyyz.bundle.office.excel.annotation.ExcelColumnLocation;
 import com.dsltyyz.bundle.office.excel.annotation.ExportExcel;
 import com.dsltyyz.bundle.office.excel.entity.Excel;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheet;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheetColumnProperty;
+import com.dsltyyz.bundle.office.excel.handler.DataHandler;
+import com.dsltyyz.bundle.office.excel.handler.DefaultDataHandler;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.formula.ptg.DeletedArea3DPtg;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * Description:
@@ -47,6 +52,149 @@ public class ExcelUtils {
      */
     public static ExcelSheet importExcel(InputStream excelInputStream, Class clazz, String excelType) throws Exception {
         return importExcel(excelInputStream, new ArrayList<>(Arrays.asList(clazz)), excelType).get(0);
+    }
+
+    /**
+     * 通过定位并指定sheet导入excel 单sheet
+     * @param excelInputStream
+     * @param sheetNum 指定sheet
+     * @param tClass
+     * @param excelType
+     * @return
+     * @throws Exception
+     */
+    public static ExcelSheet importExcelByLocationWithSheetNum(InputStream excelInputStream, int sheetNum, Class tClass, String excelType) throws Exception {
+        Workbook workbook;
+        if (XLS_TYPE.equals(excelType)) {
+            workbook = new HSSFWorkbook(excelInputStream);
+        } else if (XLSX_TYPE.equals(excelType)) {
+            workbook = new XSSFWorkbook(excelInputStream);
+        } else {
+            throw new IllegalArgumentException("fileType格式不正确");
+        }
+        //获取excel中sheet数目
+        int sheetNumber = workbook.getNumberOfSheets();
+        Assert.isTrue(sheetNum<=sheetNumber, "Excel没有指定页");
+        Sheet sheet = workbook.getSheetAt(sheetNum-1);
+        ExcelSheet excelSheet = new ExcelSheet();
+        //获取当前sheet名称
+        excelSheet.setSheetName(sheet.getSheetName());
+        System.out.println(sheet.getSheetName());
+        //除了列明说明 每列对应字段无数据
+        if (sheet.getPhysicalNumberOfRows() <= 1) {
+            return excelSheet;
+        }
+        //遍历行数据
+        System.out.println(sheet.getPhysicalNumberOfRows());
+        //从第二行开始
+        System.out.println(sheet.getPhysicalNumberOfRows());
+        for (int j = 1; j < sheet.getPhysicalNumberOfRows(); j++) {
+            Object object = ReflexUtils.instance(tClass);
+            for (Field declaredField : tClass.getDeclaredFields()) {
+                if(declaredField.isAnnotationPresent(ExcelColumnLocation.class)){
+                    ExcelColumnLocation excelColumnLocation = declaredField.getAnnotation(ExcelColumnLocation.class);
+                    Row row = sheet.getRow(j);
+                    if(row==null){
+                        break;
+                    }
+                    Cell cell = sheet.getRow(j).getCell(excelColumnLocation.value()-1);
+                    if(cell==null){
+                        continue;
+                    }
+                    String stringCellValue;
+                    if(cell.getCellType().equals(CellType.NUMERIC)){
+                        if(Arrays.asList(Date.class, LocalDateTime.class).contains(declaredField.getType())){
+                            stringCellValue = DateUtils.format(cell.getDateCellValue());
+                        }else {
+                            stringCellValue = String.valueOf(cell.getNumericCellValue());
+                        }
+                        if(!excelColumnLocation.dataHandler().equals(DefaultDataHandler.class)){
+                            DataHandler instance = ReflexUtils.instance(excelColumnLocation.dataHandler());
+                            stringCellValue = instance.deal(stringCellValue, excelColumnLocation.pattern());
+                        }
+                        //System.out.println("第R行第C列:DATA".replace("R",String.valueOf(j+1)).replace("C",String.valueOf(excelColumnLocation.value())).replace("DATA", stringCellValue));
+                    }else if(cell.getCellType().equals(CellType.FORMULA)){
+                        try {
+                            stringCellValue = String.valueOf(cell.getNumericCellValue());
+                            //System.out.println("第R行第C列:DATA".replace("R", String.valueOf(j + 1)).replace("C", String.valueOf(excelColumnLocation.value())).replace("DATA", stringCellValue));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            continue;
+                        }
+                    }else{
+                        stringCellValue = cell.getStringCellValue();
+                        //System.out.println("第R行第C列:DATA".replace("R",String.valueOf(j+1)).replace("C",String.valueOf(excelColumnLocation.value())).replace("DATA", stringCellValue));
+                        if(!excelColumnLocation.dataHandler().equals(DefaultDataHandler.class)){
+                            DataHandler instance = ReflexUtils.instance(excelColumnLocation.dataHandler());
+                            stringCellValue = instance.deal(stringCellValue, excelColumnLocation.pattern());
+                        }
+                    }
+
+                    ReflexUtils.setPropertyValueForObject(object, declaredField.getName(), stringCellValue);
+                }
+            }
+            excelSheet.getList().add(object);
+        }
+        return excelSheet;
+    }
+
+    /**
+     * 通过定位导入excel 多sheet
+     * @param excelInputStream
+     * @param classList
+     * @param excelType
+     * @return
+     * @throws Exception
+     */
+    public static List<ExcelSheet> importExcelByLocation(InputStream excelInputStream, List<Class> classList, String excelType) throws Exception {
+        List<ExcelSheet> excelSheetList = new ArrayList<>();
+        Workbook workbook;
+        if (XLS_TYPE.equals(excelType)) {
+            workbook = new HSSFWorkbook(excelInputStream);
+        } else if (XLSX_TYPE.equals(excelType)) {
+            workbook = new XSSFWorkbook(excelInputStream);
+        } else {
+            throw new IllegalArgumentException("fileType格式不正确");
+        }
+        //获取excel中sheet数目
+        int sheetNumber = workbook.getNumberOfSheets();
+        if (classList.size() != sheetNumber) {
+            throw new IllegalArgumentException("请检查sheet数目与标准模板是否相同");
+        }
+        //sheet表
+        for (int i = 0; i < sheetNumber; i++) {
+            Class tClass = classList.get(i);
+            Sheet sheet = workbook.getSheetAt(i);
+            ExcelSheet excelSheet = new ExcelSheet();
+            //获取当前sheet名称
+            excelSheet.setSheetName(sheet.getSheetName());
+            //除了列明说明 每列对应字段无数据
+            if (sheet.getPhysicalNumberOfRows() <= 1) {
+                excelSheetList.add(excelSheet);
+                break;
+            }
+
+            //遍历行数据
+            //从第二行开始
+            for (int j = 1; j < sheet.getPhysicalNumberOfRows(); j++) {
+                Object object = ReflexUtils.instance(classList.get(i));
+                for (Field declaredField : tClass.getDeclaredFields()) {
+                    if(declaredField.isAnnotationPresent(ExcelColumnLocation.class)){
+                        ExcelColumnLocation excelColumnLocation = declaredField.getAnnotation(ExcelColumnLocation.class);
+                        Cell cell = sheet.getRow(j).getCell(excelColumnLocation.value()-1);
+                        String stringCellValue = cell.getStringCellValue();
+                        if(!excelColumnLocation.dataHandler().equals(DefaultDataHandler.class)){
+                            DataHandler instance = (DataHandler) ReflexUtils.instance(excelColumnLocation.dataHandler());
+                            stringCellValue = instance.deal(stringCellValue, excelColumnLocation.pattern());
+                        }
+                        ReflexUtils.setPropertyValueForObject(object, declaredField.getName(), stringCellValue);
+                    }
+                }
+                excelSheet.getList().add(object);
+            }
+            excelSheetList.add(excelSheet);
+        }
+        return excelSheetList;
     }
 
     /**
@@ -360,4 +508,5 @@ public class ExcelUtils {
         }
         return list;
     }
+
 }
