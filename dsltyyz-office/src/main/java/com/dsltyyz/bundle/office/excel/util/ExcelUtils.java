@@ -85,9 +85,8 @@ public class ExcelUtils {
             return excelSheet;
         }
         //遍历行数据
-        System.out.println(sheet.getPhysicalNumberOfRows());
+        //System.out.println(sheet.getPhysicalNumberOfRows());
         //从第二行开始
-        System.out.println(sheet.getPhysicalNumberOfRows());
         for (int j = 1; j < sheet.getPhysicalNumberOfRows(); j++) {
             Object object = ReflexUtils.instance(tClass);
             for (Field declaredField : tClass.getDeclaredFields()) {
@@ -175,18 +174,50 @@ public class ExcelUtils {
             }
 
             //遍历行数据
+            //System.out.println(sheet.getPhysicalNumberOfRows());
             //从第二行开始
             for (int j = 1; j < sheet.getPhysicalNumberOfRows(); j++) {
-                Object object = ReflexUtils.instance(classList.get(i));
+                Object object = ReflexUtils.instance(tClass);
                 for (Field declaredField : tClass.getDeclaredFields()) {
                     if(declaredField.isAnnotationPresent(ExcelColumnLocation.class)){
                         ExcelColumnLocation excelColumnLocation = declaredField.getAnnotation(ExcelColumnLocation.class);
-                        Cell cell = sheet.getRow(j).getCell(excelColumnLocation.value()-1);
-                        String stringCellValue = cell.getStringCellValue();
-                        if(!excelColumnLocation.dataHandler().equals(DefaultDataHandler.class)){
-                            DataHandler instance = (DataHandler) ReflexUtils.instance(excelColumnLocation.dataHandler());
-                            stringCellValue = instance.deal(stringCellValue, excelColumnLocation.pattern());
+                        Row row = sheet.getRow(j);
+                        if(row==null){
+                            break;
                         }
+                        Cell cell = sheet.getRow(j).getCell(excelColumnLocation.value()-1);
+                        if(cell==null){
+                            continue;
+                        }
+                        String stringCellValue;
+                        if(cell.getCellType().equals(CellType.NUMERIC)){
+                            if(Arrays.asList(Date.class, LocalDateTime.class).contains(declaredField.getType())){
+                                stringCellValue = DateUtils.format(cell.getDateCellValue());
+                            }else {
+                                stringCellValue = String.valueOf(cell.getNumericCellValue());
+                            }
+                            if(!excelColumnLocation.dataHandler().equals(DefaultDataHandler.class)){
+                                DataHandler instance = ReflexUtils.instance(excelColumnLocation.dataHandler());
+                                stringCellValue = instance.deal(stringCellValue, excelColumnLocation.pattern());
+                            }
+                            //System.out.println("第R行第C列:DATA".replace("R",String.valueOf(j+1)).replace("C",String.valueOf(excelColumnLocation.value())).replace("DATA", stringCellValue));
+                        }else if(cell.getCellType().equals(CellType.FORMULA)){
+                            try {
+                                stringCellValue = String.valueOf(cell.getNumericCellValue());
+                                //System.out.println("第R行第C列:DATA".replace("R", String.valueOf(j + 1)).replace("C", String.valueOf(excelColumnLocation.value())).replace("DATA", stringCellValue));
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                continue;
+                            }
+                        }else{
+                            stringCellValue = cell.getStringCellValue();
+                            //System.out.println("第R行第C列:DATA".replace("R",String.valueOf(j+1)).replace("C",String.valueOf(excelColumnLocation.value())).replace("DATA", stringCellValue));
+                            if(!excelColumnLocation.dataHandler().equals(DefaultDataHandler.class)){
+                                DataHandler instance = ReflexUtils.instance(excelColumnLocation.dataHandler());
+                                stringCellValue = instance.deal(stringCellValue, excelColumnLocation.pattern());
+                            }
+                        }
+
                         ReflexUtils.setPropertyValueForObject(object, declaredField.getName(), stringCellValue);
                     }
                 }
