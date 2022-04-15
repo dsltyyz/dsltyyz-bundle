@@ -27,7 +27,7 @@ public class WechatCommonUtils {
      * @param array
      * @return
      */
-    private static String sha1(String... array) {
+    public static String sha1(String... array) {
         StringBuffer sb = new StringBuffer();
         // 字符串排序
         Arrays.sort(array);
