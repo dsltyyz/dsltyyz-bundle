@@ -3,6 +3,9 @@ package com.dsltyyz.bundle.common.util;
 import io.jsonwebtoken.lang.Assert;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +105,6 @@ public class FileUtils {
      *
      * @param file
      * @param targetDirFile
-     * @throws IOException
      */
     public static void moveFile(File file, File targetDirFile) throws IOException {
         Assert.notNull(file, "该文件不能为空");
@@ -114,7 +116,9 @@ public class FileUtils {
             targetDirFile.mkdirs();
         }
         File newFile = new File(targetDirFile, file.getName());
-        file.renameTo(newFile);
+        Files.move(Paths.get(file.getAbsolutePath()), Paths.get(newFile.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+        //WINDOW可以 LINUX不行
+        //file.renameTo(newFile);
     }
 
     /**
