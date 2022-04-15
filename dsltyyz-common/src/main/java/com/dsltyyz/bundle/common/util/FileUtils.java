@@ -101,24 +101,40 @@ public class FileUtils {
     }
 
     /**
-     * 将文件移到目标文件夹下
+     * 将文件移到目标文件夹下 若目标文件夹下存在 强行覆盖
      *
-     * @param file
+     * @param sourceFile
      * @param targetDirFile
      */
-    public static void moveFile(File file, File targetDirFile) throws IOException {
-        Assert.notNull(file, "该文件不能为空");
+    public static void moveFileDir(File sourceFile, File targetDirFile) throws IOException {
+        Assert.notNull(sourceFile, "该文件不能为空");
         Assert.notNull(targetDirFile, "该文件夹不能为空");
         //检查当前文件
-        Assert.isTrue(file.exists(), "该文件不存在");
+        Assert.isTrue(sourceFile.exists(), "该文件不存在");
         //检查目标文件夹 不存在就创建
         if (!targetDirFile.exists()) {
             targetDirFile.mkdirs();
         }
-        File newFile = new File(targetDirFile, file.getName());
-        Files.move(Paths.get(file.getAbsolutePath()), Paths.get(newFile.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
-        //WINDOW可以 LINUX不行
-        //file.renameTo(newFile);
+        File newFile = new File(targetDirFile, sourceFile.getName());
+        Files.move(Paths.get(sourceFile.getAbsolutePath()), Paths.get(newFile.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    /**
+     * 将文件移到目标文件 若目标文件下存在 强行覆盖
+     *
+     * @param sourceFile
+     * @param targetFile
+     */
+    public static void moveFile(File sourceFile, File targetFile) throws IOException {
+        Assert.notNull(sourceFile, "该源文件不能为空");
+        Assert.notNull(targetFile, "该目标文件不能为空");
+        //检查当前文件
+        Assert.isTrue(sourceFile.exists(), "该文件不存在");
+        //检查目标文件上一级文件夹 不存在就创建
+        if (!targetFile.getParentFile().exists()) {
+            targetFile.getParentFile().mkdirs();
+        }
+        Files.move(Paths.get(sourceFile.getAbsolutePath()), Paths.get(targetFile.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**
