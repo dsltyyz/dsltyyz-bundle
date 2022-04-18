@@ -53,13 +53,25 @@ public class WechatCommonUtils {
      * @param signature 签名
      * @param timestamp 时间戳
      * @param nonce 字符串
+     * @param checkToken 验证token(微信回调配置TOKEN)
+     * @return
+     */
+    public static boolean checkSignature(String signature, String timestamp, String nonce, String checkToken){
+        String sha1Str = sha1(checkToken, timestamp, nonce);
+        return signature.equals(sha1Str);
+    }
+
+    /**
+     * 【服务号】【小程序】微信回调检测并返回
+     * @param signature 签名
+     * @param timestamp 时间戳
+     * @param nonce 字符串
      * @param echostr 输出
      * @param checkToken 验证token(微信回调配置TOKEN)
      * @return
      */
     public static String callbackCheck(String signature, String timestamp, String nonce, String echostr, String checkToken){
-        String sha1Str = sha1(checkToken, timestamp, nonce);
-        return signature.equals(sha1Str)?echostr:"error";
+        return checkSignature(signature, timestamp, nonce, checkToken)?echostr:"error";
     }
 
     /**

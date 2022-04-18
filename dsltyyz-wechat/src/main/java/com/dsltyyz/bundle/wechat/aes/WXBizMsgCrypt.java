@@ -20,12 +20,12 @@ public class WXBizMsgCrypt {
     /**
      * 构造函数
      *
+     * @param appId          公众平台appid
      * @param token          公众平台上，开发者设置的token
      * @param encodingAesKey 公众平台上，开发者设置的EncodingAESKey
-     * @param appId          公众平台appid
      * @throws AesException 执行失败，请查看该异常的错误码和具体的错误信息
      */
-    public WXBizMsgCrypt(String token, String encodingAesKey, String appId) throws AesException {
+    public WXBizMsgCrypt(String appId, String token, String encodingAesKey) throws AesException {
         if (encodingAesKey.length() != 43) {
             throw new AesException(AesException.IllegalAesKey);
         }
@@ -36,7 +36,7 @@ public class WXBizMsgCrypt {
     }
 
     // 生成4个字节的网络字节序
-    public byte[] getNetworkBytesOrder(int sourceNumber) {
+    private byte[] getNetworkBytesOrder(int sourceNumber) {
         byte[] orderBytes = new byte[4];
         orderBytes[3] = (byte) (sourceNumber & 0xFF);
         orderBytes[2] = (byte) (sourceNumber >> 8 & 0xFF);
@@ -46,7 +46,7 @@ public class WXBizMsgCrypt {
     }
 
     // 还原4个字节的网络字节序
-    public int recoverNetworkBytesOrder(byte[] orderBytes) {
+    private int recoverNetworkBytesOrder(byte[] orderBytes) {
         int sourceNumber = 0;
         for (int i = 0; i < 4; i++) {
             sourceNumber <<= 8;
