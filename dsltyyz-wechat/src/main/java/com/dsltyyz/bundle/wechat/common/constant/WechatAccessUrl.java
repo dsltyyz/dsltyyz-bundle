@@ -46,10 +46,10 @@ public interface WechatAccessUrl {
     String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=APPSECRET&code=CODE&grant_type=authorization_code";
 
     /**
-     * 【网站】【服务号】通过access_token和openid获取用户信息
+     *【服务号】通过access_token和openid获取用户信息
      *
      */
-    String USER_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+    String USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 
     /*******************小程序***********/
     /**

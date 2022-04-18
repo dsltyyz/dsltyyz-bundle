@@ -80,8 +80,8 @@ public class WechatUtils {
     }
 
     /**
-     * 【网站】【服务号】获取用户信息
-     *
+     * 【服务号】获取用户信息
+     * 2021年12月27日之后，不再输出头像、昵称信息
      * @param token  访问口令
      * @param openid 唯一标识
      * @return
