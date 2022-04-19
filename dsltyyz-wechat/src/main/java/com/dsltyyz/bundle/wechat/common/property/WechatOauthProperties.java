@@ -36,5 +36,5 @@ public class WechatOauthProperties extends WechatAccountProperties implements Se
     /**
      * 数据格式 XML JSON
      */
-    private String dataType= WechatOauthDataType.JSON;
+    private String dataType= WechatOauthDataType.XML;
 }
