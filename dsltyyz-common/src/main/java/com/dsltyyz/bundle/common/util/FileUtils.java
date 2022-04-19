@@ -167,20 +167,46 @@ public class FileUtils {
      * @return
      */
     public static File inputStreamToTempFile(InputStream inputStream) {
+        return inputStreamToTempFile(inputStream, "temp", "tmp");
+    }
+
+    /**
+     * 输入流转临时文件
+     *
+     * @param inputStream
+     * @param prefix
+     * @param suffix
+     * @return
+     */
+    public static File inputStreamToTempFile(InputStream inputStream, String prefix, String suffix) {
         try {
-            File tempFile = File.createTempFile("temp", "tmp");
-            FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
+            File tempFile = File.createTempFile(prefix, suffix);
+            inputStreamToFile(inputStream, tempFile);
+            return tempFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 输入流转文件
+     *
+     * @param inputStream
+     * @param file
+     */
+    public static void inputStreamToFile(InputStream inputStream, File file) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
             int len = -1;
             byte[] buffer = new byte[1024];
             while ((len = inputStream.read(buffer)) != -1) {
                 fileOutputStream.write(buffer, 0, len);
             }
             fileOutputStream.close();
-            return tempFile;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
 }

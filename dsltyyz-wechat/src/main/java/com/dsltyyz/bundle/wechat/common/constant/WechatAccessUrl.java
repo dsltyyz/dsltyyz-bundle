@@ -9,19 +9,48 @@ package com.dsltyyz.bundle.wechat.common.constant;
  */
 public interface WechatAccessUrl {
 
-    /*****************服务器************/
+    /*****************服务号 后台************/
     /**
-     * 【服务器】通过appid和appsecret获取token
+     * 【后台】通过appid和appsecret获取token
      */
     String TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
 
-    /*****************服务号************/
     /**
-     * 【服务号】微信浏览器网页授权
-     * 默认拥有scope参数中的snsapi_base和snsapi_userinfo
+     * 【后台】上传素材URL
      */
-    String AUTHORIZE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
+    String ADD_MATERIAL_URL = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=ACCESS_TOKEN&type=TYPE";
 
+    /**
+     * 【后台】删除素材URL
+     */
+    String DEL_MATERIAL_URL = "https://api.weixin.qq.com/cgi-bin/material/del_material?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【后台】新建草稿URL
+     */
+    String ADD_DRAFT_URL = "https://api.weixin.qq.com/cgi-bin/draft/add?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【后台】新建草稿URL
+     */
+    String DEL_DRAFT_URL = "https://api.weixin.qq.com/cgi-bin/draft/delete?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【后台】新建发布URL
+     */
+    String ADD_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/submit?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【后台】获取发布URL
+     */
+    String GET_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/get?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【后台】删除发布URL
+     */
+    String DEL_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/delete?access_token=ACCESS_TOKEN";
+
+    /*****************服务号 前台************/
     /**
      * 【服务号】获取模板列表
      */

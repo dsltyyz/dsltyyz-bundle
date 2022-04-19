@@ -1,13 +1,20 @@
 package com.dsltyyz.bundle.wechat.client;
 
 import com.dsltyyz.bundle.common.cache.client.CacheClient;
+import com.dsltyyz.bundle.common.util.FileUtils;
+import com.dsltyyz.bundle.common.util.HttpUtils;
+import com.dsltyyz.bundle.wechat.common.constant.WechatMaterialType;
+import com.dsltyyz.bundle.wechat.common.model.article.WechatArticle;
 import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
+import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterial;
+import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterialSend;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
 import com.dsltyyz.bundle.wechat.common.model.pay.WechatPayConfig;
 import com.dsltyyz.bundle.wechat.common.model.pay.WechatPayOrder;
 import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
 import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhoneInfo;
+import com.dsltyyz.bundle.wechat.common.model.publish.WechatPublish;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
@@ -19,6 +26,8 @@ import com.dsltyyz.bundle.wechat.common.util.WechatPayV3Utils;
 import com.dsltyyz.bundle.wechat.common.util.WechatUtils;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +47,7 @@ public class WechatClient {
     private CacheClient cacheClient;
 
     /**
-     * 【服务器】获取access_token
+     * 【服务器】【后台】获取access_token
      *
      * @return
      */
@@ -53,7 +62,7 @@ public class WechatClient {
     }
 
     /**
-     * 【服务器】获取该服务号下所有消息模板
+     * 【服务器】【后台】获取该服务号下所有消息模板
      *
      * @return
      */
@@ -63,7 +72,7 @@ public class WechatClient {
     }
 
     /**
-     * 【服务器】发送消息模板
+     * 【服务器】【后台】发送消息模板
      *
      * @param wechatTemplateSend
      * @return
@@ -71,6 +80,106 @@ public class WechatClient {
     public WechatResult sendTemplate(WechatTemplateSend wechatTemplateSend) {
         WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
         return WechatUtils.sendTemplate(wechatToken, wechatTemplateSend);
+    }
+
+    /**
+     * 【服务器】【后台】新增永久素材
+     *
+     * @param wechatMaterialSend 素材
+     * @return
+     */
+    public WechatMaterial addMaterial(WechatMaterialSend wechatMaterialSend){
+        WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
+        return WechatUtils.addMaterial(wechatToken, wechatMaterialSend);
+    }
+
+    /**
+     * 【服务器】【后台】删除永久素材
+     *
+     * @param mediaId     素材的media_id
+     * @return
+     */
+    public WechatResult delMaterial(String mediaId) {
+        WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
+        return WechatUtils.delMaterial(wechatToken, mediaId);
+    }
+
+    /**
+     * 将资源转换为微信永久素材
+     * @param sourceUrl
+     * @return
+     */
+    public WechatMaterial convertMaterial(String sourceUrl){
+        //网络资源下载
+        InputStream inputStream = HttpUtils.doGetInputStream(sourceUrl, null, null);
+        //创建本地文件
+        File file = new File(sourceUrl.substring(sourceUrl.lastIndexOf("/")+1));
+        //文件信息写入
+        FileUtils.inputStreamToFile(inputStream, file);
+        //微信素材
+        WechatMaterialSend wechatMaterialSend = new WechatMaterialSend();
+        wechatMaterialSend.setType(WechatMaterialType.IMAGE);
+        wechatMaterialSend.setMedia(file);
+        WechatMaterial wechatMaterial = addMaterial(wechatMaterialSend);
+        //删除本地文件
+        file.delete();
+        return wechatMaterial;
+    }
+
+    /**
+     * 【服务器】【后台】增加草稿
+     *
+     * @param wechatArticle 文章
+     * @return
+     */
+    public WechatMaterial addDraft(WechatArticle wechatArticle) {
+        WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
+        return WechatUtils.addDraft(wechatToken, wechatArticle);
+    }
+
+    /**
+     * 【服务器】【后台】删除草稿
+     *
+     * @param mediaId     草稿mediaId
+     * @return
+     */
+    public WechatResult delDraft(String mediaId) {
+        WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
+        return WechatUtils.delDraft(wechatToken, mediaId);
+    }
+
+    /**
+     * 【服务器】【后台】增加发布
+     *
+     * @param mediaId     草稿mediaId
+     * @return
+     */
+    public WechatPublish addPublish(String mediaId) {
+        WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
+        return WechatUtils.addPublish(wechatToken, mediaId);
+    }
+
+    /**
+     * 【服务器】【后台】获取发布
+     *
+     * @param publishId   发布publishId
+     * @return
+     */
+    public WechatPublish getPublish(String publishId) {
+        WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
+        return WechatUtils.getPublish(wechatToken, publishId);
+    }
+
+    /**
+     * 【服务器】【后台】增加发布
+     *
+     * @param articleId   发布成功时返回的articleId
+     * @param index       要删除的文章在图文消息中的位置，第一篇编号为1，该字段不填或填0会删除全部文章
+     * @return
+     */
+    public WechatResult delPublish(String articleId, Integer index) {
+        WechatToken wechatToken = cacheClient.getEntity(wechatProperties.getOauth().getAppId(), WechatToken.class);
+        return WechatUtils.delPublish(wechatToken, articleId, index);
     }
 
     /**
