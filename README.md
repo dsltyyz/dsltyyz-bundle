@@ -45,8 +45,10 @@
 - dsltyyz-template ___代码模板模块___
   - bean ___对象包___
   - config ___配置___
+  - enums ___枚举___
   - filter ___适配___
   - handler ___处理器___
+  - listener ___监听___
   - mybatisplus ___Mybatis Plus拓展配置___
   - page ___通用分页DTO/VO___
   - util ___工具包___
@@ -54,6 +56,7 @@
     - META-INF ___初始化配置___
     - user-defined  ___用户自定义模板包___
 - dsltyyz-wechat ___微信模块___
+  - aes ___安全模式AES___
   - client ___客户端___
   - common ___通用___
     - constant ___常量___
