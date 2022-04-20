@@ -16,6 +16,7 @@ import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
+import com.dsltyyz.bundle.wechat.common.model.user.WechatUserSubscribe;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -44,6 +45,20 @@ public class WechatUtils {
     public static WechatToken getAccessToken(String appId, String appSecret) {
         String url = WechatAccessUrl.TOKEN_URL.replace("APPID", appId).replace("APPSECRET", appSecret);
         return HttpUtils.doGet(url, null, null, new TypeReference<WechatToken>() {
+        });
+    }
+
+    /**
+     * 【服务号】获取用户订阅信息
+     * 2021年12月27日之后，不再输出头像、昵称信息
+     *
+     * @param token  访问口令
+     * @param openid 唯一标识
+     * @return
+     */
+    public static WechatUserSubscribe getUserSubscribe(String token, String openid) {
+        String url = WechatAccessUrl.USER_INFO_URL.replace("ACCESS_TOKEN", token).replace("OPENID", openid);
+        return HttpUtils.doGet(url, null, null, new TypeReference<WechatUserSubscribe>() {
         });
     }
 
@@ -204,14 +219,13 @@ public class WechatUtils {
 
     /**
      * 【服务号】获取用户信息
-     * 2021年12月27日之后，不再输出头像、昵称信息
      *
      * @param token  访问口令
      * @param openid 唯一标识
      * @return
      */
     public static WechatUser getUserInfo(String token, String openid) {
-        String url = WechatAccessUrl.USER_INFO_URL.replace("ACCESS_TOKEN", token).replace("OPENID", openid);
+        String url = WechatAccessUrl.SNS_USER_INFO_URL.replace("ACCESS_TOKEN", token).replace("OPENID", openid);
         return HttpUtils.doGet(url, null, null, new TypeReference<WechatUser>() {
         });
     }

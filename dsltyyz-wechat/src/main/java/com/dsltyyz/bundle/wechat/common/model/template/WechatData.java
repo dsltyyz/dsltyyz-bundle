@@ -38,7 +38,6 @@ public class WechatData implements Serializable {
     /**
      * 关键字3
      */
-    @NonNull
     private WechatDataValue keyword3;
 
 

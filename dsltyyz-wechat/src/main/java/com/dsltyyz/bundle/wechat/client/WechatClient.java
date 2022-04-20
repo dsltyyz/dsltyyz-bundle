@@ -19,6 +19,7 @@ import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
+import com.dsltyyz.bundle.wechat.common.model.user.WechatUserSubscribe;
 import com.dsltyyz.bundle.wechat.common.property.WechatPayProperties;
 import com.dsltyyz.bundle.wechat.common.property.WechatProperties;
 import com.dsltyyz.bundle.wechat.common.util.WechatPayUtils;
@@ -59,6 +60,18 @@ public class WechatClient {
         wechatToken = WechatUtils.getAccessToken(wechatProperties.getOauth().getAppId(), wechatProperties.getOauth().getAppSecret());
         cacheClient.putEntity(wechatProperties.getOauth().getAppId(), wechatToken, Long.valueOf(wechatToken.getExpires_in()));
         return wechatToken;
+    }
+
+    /**
+     * 【服务器】【后台】根据用户openid获取用户信息
+     *
+     * @param openId
+     * @return
+     */
+    public WechatUserSubscribe getUserSubscribe(String openId) {
+        WechatToken wechatToken = getWechatToken();
+        //openid及token获取用户信息
+        return WechatUtils.getUserSubscribe(wechatToken.getAccess_token(),openId);
     }
 
     /**
@@ -193,18 +206,6 @@ public class WechatClient {
         WechatOpenId openId = WechatUtils.getOpenId(wechatProperties.getOauth().getAppId(), wechatProperties.getOauth().getAppSecret(), code);
         //openid及token获取用户信息
         return WechatUtils.getUserInfo(openId.getAccess_token(), openId.getOpenid());
-    }
-
-    /**
-     * 【网站】【服务号】根据用户openid获取用户信息
-     *
-     * @param openId
-     * @return
-     */
-    public WechatUser getUserInfo(String openId) {
-        WechatToken wechatToken = getWechatToken();
-        //openid及token获取用户信息
-        return WechatUtils.getUserInfo(wechatToken.getAccess_token(), openId);
     }
 
     /**

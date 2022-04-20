@@ -16,6 +16,12 @@ public interface WechatAccessUrl {
     String TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
 
     /**
+     *【服务号】通过access_token和openid获取用户信息
+     *
+     */
+    String USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+
+    /**
      * 【后台】上传素材URL
      */
     String ADD_MATERIAL_URL = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=ACCESS_TOKEN&type=TYPE";
@@ -78,7 +84,7 @@ public interface WechatAccessUrl {
      *【服务号】通过access_token和openid获取用户信息
      *
      */
-    String USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+    String SNS_USER_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 
     /*******************小程序***********/
     /**
