@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class WechatDraftSend implements Serializable {
+public class WechatDraftVO implements Serializable {
 
     /**
      * 标题
@@ -56,4 +56,9 @@ public class WechatDraftSend implements Serializable {
      * 接口返回说明
      */
     private Integer only_fans_can_comment;
+
+    /**
+     * 草稿的临时链接
+     */
+    private String url;
 }

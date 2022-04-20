@@ -7,14 +7,14 @@ import java.io.Serializable;
 
 /**
  * Description:
- * 发送微信草稿
+ * 发送草稿
  *
  * @author: dsltyyz
  * @date: 2019-11-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class WechatDraftSend implements Serializable {
+public class DsltyyzDraftSend implements Serializable {
 
     /**
      * 标题
@@ -42,9 +42,9 @@ public class WechatDraftSend implements Serializable {
     private String content_source_url;
 
     /**
-     * 图文消息的封面图片素材id（必须是永久MediaID）
+     * 封面图片logo路径
      */
-    private String thumb_media_id;
+    private String logo;
 
     /**
      * Uint32 是否打开评论，0不打开(默认)，1打开
