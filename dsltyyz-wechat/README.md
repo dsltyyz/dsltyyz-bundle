@@ -133,7 +133,7 @@ public class WechatController {
         menu22.setName("GITEE");
         menu22.setType(WechatButtonType.VIEW.getValue());
         menu22.setUrl("https://gitee.com/");
-        menu2.setButton(Arrays.asList(menu21, menu22));
+        menu2.setSub_button(Arrays.asList(menu21, menu22));
 
         wechatMenu.setButton(Arrays.asList(menu1, menu2));
         wechatClient.addMenu(wechatMenu);
