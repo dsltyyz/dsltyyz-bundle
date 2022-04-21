@@ -24,6 +24,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -226,7 +227,7 @@ public class WechatPayV3Utils {
      * @param refundFee        退款金额
      * @return
      */
-    public static Map<String, String> applyRefund(WechatProperties wechatProperties, String id, String totalFee, String refundFee) {
+    public static Map<String, String> applyRefund(WechatProperties wechatProperties, String id, String totalFee, String refundFee, String notifyUrl) {
         CloseableHttpClient httpClient = getHttpClient(wechatProperties);
         Assert.notNull(httpClient, "请查看微信配置");
 
@@ -242,6 +243,9 @@ public class WechatPayV3Utils {
                 .put("funds_account","AVAILABLE")
                 .put("out_trade_no", id)
                 .put("out_refund_no", id);
+        if(!StringUtils.isEmpty(notifyUrl)){
+            rootNode.put("notify_url",notifyUrl);
+        }
         rootNode.putObject("amount")
                 .put("refund", refundFee)
                 .put("total", totalFee)

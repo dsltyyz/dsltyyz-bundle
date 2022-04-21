@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 /**
  * Description:
- * 微信数据
+ * 微信支付配置
  *
  * @author: dsltyyz
  * @date: 2019-11-07
@@ -57,14 +57,16 @@ public class WechatPayConfig implements WXPayConfig, Serializable {
         this.appID = appID;
         this.mchID = mchID;
         this.key = key;
-        this.certStream = certStream;
+        if (certStream != null) {
+            this.certStream = certStream;
+        }
     }
 
     public WechatPayConfig(@NonNull String appID, @NonNull String mchID, @NonNull String key, String certUrl) {
         this.appID = appID;
         this.mchID = mchID;
         this.key = key;
-        if(!StringUtils.isEmpty(certUrl)){
+        if (!StringUtils.isEmpty(certUrl)) {
             this.certStream = HttpUtils.doGetInputStream(certUrl, null, null);
         }
     }

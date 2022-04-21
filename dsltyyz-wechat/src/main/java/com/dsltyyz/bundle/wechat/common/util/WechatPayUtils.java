@@ -8,6 +8,7 @@ import com.dsltyyz.bundle.wechat.common.model.pay.WechatPayOrder;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -154,9 +155,10 @@ public class WechatPayUtils {
      * @param id              订单号
      * @param totalFee        总金额
      * @param refundFee       退款金额
+     * @param notifyUrl       通知URL
      * @return
      */
-    public static Map<String, String> applyRefund(WechatPayConfig wechatPayConfig, String id, String totalFee, String refundFee) {
+    public static Map<String, String> applyRefund(WechatPayConfig wechatPayConfig, String id, String totalFee, String refundFee, String notifyUrl) {
         try {
             WXPay wxPay = new WXPay(wechatPayConfig);
             HashMap<String, String> data = new HashMap<>();
@@ -166,6 +168,9 @@ public class WechatPayUtils {
             data.put("refund_fee", refundFee);
             data.put("refund_fee_type", WechatPayFeeType.CNY);
             data.put("op_user_id", wechatPayConfig.getMchID());
+            if(!StringUtils.isEmpty(notifyUrl)){
+                data.put("notify_url", notifyUrl);
+            }
             return wxPay.refund(data);
         } catch (Exception e) {
             e.printStackTrace();

@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * Description:
- * 微信数据
+ * 微信支付订单
  *
  * @author: dsltyyz
  * @date: 2019-11-07
