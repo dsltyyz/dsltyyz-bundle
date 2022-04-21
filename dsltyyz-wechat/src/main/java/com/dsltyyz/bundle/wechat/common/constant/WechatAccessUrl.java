@@ -22,6 +22,16 @@ public interface WechatAccessUrl {
     String USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 
     /**
+     * 【后台】通过access_token创建菜单
+     */
+    String ADD_MENU_URL= "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【后台】通过access_token删除菜单
+     */
+    String DEL_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=ACCESS_TOKEN";
+
+    /**
      * 【后台】上传素材URL
      */
     String ADD_MATERIAL_URL = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=ACCESS_TOKEN&type=TYPE";

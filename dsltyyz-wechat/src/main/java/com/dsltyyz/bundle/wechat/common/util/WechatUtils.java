@@ -10,6 +10,7 @@ import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import com.dsltyyz.bundle.wechat.common.model.draft.WechatDraftDetailVO;
 import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterial;
 import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterialSend;
+import com.dsltyyz.bundle.wechat.common.model.menu.WechatMenu;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
 import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
@@ -62,6 +63,31 @@ public class WechatUtils {
      */
     public static WechatUserSubscribe getUserSubscribe(String token, String openid) {
         String url = WechatAccessUrl.USER_INFO_URL.replace("ACCESS_TOKEN", token).replace("OPENID", openid);
+        return HttpUtils.doGet(url, null, null, new TypeReference<WechatUserSubscribe>() {
+        });
+    }
+
+    /**
+     * 【后台】创建菜单
+     *
+     * @param token      访问口令
+     * @param wechatMenu 微信菜单
+     * @return
+     */
+    public static WechatResult addMenu(String token, WechatMenu wechatMenu) {
+        String url = WechatAccessUrl.ADD_MENU_URL.replace("ACCESS_TOKEN", token);
+        return HttpUtils.doPostJson(url, null, null, wechatMenu, new TypeReference<WechatUserSubscribe>() {
+        });
+    }
+
+    /**
+     * 【后台】删除菜单
+     *
+     * @param token 访问口令
+     * @return
+     */
+    public static WechatResult delMenu(String token) {
+        String url = WechatAccessUrl.DEL_MENU_URL.replace("ACCESS_TOKEN", token);
         return HttpUtils.doGet(url, null, null, new TypeReference<WechatUserSubscribe>() {
         });
     }
@@ -223,7 +249,7 @@ public class WechatUtils {
      * 【后台】增加群发
      *
      * @param wechatToken
-     * @param param 参数
+     * @param param       参数
      * @return
      */
     public static WechatMass addMessageMass(WechatToken wechatToken, Map<String, Object> param) {
@@ -236,15 +262,15 @@ public class WechatUtils {
      * 【后台】删除群发
      *
      * @param wechatToken
-     * @param msgId 发送出去的消息ID
-     * @param articleIdx 要删除的文章在图文消息中的位置，第一篇编号为1，该字段不填或填0会删除全部文章
+     * @param msgId       发送出去的消息ID
+     * @param articleIdx  要删除的文章在图文消息中的位置，第一篇编号为1，该字段不填或填0会删除全部文章
      * @return
      */
     public static WechatResult delMessageMass(WechatToken wechatToken, Integer msgId, Integer articleIdx) {
         String url = WechatAccessUrl.MESSAGE_MASS_DELETE_URL.replace("ACCESS_TOKEN", wechatToken.getAccess_token());
         Map<String, Object> param = new HashMap<>();
         param.put("msg_id", msgId);
-        if(articleIdx!=null){
+        if (articleIdx != null) {
             param.put("article_idx", articleIdx);
         }
         return HttpUtils.doPostJson(url, null, null, param, new TypeReference<WechatResult>() {
@@ -255,7 +281,7 @@ public class WechatUtils {
      * 【后台】获取群发状态
      *
      * @param wechatToken
-     * @param msgId 发送出去的消息ID
+     * @param msgId       发送出去的消息ID
      * @return
      */
     public static WechatMass getMessageMass(WechatToken wechatToken, Integer msgId) {

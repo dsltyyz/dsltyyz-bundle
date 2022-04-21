@@ -12,6 +12,7 @@ import com.dsltyyz.bundle.wechat.common.model.draft.WechatDraftDetailVO;
 import com.dsltyyz.bundle.wechat.common.model.draft.WechatDraftSend;
 import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterial;
 import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterialSend;
+import com.dsltyyz.bundle.wechat.common.model.menu.WechatMenu;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
 import com.dsltyyz.bundle.wechat.common.model.pay.WechatPayConfig;
@@ -81,6 +82,27 @@ public class WechatClient {
         WechatToken wechatToken = getWechatToken();
         //openid及token获取用户信息
         return WechatUtils.getUserSubscribe(wechatToken.getAccess_token(), openId);
+    }
+
+    /**
+     * 【后台】创建菜单
+     *
+     * @param wechatMenu 微信菜单
+     * @return
+     */
+    public WechatResult addMenu(WechatMenu wechatMenu) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.addMenu(wechatToken.getAccess_token(), wechatMenu);
+    }
+
+    /**
+     * 【后台】删除菜单
+     *
+     * @return
+     */
+    public WechatResult delMenu() {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.delMenu(wechatToken.getAccess_token());
     }
 
     /**
@@ -174,7 +196,7 @@ public class WechatClient {
     /**
      * 【后台】获取草稿
      *
-     * @param mediaId     草稿mediaId
+     * @param mediaId 草稿mediaId
      * @return
      */
     public WechatDraftDetailVO getDraft(String mediaId) {
@@ -199,7 +221,7 @@ public class WechatClient {
      * @return
      */
     public WechatMaterial addDsltyyzDraft(List<DsltyyzDraftSend> list) {
-        Assert.isTrue(list!=null&&list.size()>0, "文章列表不能为空");
+        Assert.isTrue(list != null && list.size() > 0, "文章列表不能为空");
         WechatArticle wechatArticle = new WechatArticle();
         wechatArticle.setArticles(list.stream().map(dsltyyzDraftSend -> {
             WechatDraftSend wechatDraftSend = new WechatDraftSend();
@@ -278,7 +300,7 @@ public class WechatClient {
     /**
      * 【服务号-后台】删除群发
      *
-     * @param msgId 发送出去的消息ID
+     * @param msgId      发送出去的消息ID
      * @param articleIdx 要删除的文章在图文消息中的位置，第一篇编号为1，该字段不填或填0会删除全部文章
      * @return
      */
