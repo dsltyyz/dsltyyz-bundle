@@ -4,17 +4,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Description:
- * 微信模块
+ * 微信按钮菜单
  *
  * @author: dsltyyz
  * @date: 2022-4-21
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class WechatModule implements Serializable {
+public class WechatButtonMenu implements Serializable {
 
     /**
      * 菜单的响应动作类型，view表示网页类型，click表示点击类型，miniprogram表示小程序类型
@@ -63,4 +64,11 @@ public class WechatModule implements Serializable {
      * article_id类型和article_view_limited类型必须
      */
     private String article_id;
+
+    /**
+     * 二级及以上菜单
+     * 最多包含5个二级菜单
+     */
+    private List<WechatButtonMenu> sub_button;
+
 }

@@ -23,6 +23,9 @@ public enum WechatButtonType {
     //跳转URL用户点击view类型按钮后，微信客户端将会打开开发者在按钮中填写的网页URL，可与网页授权获取用户基本信息接口结合，获得用户基本信息。
     VIEW("view","跳转URL"),
 
+    //小程序
+    MINIPROGRAM("miniprogram","小程序"),
+
     //扫码推事件用户点击按钮后，微信客户端将调起扫一扫工具，完成扫码操作后显示扫描结果（如果是URL，将进入URL），且会将扫码的结果传给开发者，开发者可以下发消息。
     SCANCODE_PUSH("scancode_push","扫码"),
 
@@ -33,7 +36,7 @@ public enum WechatButtonType {
     PIC_SYSPHOTO("pic_sysphoto","系统拍照"),
 
     //弹出拍照或者相册发图用户点击按钮后，微信客户端将弹出选择器供用户选择“拍照”或者“从手机相册选择”。用户选择后即走其他两种流程。
-    PIC_PHOTO_OR_ALBUM("click","拍照或者相册发图"),
+    PIC_PHOTO_OR_ALBUM("pic_photo_or_album","拍照或者相册发图"),
 
     //弹出微信相册发图器用户点击按钮后，微信客户端将调起微信相册，完成选择操作后，将选择的相片发送给开发者的服务器，并推送事件给开发者，同时收起相册，随后可能会收到开发者下发的消息。
     PIC_WEIXIN("pic_weixin","微信相册发图"),

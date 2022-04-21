@@ -21,5 +21,5 @@ public class WechatMenu implements Serializable {
      * 一级菜单
      * 最多包括3个一级菜单
      */
-    private List<WechatButtonModule> button;
+    private List<WechatButtonMenu> button;
 }
