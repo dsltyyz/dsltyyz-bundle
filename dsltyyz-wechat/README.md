@@ -109,11 +109,56 @@ public class WechatController {
         return new CommonResponse<>(wechatClient.getUserInfoByCode(code));
     }
 
+    @ApiOperation(value = "创建菜单")
+    @PostMapping(value = "/menu")
+    public CommonResponse addMenu() {
+        //配置菜单
+        WechatMenu wechatMenu = new WechatMenu();
+        //一级 百度
+        WechatButtonMenu menu1 = new WechatButtonMenu();
+        menu1.setName("百度");
+        menu1.setType(WechatButtonType.VIEW.getValue());
+        menu1.setUrl("https://www.baidu.com/");
+
+        //一级 代码平台
+        WechatButtonMenu menu2 = new WechatButtonMenu();
+        menu2.setName("代码平台");
+        //二级GITHUB
+        WechatButtonMenu menu21 = new WechatButtonMenu();
+        menu21.setName("GITHUB");
+        menu21.setType(WechatButtonType.VIEW.getValue());
+        menu21.setUrl("https://github.com/");
+        //二级GITEE
+        WechatButtonMenu menu22 = new WechatButtonMenu();
+        menu22.setName("GITEE");
+        menu22.setType(WechatButtonType.VIEW.getValue());
+        menu22.setUrl("https://gitee.com/");
+        menu2.setButton(Arrays.asList(menu21, menu22));
+
+        wechatMenu.setButton(Arrays.asList(menu1, menu2));
+        wechatClient.addMenu(wechatMenu);
+        return new CommonResponse();
+    }
+
+    @ApiOperation(value = "删除菜单")
+    @DeleteMapping(value = "/menu")
+    public CommonResponse delMenu() {
+        wechatClient.delMenu();
+        return new CommonResponse();
+    }
+
     @ApiOperation(value = "创建草稿")
     @PostMapping(value = "/article")
     public CommonResponse<WechatMaterial> createArticle() {
         DsltyyzDraftSend dsltyyzDraftSend = new DsltyyzDraftSend();
-        //配置属性
+        dsltyyzDraftSend.setLogo("LOGO URL");
+        dsltyyzDraftSend.setTitle("文章标题");
+        dsltyyzDraftSend.setDigest("文章简介");
+        dsltyyzDraftSend.setContent("html代码 ps:自动替换src资源为素材");
+        dsltyyzDraftSend.setContent_source_url("原文路径");
+        dsltyyzDraftSend.setAuthor("auther");
+        dsltyyzDraftSend.setNeed_open_comment(0);
+        dsltyyzDraftSend.setOnly_fans_can_comment(0);
         WechatMaterial wechatMaterial = wechatClient.addDsltyyzDraft(dsltyyzDraftSend);
         return new CommonResponse<>(wechatMaterial);
     }
