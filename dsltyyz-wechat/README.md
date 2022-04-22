@@ -44,10 +44,10 @@ wechat:
   pay:
     mch-id: 商户ID
     mch-private-key: 商户KEY
-    version: v3 #默认
-    mch-serial-no: 版本为v3 商户API证书的证书序列号
-    api-v3-key: 版本为v3 apiV3秘钥
+    version: v2 #默认
     cert-url: 版本为v2 微信支付平台证书URL
+    api-v3-key: 版本为v3 apiV3秘钥
+    mch-serial-no: 版本为v3 商户API证书的证书序列号
 ~~~
 #### 2.1.3 示例
 ~~~
@@ -197,6 +197,80 @@ public class WechatController {
     @GetMapping(value = "/message/mass")
     public CommonResponse<WechatMass> getMessageMass(@RequestParam("msgId") Integer msgId) {
         return new CommonResponse<>(wechatClient.getMessageMass(msgId));
+    }
+
+    @ApiOperation(value = "二维码支付")
+    @PostMapping(value = "/pay/qrcode")
+    public CommonResponse<String> createPayQrcode(HttpServletResponse response) throws IOException {
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId  ="dsltyyz_"+ DateUtils.format(new Date(),"yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        //本机外网IP 且在微信公众号IP白名单内
+        wechatPayOrder.setIp("外网IP");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("回调URL");
+        String s = wechatClient.unifiedOrderByNative(wechatPayOrder);
+        System.out.println(s);
+        String key = "pay/"+orderId+"."+ ImageType.JPG;
+        aliyunOssClient.putObject(key, QRCodeUtils.encode(s));
+        return new CommonResponse<>(aliyunOssClient.getResourceUrl(key));
+    }
+
+    @ApiOperation(value = "jsapi支付")
+    @PostMapping(value = "/pay/jsapi")
+    public CommonResponse<Map<String, String>> createPayJsapi(HttpServletResponse response) throws IOException {
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId  ="dsltyyz_"+ DateUtils.format(new Date(),"yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        //本机外网IP 且在微信公众号IP白名单内
+        wechatPayOrder.setIp("外网IP");
+        //发起用户openid
+        wechatPayOrder.setOpenid("openid");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("回调URL");
+        return new CommonResponse<>(wechatClient.unifiedOrderByJsApi(wechatPayOrder));
+    }
+    
+    @ApiOperation(value = "微信支付回调")
+    @PostMapping(value = "/v2/pay/callback")
+    public String payCallback(HttpServletRequest request) throws Exception {
+        String msg = StreamUtils.inputStreamToString(request.getInputStream());
+        System.out.println(msg);
+        if(!WXPayUtil.isSignatureValid(msg, wechatProperties.getPay().getMchPrivateKey())){
+            return "验证回调信息失败";
+        }
+        JSONObject jsonObject = XmlUtils.xmlToJSONObject(msg);
+        System.out.println(jsonObject.toJSONString());
+        WechatPayV2Result v2Result = jsonObject.toJavaObject(WechatPayV2Result.class);
+        //TODO 执行业务
+        Map<String,String> result = new HashMap<>();
+        result.put("return_code","SUCCESS");
+        result.put("return_msg","OK");
+        return WXPayUtil.mapToXml(result);
+    }
+
+    @ApiOperation(value = "【未测试】微信退款回调")
+    @PostMapping(value = "/v2/refund/callback")
+    public String refundCallback(HttpServletRequest request) throws Exception {
+        String msg = StreamUtils.inputStreamToString(request.getInputStream());
+        System.out.println(msg);
+        if(!WXPayUtil.isSignatureValid(msg, wechatProperties.getPay().getMchPrivateKey())){
+            return "验证回调信息失败";
+        }
+        JSONObject jsonObject = XmlUtils.xmlToJSONObject(msg);
+        System.out.println(jsonObject.toJSONString());
+        WechatRefundEncryptV2Result encryptV2Result = jsonObject.toJavaObject(WechatRefundEncryptV2Result.class);
+        String decrypt = WechatCommonUtils.decrypt(encryptV2Result.getReq_info(), wechatProperties.getPay().getMchPrivateKey());
+        JSONObject decryptJsonObject = XmlUtils.xmlToJSONObject(decrypt);
+        System.out.println(decryptJsonObject.toJSONString());
+        WechatRefundV2Result v2Result = decryptJsonObject.toJavaObject(WechatRefundV2Result.class);
+        //TODO 执行业务
+        Map<String,String> result = new HashMap<>();
+        result.put("return_code","SUCCESS");
+        result.put("return_msg","OK");
+        return WXPayUtil.mapToXml(result);
     }
 
 }
