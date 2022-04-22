@@ -34,7 +34,7 @@ import java.util.Map;
 
 /**
  * Description:
- * 微信支付工具类 v3
+ * 【未测试】微信支付工具类 v3
  * https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pages/index.shtml
  *
  * @author: dsltyyz
@@ -60,7 +60,7 @@ public class WechatPayV3Utils {
                     new PrivateKeySigner(wechatProperties.getPay().getMchSerialNo(), merchantPrivateKey)), wechatProperties.getPay().getApiV3Key().getBytes(StandardCharsets.UTF_8));
             Verifier verifier = certificatesManager.getVerifier(wechatProperties.getPay().getMchId());
             WechatPayHttpClientBuilder builder = WechatPayHttpClientBuilder.create()
-                    .withMerchant(wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchId(), merchantPrivateKey)
+                    .withMerchant(wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchSerialNo(), merchantPrivateKey)
                     .withValidator(new WechatPay2Validator(verifier));
             return builder.build();
         } catch (Exception e) {

@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  * Description:
- * 微信支付结果
+ * 微信退款V2结果
  *
  * @author: dsltyyz
  * @date: 2019-11-07
@@ -16,7 +16,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class WechatRefund implements Serializable {
+public class WechatRefundV2Result implements Serializable {
 
     /**
      *返回状态码 SUCCESS/FAIL

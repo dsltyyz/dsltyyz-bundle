@@ -94,4 +94,19 @@ public class WechatCommonUtils {
         return  JSONObject.parseObject(new String(bytes));
     }
 
+    /***
+     * 微信回调数据解密
+     * @param encryptedData
+     * @param keyData
+     * @return
+     * @throws Exception
+     */
+    public static String decrypt(String encryptedData, String keyData) throws Exception {
+        Key key = new SecretKeySpec(Base64.decodeBase64(keyData), "AES");
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS7Padding");
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        byte[] bytes = cipher.doFinal(Base64.decodeBase64(encryptedData));
+        return new String(bytes);
+    }
+
 }

@@ -401,27 +401,52 @@ public class WechatClient {
     /**
      * 【微信支付】申请退款(全额)
      *
-     * @param id       订单ID
-     * @param totalFee 总费用（分）
+     * @param id        订单ID
+     * @param totalFee  总费用（分）
      * @param notifyUrl 通知URL
      * @return
      */
-    public Map<String, String> applyRefund(String id, String totalFee, String notifyUrl) {
-        return applyRefund(id, totalFee, totalFee, notifyUrl);
+    public Map<String, String> applyRefundById(String id, String totalFee, String notifyUrl) {
+        return applyRefundById(id, totalFee, totalFee, notifyUrl);
     }
 
     /**
      * 【微信支付】申请退款(指定金额)
      *
-     * @param id        订单ID
+     * @param id        微信订单ID
      * @param totalFee  总费用（分）
      * @param refuseFee 退款费用（分）
      * @param notifyUrl 通知URL
      * @return
      */
-    public Map<String, String> applyRefund(String id, String totalFee, String refuseFee, String notifyUrl) {
+    public Map<String, String> applyRefundById(String id, String totalFee, String refuseFee, String notifyUrl) {
         WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
-        return WechatPayUtils.applyRefund(wechatPayConfig, id, totalFee, refuseFee, notifyUrl);
+        return WechatPayUtils.applyRefundById(wechatPayConfig, id, totalFee, refuseFee, notifyUrl);
     }
 
+    /**
+     * 【微信支付】申请退款(全额)
+     *
+     * @param outTradeNo 系统订单ID
+     * @param totalFee   总费用（分）
+     * @param notifyUrl  通知URL
+     * @return
+     */
+    public Map<String, String> applyRefundByOutTradeNo(String outTradeNo, String totalFee, String notifyUrl) {
+        return applyRefundByOutTradeNo(outTradeNo, totalFee, totalFee, notifyUrl);
+    }
+
+    /**
+     * 【微信支付】申请退款(指定金额)
+     *
+     * @param outTradeNo 系统订单ID
+     * @param totalFee   总费用（分）
+     * @param refuseFee  退款费用（分）
+     * @param notifyUrl  通知URL
+     * @return
+     */
+    public Map<String, String> applyRefundByOutTradeNo(String outTradeNo, String totalFee, String refuseFee, String notifyUrl) {
+        WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
+        return WechatPayUtils.applyRefundByOutTradeNo(wechatPayConfig, outTradeNo, totalFee, refuseFee, notifyUrl);
+    }
 }
