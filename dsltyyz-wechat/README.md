@@ -254,23 +254,23 @@ public class WechatController {
     @ApiOperation(value = "【未测试】微信退款回调")
     @PostMapping(value = "/v2/refund/callback")
     public String refundCallback(HttpServletRequest request) throws Exception {
-        String msg = StreamUtils.inputStreamToString(request.getInputStream());
-        System.out.println(msg);
-        if(!WXPayUtil.isSignatureValid(msg, wechatProperties.getPay().getMchPrivateKey())){
-            return "验证回调信息失败";
-        }
-        JSONObject jsonObject = XmlUtils.xmlToJSONObject(msg);
-        System.out.println(jsonObject.toJSONString());
-        WechatRefundEncryptV2Result encryptV2Result = jsonObject.toJavaObject(WechatRefundEncryptV2Result.class);
-        String decrypt = WechatCommonUtils.decrypt(encryptV2Result.getReq_info(), wechatProperties.getPay().getMchPrivateKey());
-        JSONObject decryptJsonObject = XmlUtils.xmlToJSONObject(decrypt);
-        System.out.println(decryptJsonObject.toJSONString());
-        WechatRefundV2Result v2Result = decryptJsonObject.toJavaObject(WechatRefundV2Result.class);
-        //TODO 执行业务
-        Map<String,String> result = new HashMap<>();
-        result.put("return_code","SUCCESS");
-        result.put("return_msg","OK");
-        return WXPayUtil.mapToXml(result);
+         String msg = StreamUtils.inputStreamToString(request.getInputStream());
+            System.out.println(msg);
+            JSONObject jsonObject = XmlUtils.xmlToJSONObject(msg);
+            System.out.println(jsonObject.toJSONString());
+            WechatRefundEncryptV2Result encryptV2Result = jsonObject.toJavaObject(WechatRefundEncryptV2Result.class);
+            String decrypt = WechatCommonUtils.decrypt(encryptV2Result.getReq_info(), wechatProperties.getPay().getMchPrivateKey());
+            if(!WXPayUtil.isSignatureValid(decrypt, wechatProperties.getPay().getMchPrivateKey())){
+                return "验证回调信息失败";
+            }
+            JSONObject decryptJsonObject = XmlUtils.xmlToJSONObject(decrypt);
+            System.out.println(decryptJsonObject.toJSONString());
+            WechatRefundV2Result v2Result = decryptJsonObject.toJavaObject(WechatRefundV2Result.class);
+            //TODO 执行业务
+            Map<String,String> result = new HashMap<>();
+            result.put("return_code","SUCCESS");
+            result.put("return_msg","OK");
+            return WXPayUtil.mapToXml(result);
     }
 
 }
