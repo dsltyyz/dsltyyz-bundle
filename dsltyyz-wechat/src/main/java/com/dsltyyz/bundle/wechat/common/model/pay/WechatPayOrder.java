@@ -9,10 +9,10 @@ import java.io.Serializable;
 
 /**
  * Description:
- * 微信数据
+ * 微信支付订单
  *
  * @author: dsltyyz
- * @since: 2019-11-07
+ * @date: 2019-11-07
  */
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,6 +50,7 @@ public class WechatPayOrder implements Serializable {
 
     /**
      * 支付者openid
+     * trade_type=JSAPI时（即JSAPI支付），此参数必传，此参数为微信用户在商户对应appid下的唯一标识。
      */
     private String openid;
 

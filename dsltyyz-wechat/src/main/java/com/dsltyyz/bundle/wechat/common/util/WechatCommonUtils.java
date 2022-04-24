@@ -18,7 +18,7 @@ import java.util.Arrays;
  * 通用工具类
  *
  * @author: dsltyyz
- * @since: 2019-11-07
+ * @date: 2019-11-07
  */
 public class WechatCommonUtils {
 
@@ -27,7 +27,7 @@ public class WechatCommonUtils {
      * @param array
      * @return
      */
-    private static String sha1(String... array) {
+    public static String sha1(String... array) {
         StringBuffer sb = new StringBuffer();
         // 字符串排序
         Arrays.sort(array);
@@ -53,13 +53,25 @@ public class WechatCommonUtils {
      * @param signature 签名
      * @param timestamp 时间戳
      * @param nonce 字符串
+     * @param checkToken 验证token(微信回调配置TOKEN)
+     * @return
+     */
+    public static boolean checkSignature(String signature, String timestamp, String nonce, String checkToken){
+        String sha1Str = sha1(checkToken, timestamp, nonce);
+        return signature.equals(sha1Str);
+    }
+
+    /**
+     * 【服务号】【小程序】微信回调检测并返回
+     * @param signature 签名
+     * @param timestamp 时间戳
+     * @param nonce 字符串
      * @param echostr 输出
      * @param checkToken 验证token(微信回调配置TOKEN)
      * @return
      */
     public static String callbackCheck(String signature, String timestamp, String nonce, String echostr, String checkToken){
-        String sha1Str = sha1(checkToken, timestamp, nonce);
-        return signature.equals(sha1Str)?echostr:"error";
+        return checkSignature(signature, timestamp, nonce, checkToken)?echostr:"error";
     }
 
     /**
@@ -80,6 +92,21 @@ public class WechatCommonUtils {
         cipher.init(Cipher.DECRYPT_MODE, key, params);
         byte[] bytes = cipher.doFinal(Base64.decodeBase64(encryptedData));
         return  JSONObject.parseObject(new String(bytes));
+    }
+
+    /***
+     * 微信回调数据解密
+     * @param encryptedData
+     * @param keyData
+     * @return
+     * @throws Exception
+     */
+    public static String decrypt(String encryptedData, String keyData) throws Exception {
+        Key key = new SecretKeySpec(Base64.decodeBase64(keyData), "AES");
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS7Padding");
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        byte[] bytes = cipher.doFinal(Base64.decodeBase64(encryptedData));
+        return new String(bytes);
     }
 
 }

@@ -54,9 +54,11 @@
     - META-INF ___初始化配置___
     - user-defined  ___用户自定义模板包___
 - dsltyyz-wechat ___微信模块___
+  - aes ___安全模式AES___
   - client ___客户端___
   - common ___通用___
     - constant ___常量___
+    - enums ___枚举___
     - model ___模型___
     - property ___属性___
     - util ___工具___
