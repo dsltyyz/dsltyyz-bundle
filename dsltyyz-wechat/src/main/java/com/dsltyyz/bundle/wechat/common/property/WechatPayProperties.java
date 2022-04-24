@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 微信授权属性
  *
  * @author: dsltyyz
- * @since: 2019-11-19
+ * @date: 2019-11-19
  */
 @Data
 public class WechatPayProperties implements Serializable {
@@ -35,9 +35,9 @@ public class WechatPayProperties implements Serializable {
     private String mchPrivateKey;
 
     /**
-     * 支付版本 默认V3
+     * 支付版本 默认V2
      */
-    private String version = V3;
+    private String version = V2;
 
     /**
      * 版本为非V3 微信支付平台证书路径

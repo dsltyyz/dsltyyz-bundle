@@ -17,6 +17,7 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -29,6 +30,7 @@ import org.springframework.util.StringUtils;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -292,12 +294,12 @@ public class HttpUtils {
      * @param url 访问url
      * @param header 头部参数
      * @param query 指该参数需在请求URL传参
-     * @param param 主体参数
+     * @param file  文件参数
      * @param typeReference
      * @return
      */
-    public static <T> T doPostInputStream(String url, Map<String, String> header, Map<String, Object> query, Map<String, InputStream> param, TypeReference<T> typeReference) {
-        String result = doPostInputStream(url, header, query, param);
+    public static <T> T doPostInputStream(String url, Map<String, String> header, Map<String, Object> query, Map<String, InputStream> file, TypeReference<T> typeReference) {
+        String result = doPostInputStream(url, header, query, null, file);
         if (null == result) {
             return null;
         }
@@ -311,9 +313,48 @@ public class HttpUtils {
      * @param header 头部参数
      * @param query 指该参数需在请求URL传参
      * @param param 主体参数
+     * @param file  文件参数
+     * @param typeReference
      * @return
      */
-    public static String doPostInputStream(String url, Map<String, String> header, Map<String, Object> query, Map<String, InputStream> param) {
+    public static <T> T doPostInputStream(String url, Map<String, String> header, Map<String, Object> query, Map<String, Object> param, Map<String, InputStream> file, TypeReference<T> typeReference) {
+        String result = doPostInputStream(url, header, query, param, file);
+        if (null == result) {
+            return null;
+        }
+        return JSONObject.parseObject(result, typeReference);
+    }
+
+    /**
+     * post提交文件流
+     *
+     * @param url 访问url
+     * @param header 头部参数
+     * @param query 指该参数需在请求URL传参
+     * @param param 主体参数
+     * @param file  文件参数
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPostFile(String url, Map<String, String> header, Map<String, Object> query, Map<String, Object> param, Map<String, File> file, TypeReference<T> typeReference) {
+        String result = doPostFile(url, header, query, param, file);
+        if (null == result) {
+            return null;
+        }
+        return JSONObject.parseObject(result, typeReference);
+    }
+
+    /**
+     * post提交文件
+     *
+     * @param url 访问url
+     * @param header 头部参数
+     * @param query 指该参数需在请求URL传参
+     * @param param 主体参数
+     * @param file 文件参数
+     * @return
+     */
+    public static String doPostFile(String url, Map<String, String> header, Map<String, Object> query, Map<String, Object> param, Map<String, File> file) {
         HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Post请求
@@ -328,8 +369,66 @@ public class HttpUtils {
             }
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            for (Map.Entry<String, InputStream> entry : param.entrySet()) {
-                builder.addBinaryBody(entry.getKey(), entry.getValue());
+            if(param!=null){
+                for (Map.Entry<String, Object> stringObjectEntry : param.entrySet()) {
+                    builder.addTextBody(stringObjectEntry.getKey(), stringObjectEntry.getValue().toString());
+                }
+            }
+            if(file!=null) {
+                for (Map.Entry<String, File> entry : file.entrySet()) {
+                    builder.addBinaryBody(entry.getKey(), entry.getValue());
+                }
+            }
+            httpPost.setEntity(builder.build());
+
+            // 响应模型
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            String result = EntityUtils.toString(entity, "UTF-8");
+            log.info(result);
+            if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * post提交文件流
+     *
+     * @param url 访问url
+     * @param header 头部参数
+     * @param query 指该参数需在请求URL传参
+     * @param param 主体参数
+     * @param file 文件参数
+     * @return
+     */
+    public static String doPostInputStream(String url, Map<String, String> header, Map<String, Object> query, Map<String, Object> param, Map<String, InputStream> file) {
+        HttpClient httpClient = getHttpclient(url);
+
+        // 由客户端执行(发送)Post请求
+        try {
+            // 创建Post请求
+            log.info(url);
+            HttpPost httpPost = new HttpPost(url+buildUrlParam(query));
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpPost.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            if(param!=null){
+                for (Map.Entry<String, Object> stringObjectEntry : param.entrySet()) {
+                    builder.addTextBody(stringObjectEntry.getKey(), stringObjectEntry.getValue().toString());
+                }
+            }
+            if(file!=null) {
+                for (Map.Entry<String, InputStream> entry : file.entrySet()) {
+                    builder.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.DEFAULT_BINARY, "dsltyyz");
+                }
             }
             httpPost.setEntity(builder.build());
 

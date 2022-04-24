@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 发送模板消息
  *
  * @author: dsltyyz
- * @since: 2019-11-07
+ * @date: 2019-11-07
  */
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,6 +43,6 @@ public class WechatTemplateSend implements Serializable {
      * 模板数据
      */
     @NonNull
-    private String data;
+    private Object data;
 
 }

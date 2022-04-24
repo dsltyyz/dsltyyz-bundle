@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * 自动加载WechatProperties属性
  *
  * @author: dsltyyz
- * @since: 2019-11-22
+ * @date: 2019-11-22
  */
 @Configuration
 @EnableConfigurationProperties(WechatProperties.class)

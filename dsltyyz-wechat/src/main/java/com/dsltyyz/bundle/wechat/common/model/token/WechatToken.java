@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 微信token
  *
  * @author: dsltyyz
- * @since: 2019-11-06
+ * @date: 2019-11-06
  */
 @NoArgsConstructor
 @AllArgsConstructor
