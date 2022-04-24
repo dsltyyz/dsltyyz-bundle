@@ -35,7 +35,6 @@ public class ${entity}DTO implements Serializable {
     @JsonFormat(pattern = DateUtils.PATTERN_DATETIME)
     </#if>
     private <#if field.name == "status">CommonStatus<#else>${field.propertyType}</#if> ${field.propertyName};
-
     </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
