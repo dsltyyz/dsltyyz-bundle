@@ -1,5 +1,6 @@
 package ${package.Entity?replace('entity','dto')};
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -31,6 +32,7 @@ public class ${entity}DTO implements Serializable {
     </#if>
     <#if field.propertyType == "LocalDateTime">
     @DateTimeFormat(pattern = DateUtils.PATTERN_DATETIME)
+    @JsonFormat(pattern = DateUtils.PATTERN_DATETIME)
     </#if>
     private <#if field.name == "status">CommonStatus<#else>${field.propertyType}</#if> ${field.propertyName};
 
