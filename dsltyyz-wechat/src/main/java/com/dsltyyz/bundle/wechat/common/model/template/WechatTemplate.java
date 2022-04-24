@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 微信模板消息
  *
  * @author: dsltyyz
- * @since: 2019-11-07
+ * @date: 2019-11-07
  */
 @Data
 public class WechatTemplate implements Serializable {

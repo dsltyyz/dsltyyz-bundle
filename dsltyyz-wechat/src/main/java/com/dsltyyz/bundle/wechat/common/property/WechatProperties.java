@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 微信属性
  *
  * @author: dsltyyz
- * @since: 2019-11-19
+ * @date: 2019-11-19
  */
 @ApiModel(description = "OSS属性")
 @ConfigurationProperties("wechat")
