@@ -8,17 +8,18 @@ import com.dsltyyz.bundle.wechat.common.model.pay.WechatPayOrder;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Description:
- * 微信支付工具类 待测试
+ * 微信支付工具类
  * https://pay.weixin.qq.com/wiki/doc/api/index.html
  *
  * @author: dsltyyz
- * @since: 2019-11-12
+ * @date: 2019-11-12
  */
 @Slf4j
 public class WechatPayUtils {
@@ -151,21 +152,56 @@ public class WechatPayUtils {
      * 申请退款
      *
      * @param wechatPayConfig 支付配置
-     * @param id              订单号
+     * @param id              微信订单号
      * @param totalFee        总金额
      * @param refundFee       退款金额
+     * @param notifyUrl       通知URL
      * @return
      */
-    public static Map<String, String> applyRefund(WechatPayConfig wechatPayConfig, String id, String totalFee, String refundFee) {
+    public static Map<String, String> applyRefundById(WechatPayConfig wechatPayConfig, String id, String totalFee, String refundFee, String notifyUrl) {
         try {
             WXPay wxPay = new WXPay(wechatPayConfig);
             HashMap<String, String> data = new HashMap<>();
-            data.put("out_trade_no", id);
+            data.put("transaction_id", id);
             data.put("out_refund_no", id);
             data.put("total_fee", totalFee);
             data.put("refund_fee", refundFee);
             data.put("refund_fee_type", WechatPayFeeType.CNY);
             data.put("op_user_id", wechatPayConfig.getMchID());
+            if(!StringUtils.isEmpty(notifyUrl)){
+                data.put("notify_url", notifyUrl);
+            }
+            return wxPay.refund(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 申请退款
+     *
+     * @param wechatPayConfig 支付配置
+     * @param outTradeNo      系统订单号
+     * @param totalFee        总金额
+     * @param refundFee       退款金额
+     * @param notifyUrl       通知URL
+     * @return
+     */
+    public static Map<String, String> applyRefundByOutTradeNo(WechatPayConfig wechatPayConfig, String outTradeNo, String totalFee, String refundFee, String notifyUrl) {
+        try {
+            WXPay wxPay = new WXPay(wechatPayConfig);
+            HashMap<String, String> data = new HashMap<>();
+            data.put("out_trade_no", outTradeNo);
+            data.put("out_refund_no", outTradeNo);
+            data.put("total_fee", totalFee);
+            data.put("refund_fee", refundFee);
+            data.put("refund_fee_type", WechatPayFeeType.CNY);
+            data.put("op_user_id", wechatPayConfig.getMchID());
+            if(!StringUtils.isEmpty(notifyUrl)){
+                data.put("notify_url", notifyUrl);
+            }
             return wxPay.refund(data);
         } catch (Exception e) {
             e.printStackTrace();

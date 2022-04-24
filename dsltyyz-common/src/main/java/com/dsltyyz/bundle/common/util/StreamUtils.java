@@ -7,7 +7,7 @@ import java.io.*;
  * 流工具类
  *
  * @author: dsltyyz
- * @since: 2019-05-29
+ * @date: 2019-05-29
  */
 public class StreamUtils {
 
@@ -56,7 +56,8 @@ public class StreamUtils {
         String oneLine = "";
         try {
             while ((oneLine = bufferedReader.readLine()) != null) {
-                stringBuffer.append(oneLine);
+                //按行读取 数据追加换行符
+                stringBuffer.append(oneLine).append("\n");
             }
             bufferedReader.close();
             return stringBuffer.toString();

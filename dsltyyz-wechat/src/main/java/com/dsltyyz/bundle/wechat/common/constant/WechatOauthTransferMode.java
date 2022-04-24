@@ -5,7 +5,7 @@ package com.dsltyyz.bundle.wechat.common.constant;
  * 微信授权传输模式
  *
  * @author: dsltyyz
- * @since: 2019-03-21
+ * @date: 2019-03-21
  */
 public interface WechatOauthTransferMode {
 

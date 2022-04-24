@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 微信授权属性
  *
  * @author: dsltyyz
- * @since: 2019-11-19
+ * @date: 2019-11-19
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -36,5 +36,5 @@ public class WechatOauthProperties extends WechatAccountProperties implements Se
     /**
      * 数据格式 XML JSON
      */
-    private String dataType= WechatOauthDataType.JSON;
+    private String dataType= WechatOauthDataType.XML;
 }

@@ -20,7 +20,7 @@ import java.util.Hashtable;
  * 二维码工具类
  *
  * @author: dsltyyz
- * @since: 2019-11-12
+ * @date: 2019-11-12
  */
 public class QRCodeUtils {
     /**

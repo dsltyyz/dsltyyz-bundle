@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 微信账号属性
  *
  * @author: dsltyyz
- * @since: 2019-11-19
+ * @date: 2019-11-19
  */
 @Data
 public class WechatAccountProperties implements Serializable {
