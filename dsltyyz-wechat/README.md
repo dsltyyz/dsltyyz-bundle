@@ -151,10 +151,10 @@ public class WechatController {
     @PostMapping(value = "/article")
     public CommonResponse<WechatMaterial> createArticle() {
         DsltyyzDraftSend dsltyyzDraftSend = new DsltyyzDraftSend();
-        dsltyyzDraftSend.setLogo("LOGO URL");
+        dsltyyzDraftSend.setLogo("LOGO URL ps:自动替换资源url为素材");
         dsltyyzDraftSend.setTitle("文章标题");
         dsltyyzDraftSend.setDigest("文章简介");
-        dsltyyzDraftSend.setContent("html代码 ps:自动替换src资源为素材");
+        dsltyyzDraftSend.setContent("html代码 ps:自动替换src资源url为素材");
         dsltyyzDraftSend.setContent_source_url("原文路径");
         dsltyyzDraftSend.setAuthor("auther");
         dsltyyzDraftSend.setNeed_open_comment(0);
