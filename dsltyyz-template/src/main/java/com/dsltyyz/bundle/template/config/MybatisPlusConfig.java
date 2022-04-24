@@ -1,7 +1,8 @@
 package com.dsltyyz.bundle.template.config;
 
-import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.dsltyyz.bundle.template.mybatisplus.DsltyyzMetaObjectHandler;
 import com.dsltyyz.bundle.template.mybatisplus.DsltyyzSqlInjector;
 import org.springframework.context.annotation.Bean;
@@ -19,21 +20,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class MybatisPlusConfig {
 
     /**
-     * 分页插件
+     * 配置拦截器
      */
     @Bean
-    public PaginationInterceptor paginationInterceptor() {
-        return new PaginationInterceptor();
-    }
-
-    /**
-     * 乐观锁（仅适合高读取，少更新）
-     *
-     * @return
-     */
-    @Bean
-    public OptimisticLockerInterceptor optimisticLockerInterceptor() {
-        return new OptimisticLockerInterceptor();
+    public MybatisPlusInterceptor MybatisPlusInterceptor () {
+        MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
+        //分页插件
+        mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+        //乐观锁（仅适合高读取，少更新）
+        mybatisPlusInterceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
+        return mybatisPlusInterceptor;
     }
 
     /**
