@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * Description:
- * 微信支付工具类 待测试
+ * 微信支付工具类
  * https://pay.weixin.qq.com/wiki/doc/api/index.html
  *
  * @author: dsltyyz
