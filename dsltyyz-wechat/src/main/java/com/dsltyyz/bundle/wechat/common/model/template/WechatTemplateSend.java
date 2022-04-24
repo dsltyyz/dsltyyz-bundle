@@ -43,6 +43,6 @@ public class WechatTemplateSend implements Serializable {
      * 模板数据
      */
     @NonNull
-    private String data;
+    private Object data;
 
 }

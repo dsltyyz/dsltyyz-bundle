@@ -17,6 +17,7 @@ import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatMass;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatPublish;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
+import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateResult;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
@@ -300,8 +301,9 @@ public class WechatUtils {
      */
     public static List<WechatTemplate> getAllPrivateTemplate(WechatToken wechatToken) {
         String url = WechatAccessUrl.TEMPLATE_GET_ALL_PRIVATE_TEMPLATE_MESSAGE_URL.replace("ACCESS_TOKEN", wechatToken.getAccess_token());
-        return HttpUtils.doGet(url, null, null, new TypeReference<List<WechatTemplate>>() {
+        WechatTemplateResult wechatTemplateResult = HttpUtils.doGet(url, null, null, new TypeReference<WechatTemplateResult>() {
         });
+        return wechatTemplateResult.getTemplate_list();
     }
 
     /**

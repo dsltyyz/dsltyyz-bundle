@@ -109,6 +109,32 @@ public class WechatController {
         return new CommonResponse<>(wechatClient.getUserInfoByCode(code));
     }
 
+    @ApiOperation(value = "获取模板列表")
+    @GetMapping(value = "/template")
+    public CommonResponse<List<WechatTemplate>> getAllPrivateTemplate() {
+        return new CommonResponse<>(wechatClient.getAllPrivateTemplate());
+    }
+
+    @ApiOperation(value = "发送模板消息")
+    @PostMapping(value = "/template")
+    public CommonResponse sendTemplate() {
+        WechatTemplateSend wechatTemplateSend = new WechatTemplateSend();
+        wechatTemplateSend.setTouser("用户openid");
+        wechatTemplateSend.setTemplate_id("模板id");
+        wechatTemplateSend.setUrl("点击通知跳转url");
+
+        Map<String, WechatDataValue> dataMap = new HashMap<>();
+        dataMap.put("first", new WechatDataValue("您预约的活动结果通知如下:"));
+        dataMap.put("activity_name", new WechatDataValue("活动名称"));
+        dataMap.put("reserve_results", new WechatDataValue("活动状态"));
+        dataMap.put("activity_time", new WechatDataValue(DateUtils.format(new Date(), "yyyy-MM-dd")));
+        dataMap.put("activity_address", new WechatDataValue("成活动地址"));
+        dataMap.put("remark", new WechatDataValue("感谢你的参与！"));
+        wechatTemplateSend.setData(dataMap);
+        wechatClient.sendTemplate(wechatTemplateSend);
+        return new CommonResponse<>();
+    }
+
     @ApiOperation(value = "创建菜单")
     @PostMapping(value = "/menu")
     public CommonResponse addMenu() {
