@@ -50,7 +50,7 @@ wechat:
     api-v3-key: 版本为v3 apiV3秘钥
     mch-serial-no: 版本为v3 商户API证书的证书序列号
 ~~~
-#### 2.1.3 公众号示例
+#### 2.1.3 服务号示例
 ~~~
 @Api(value = "微信controller", tags = {"微信"})
 @RestController
