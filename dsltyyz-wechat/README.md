@@ -41,6 +41,7 @@ wechat:
     token: 令牌
     encoding-type: 消息加解密方式
     encoding-aes-key: 消息加解密密钥
+    data-type: XML #默认XML 小程序支持JSON
   pay:
     mch-id: 商户ID
     mch-private-key: 商户KEY
@@ -49,7 +50,7 @@ wechat:
     api-v3-key: 版本为v3 apiV3秘钥
     mch-serial-no: 版本为v3 商户API证书的证书序列号
 ~~~
-#### 2.1.3 示例
+#### 2.1.3 公众号示例
 ~~~
 @Api(value = "微信controller", tags = {"微信"})
 @RestController
@@ -297,6 +298,104 @@ public class WechatController {
             result.put("return_code","SUCCESS");
             result.put("return_msg","OK");
             return WXPayUtil.mapToXml(result);
+    }
+
+}
+~~~
+#### 2.1.4 小程序示例
+~~~
+@Api(value = "微信controller", tags = {"微信"})
+@RestController
+@RequestMapping("wechat")
+public class WechatController {
+
+    @Resource
+    private WechatProperties wechatProperties;
+
+    @Resource
+    private WechatClient wechatClient;
+
+    @Resource
+    private AliyunOssClient aliyunOssClient;
+
+    @ApiOperation(value = "微信请求GET回调")
+    @GetMapping("/check")
+    public String check(@RequestParam("signature") String signature, @RequestParam("timestamp") String timestamp,
+                        @RequestParam("nonce") String nonce, @RequestParam("echostr") String echostr) {
+        return WechatCommonUtils.callbackCheck(signature, timestamp, nonce, echostr, wechatProperties.getOauth().getToken());
+    }
+
+    @ApiOperation(value = "微信消息回调")
+    @PostMapping("/check")
+    public String check(HttpServletRequest request) throws Exception {
+        System.out.println("------------request parameter参数-------------");
+        System.out.println(JSONObject.toJSONString(request.getParameterMap()));
+        String signature = request.getParameter("signature");
+        String timestamp = request.getParameter("timestamp");
+        String nonce = request.getParameter("nonce");
+        if (!WechatCommonUtils.checkSignature(signature, timestamp, nonce, wechatProperties.getOauth().getToken())) {
+            return "消息不合法";
+        }
+
+        String encryptType = request.getParameter("encrypt_type");
+        String msg;
+        if (encryptType == null) {
+            // 明文传输的消息
+            msg = StreamUtils.inputStreamToString(request.getInputStream());
+        } else if ("aes".equals(encryptType)) {
+            // aes加密的消息
+            WXBizMsgCrypt wxBizMsgCrypt = new WXBizMsgCrypt(wechatProperties.getOauth().getAppId(), wechatProperties.getOauth().getToken(), wechatProperties.getOauth().getEncodingAesKey());
+            String msgSignature = request.getParameter("msg_signature");
+            msg = wxBizMsgCrypt.decryptMsg(msgSignature, timestamp, nonce, StreamUtils.inputStreamToString(request.getInputStream()));
+        } else {
+            return "不可识别的加密类型";
+        }
+        WechatMessage wechatMessage;
+        if(WechatOauthDataType.XML.equals(wechatProperties.getOauth().getDataType())){
+            //数据格式为XML
+            System.out.println("------------xml转json数据-------------");
+            System.out.println(XmlUtils.xmlToJSONObject(msg).toJSONString());
+            wechatMessage = XmlUtils.xmlToJSONObject(msg).toJavaObject(WechatMessage.class);
+        }else{
+            //数据格式为JSON
+            wechatMessage = JSONObject.parseObject(msg,WechatMessage.class);
+        }
+        System.out.println("------------json转对象数据-------------");
+        System.out.println(JSONObject.toJSONString(wechatMessage));
+        return "success";
+    }
+
+    @ApiOperation(value = "获取用户登录信息")
+    @GetMapping("/user/login/{code}")
+    public CommonResponse<WechatMiniOpenId> login(@PathVariable("code") String code) {
+        return new CommonResponse<>(wechatClient.getMiniOpenId(code));
+    }
+
+    @ApiOperation(value = "获取用户手机信息")
+    @GetMapping("/user/telephone/{code}")
+    public CommonResponse<WechatPhoneInfo> getUserPhoneInfo(@PathVariable("code") String code) {
+        return new CommonResponse<>(wechatClient.getUserPhoneInfo(code));
+    }
+
+    @ApiOperation(value = "获取订阅消息模板列表")
+    @GetMapping("/template")
+    public CommonResponse<List<WechatMiniTemplate>> getNewTmplList() {
+        return new CommonResponse<>(wechatClient.getNewTmplList());
+    }
+
+    @ApiOperation(value = "发送订阅消息")
+    @PostMapping("/template")
+    public CommonResponse getUserPhoneInfo() {
+        WechatMiniTemplateSend wechatMiniTemplateSend = new WechatMiniTemplateSend();
+        wechatMiniTemplateSend.setTouser("用户OPENID");
+        wechatMiniTemplateSend.setPage("跳转页面");
+        wechatMiniTemplateSend.setTemplate_id("订阅模板ID");
+
+        Map<String, WechatDataValue> dataMap = new HashMap<>();
+        //参数配置
+        wechatMiniTemplateSend.setData(dataMap);
+        wechatClient.sendNewTmpl(wechatMiniTemplateSend);
+        return new CommonResponse<>();
     }
 
 }

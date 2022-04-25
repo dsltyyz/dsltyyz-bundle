@@ -16,12 +16,11 @@ import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
 import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatMass;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatPublish;
-import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
-import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateResult;
-import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
+import com.dsltyyz.bundle.wechat.common.model.template.*;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUserSubscribe;
+import io.jsonwebtoken.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -375,6 +374,32 @@ public class WechatUtils {
         Map<String, Object> param = new HashMap<>();
         param.put("code", code);
         return HttpUtils.doPostJson(url, null, null, param, new TypeReference<WechatPhone>() {
+        });
+    }
+
+    /**
+     * 【小程序】订阅消息获取当前帐号下的个人模板列表
+     *
+     * @param token
+     * @return
+     */
+    public static List<WechatMiniTemplate> getNewTmplList(String token) {
+        String url = WechatAccessUrl.NEW_TMPL_LIST_URL.replace("ACCESS_TOKEN", token);
+        WechatMiniTemplateResult wechatMiniTemplateResult = HttpUtils.doGet(url, null, null, new TypeReference<WechatMiniTemplateResult>() {
+        });
+        Assert.isTrue(wechatMiniTemplateResult.getErrcode().equals(0L), wechatMiniTemplateResult.getErrmsg());
+        return wechatMiniTemplateResult.getData();
+    }
+
+    /**
+     * 【小程序】发送订阅消息
+     * @param token
+     * @param wechatMiniTemplateSend
+     * @return
+     */
+    public static WechatResult sendNewTmpl(String token, WechatMiniTemplateSend wechatMiniTemplateSend){
+        String url = WechatAccessUrl.SEND_NEW_TMPL_URL.replace("ACCESS_TOKEN", token);
+        return HttpUtils.doPostJson(url, null, null,wechatMiniTemplateSend, new TypeReference<WechatResult>() {
         });
     }
 

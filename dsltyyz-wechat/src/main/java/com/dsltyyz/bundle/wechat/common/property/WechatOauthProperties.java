@@ -34,7 +34,9 @@ public class WechatOauthProperties extends WechatAccountProperties implements Se
     private String encodingAesKey;
 
     /**
-     * 数据格式 XML JSON
+     * 公众号支持XML
+     * 小程序支持XML JSON
+     * 数据格式
      */
     private String dataType= WechatOauthDataType.XML;
 }

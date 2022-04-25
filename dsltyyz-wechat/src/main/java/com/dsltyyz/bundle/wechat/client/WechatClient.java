@@ -21,6 +21,8 @@ import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
 import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhoneInfo;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatMass;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatPublish;
+import com.dsltyyz.bundle.wechat.common.model.template.WechatMiniTemplate;
+import com.dsltyyz.bundle.wechat.common.model.template.WechatMiniTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
@@ -351,6 +353,27 @@ public class WechatClient {
         WechatToken wechatToken = getWechatToken();
         WechatPhone userPhone = WechatUtils.getUserPhone(wechatToken.getAccess_token(), code);
         return userPhone != null ? userPhone.getPhone_info() : null;
+    }
+
+    /**
+     * 【小程序】订阅消息获取当前帐号下的个人模板列表
+     *
+     * @return
+     */
+    public List<WechatMiniTemplate> getNewTmplList() {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.getNewTmplList(wechatToken.getAccess_token());
+    }
+
+    /**
+     * 【小程序】发送订阅消息
+     *
+     * @param wechatMiniTemplateSend
+     * @return
+     */
+    public WechatResult sendNewTmpl(WechatMiniTemplateSend wechatMiniTemplateSend) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.sendNewTmpl(wechatToken.getAccess_token(), wechatMiniTemplateSend);
     }
 
     /***************支付**************/

@@ -119,4 +119,14 @@ public interface WechatAccessUrl {
      * 【小程序】获取用户手机号
      */
     String USER_PHONE_URL = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【小程序】订阅消息获取当前帐号下的个人模板列表
+     */
+    String NEW_TMPL_LIST_URL = "https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【小程序】发送订阅消息
+     */
+    String SEND_NEW_TMPL_URL = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=ACCESS_TOKEN";
 }
