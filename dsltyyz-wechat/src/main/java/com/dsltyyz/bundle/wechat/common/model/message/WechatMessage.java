@@ -4,18 +4,19 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Description:
- * 微信消息Query
+ * 微信消息
  *
  * @author: dsltyyz
  * @date: 2019/05/15
  */
 @Data
 @ApiModel(value = "微信消息")
-public class WechatMessage {
+public class WechatMessage implements Serializable {
 
     @ApiModelProperty(value = "消息id，64位整型")
     private Long MsgId;

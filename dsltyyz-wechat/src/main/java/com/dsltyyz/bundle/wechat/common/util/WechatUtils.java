@@ -11,6 +11,9 @@ import com.dsltyyz.bundle.wechat.common.model.draft.WechatDraftDetailVO;
 import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterial;
 import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterialSend;
 import com.dsltyyz.bundle.wechat.common.model.menu.WechatMenu;
+import com.dsltyyz.bundle.wechat.common.model.ocr.WechatBankcardResult;
+import com.dsltyyz.bundle.wechat.common.model.ocr.WechatBizlicenseResult;
+import com.dsltyyz.bundle.wechat.common.model.ocr.WechatIdcardResult;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
 import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
@@ -403,4 +406,71 @@ public class WechatUtils {
         });
     }
 
+    /*******************OCR***********/
+    /**
+     * 获取银行卡号
+     * @param token
+     * @param type
+     * @param imgUrl
+     * @param img
+     * @return
+     */
+    public static WechatBankcardResult getBankcard(String token, String type, String imgUrl, File img){
+        String url = WechatAccessUrl.OCR_BANKCARD_URL;
+        Map<String, Object> query = new HashMap<>();
+        Map<String, File> file = new HashMap<>();
+        query.put("access_token", token);
+        query.put("type", type);
+        if(!StringUtils.isEmpty(imgUrl)){
+            query.put("img_url", imgUrl);
+        }else{
+            file.put("img", img);
+        }
+        return HttpUtils.doPostFile(url, null, query, null,file, new TypeReference<WechatBankcardResult>() {
+        });
+    }
+
+    /**
+     * 获取身份证号
+     * @param token
+     * @param type
+     * @param imgUrl
+     * @param img
+     * @return
+     */
+    public static WechatIdcardResult getIdcard(String token, String type, String imgUrl, File img){
+        String url = WechatAccessUrl.OCR_IDCARD_URL;
+        Map<String, Object> query = new HashMap<>();
+        Map<String, File> file = new HashMap<>();
+        query.put("access_token", token);
+        query.put("type", type);
+        if(!StringUtils.isEmpty(imgUrl)){
+            query.put("img_url", imgUrl);
+        }else{
+            file.put("img", img);
+        }
+        return HttpUtils.doPostFile(url, null, query, null,file, new TypeReference<WechatIdcardResult>() {
+        });
+    }
+
+    /**
+     * 获取营业执照
+     * @param token
+     * @param imgUrl
+     * @param img
+     * @return
+     */
+    public static WechatBizlicenseResult getBizLicense(String token, String imgUrl, File img){
+        String url = WechatAccessUrl.OCR_BIZLICENSE_URL;
+        Map<String, Object> query = new HashMap<>();
+        Map<String, File> file = new HashMap<>();
+        query.put("access_token", token);
+        if(!StringUtils.isEmpty(imgUrl)){
+            query.put("img_url", imgUrl);
+        }else{
+            file.put("img", img);
+        }
+        return HttpUtils.doPostFile(url, null, query, null,file, new TypeReference<WechatBizlicenseResult>() {
+        });
+    }
 }

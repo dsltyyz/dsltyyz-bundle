@@ -400,3 +400,48 @@ public class WechatController {
 
 }
 ~~~
+#### 2.1.5 OCR示例 
+~~~
+@Api(value = "微信controller", tags = {"微信"})
+@RestController
+@RequestMapping("wechat")
+public class WechatController {
+
+    //支持小程序和公众号
+    //API文档 https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/ocr/ocr.idcard.html
+    //需要购买服务 100次/天免费 https://fuwu.weixin.qq.com/service/detail/000ce4cec24ca026d37900ed551415
+
+    @Resource
+    private WechatClient wechatClient;
+
+    @ApiOperation(value = "获取身份证信息")
+    @PostMapping("/idcard")
+    public CommonResponse<WechatIdcardResult> getIdCard(@RequestPart("file") MultipartFile multipartFile) throws IOException {
+        File file = new File(multipartFile.getOriginalFilename());
+        FileUtils.inputStreamToFile(multipartFile.getInputStream(), file);
+        WechatIdcardResult photo = wechatClient.getIdcard("photo", null, file);
+        file.delete();
+        return new CommonResponse<>(photo);
+    }
+
+    @ApiOperation(value = "获取银行卡信息")
+    @PostMapping("/bankcard")
+    public CommonResponse<WechatBankcardResult> getBandCard(@RequestPart("file") MultipartFile multipartFile) throws IOException {
+        File file = new File(multipartFile.getOriginalFilename());
+        FileUtils.inputStreamToFile(multipartFile.getInputStream(), file);
+        WechatBankcardResult photo = wechatClient.getBankcard("photo", null, file);
+        file.delete();
+        return new CommonResponse<>(photo);
+    }
+
+    @ApiOperation(value = "获取营业执照")
+    @PostMapping("/businessLicense")
+    public CommonResponse<WechatBizlicenseResult> getBizLicense(@RequestPart("file") MultipartFile multipartFile) throws IOException {
+        File file = new File(multipartFile.getOriginalFilename());
+        FileUtils.inputStreamToFile(multipartFile.getInputStream(), file);
+        WechatBizlicenseResult photo = wechatClient.getBizLicense(null, file);
+        file.delete();
+        return new CommonResponse<>(photo);
+    }
+}
+~~~

@@ -13,6 +13,9 @@ import com.dsltyyz.bundle.wechat.common.model.draft.WechatDraftSend;
 import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterial;
 import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterialSend;
 import com.dsltyyz.bundle.wechat.common.model.menu.WechatMenu;
+import com.dsltyyz.bundle.wechat.common.model.ocr.WechatBankcardResult;
+import com.dsltyyz.bundle.wechat.common.model.ocr.WechatBizlicenseResult;
+import com.dsltyyz.bundle.wechat.common.model.ocr.WechatIdcardResult;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
 import com.dsltyyz.bundle.wechat.common.model.pay.WechatPayConfig;
@@ -376,6 +379,45 @@ public class WechatClient {
         return WechatUtils.sendNewTmpl(wechatToken.getAccess_token(), wechatMiniTemplateSend);
     }
 
+    /*******************OCR***********/
+    /**
+     * 获取银行卡号
+     *
+     * @param type
+     * @param imgUrl
+     * @param img
+     * @return
+     */
+    public WechatBankcardResult getBankcard(String type, String imgUrl, File img) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.getBankcard(wechatToken.getAccess_token(), type, imgUrl, img);
+    }
+
+    /**
+     * 获取身份证号
+     *
+     * @param type
+     * @param imgUrl
+     * @param img
+     * @return
+     */
+    public WechatIdcardResult getIdcard(String type, String imgUrl, File img) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.getIdcard(wechatToken.getAccess_token(), type, imgUrl, img);
+    }
+
+    /**
+     * 获取营业执照
+     *
+     * @param imgUrl
+     * @param img
+     * @return
+     */
+    public WechatBizlicenseResult getBizLicense(String imgUrl, File img) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.getBizLicense(wechatToken.getAccess_token(), imgUrl, img);
+    }
+
     /***************支付**************/
     /**
      * 【微信支付】统一下单JSAPI
@@ -472,4 +514,5 @@ public class WechatClient {
         WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
         return WechatPayUtils.applyRefundByOutTradeNo(wechatPayConfig, outTradeNo, totalFee, refuseFee, notifyUrl);
     }
+
 }

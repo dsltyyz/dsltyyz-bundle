@@ -129,4 +129,19 @@ public interface WechatAccessUrl {
      * 【小程序】发送订阅消息
      */
     String SEND_NEW_TMPL_URL = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【OCR】识别银行卡
+     */
+    String OCR_BANKCARD_URL = "https://api.weixin.qq.com/cv/ocr/bankcard";
+
+    /**
+     * 【OCR】识别身份证
+     */
+    String OCR_IDCARD_URL = "https://api.weixin.qq.com/cv/ocr/idcard";
+
+    /**
+     * 【OCR】识别营业执照
+     */
+    String OCR_BIZLICENSE_URL = "https://api.weixin.qq.com/cv/ocr/bizlicense";
 }
