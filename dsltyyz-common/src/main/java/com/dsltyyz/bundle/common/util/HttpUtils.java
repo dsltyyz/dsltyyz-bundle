@@ -17,7 +17,6 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -427,7 +426,7 @@ public class HttpUtils {
             }
             if(file!=null) {
                 for (Map.Entry<String, InputStream> entry : file.entrySet()) {
-                    builder.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.DEFAULT_BINARY, "dsltyyz");
+                    builder.addBinaryBody(entry.getKey(), entry.getValue());
                 }
             }
             httpPost.setEntity(builder.build());
