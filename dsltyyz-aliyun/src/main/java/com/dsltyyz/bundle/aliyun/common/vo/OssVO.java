@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * Description:
  * OSS值对象
@@ -16,7 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Data
-public class OssVO {
+public class OssVO implements Serializable {
 
     /**
      * 名称

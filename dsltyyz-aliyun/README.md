@@ -33,25 +33,29 @@ spring:
       secret-key: 阿里云secret-key
       #短信  
       sms:
-        enable: true #不用 设置为false
+        enable: true #不用 设置为false 默认为true
         sign-name: 短信签名
       #对象存储
       oss:
-        enabled: true #不用 设置为false
+        enabled: true #不用 设置为false 默认为true
         endpoint: oss-cn-hangzhou.aliyuncs.com
         bucket-name: dsltyyz
       #支付
       pay:
-        enable: true #不用 设置为false
-        server-url: https://openapi.alipay.com/gateway.do
+        enable: true #不用 设置为false 默认为false
+        server-url: https://openapi.alipay.com/gateway.do #https://openapi.alipaydev.com/gateway.do
         app-id: 应用ID
         private-key: 应用私钥
-        cert-path: 文件绝对路径
-        alipay-public-cert-path: 文件绝对路径
-        root-cert-path: 文件绝对路径
+        mode: CERT
+        #MODE KEY
+        alipay-public-key: 支付宝公钥
+        #MODE CERT
+        cert-path: 文件绝对路径 #appCertPublicKey_${app-id}.crt
+        alipay-public-cert-path: 文件绝对路径 #alipayCertPublicKey_RSA2.crt
+        root-cert-path: 文件绝对路径 #alipayRootCert.crt
 ...
 ~~~
-### 2.2 OSS对象存储
+### 2.2 OSS对象存储示例
 ~~~
 /**
  * <p>
@@ -96,7 +100,7 @@ public class OssController {
 
 }
 ~~~
-### 2.3 短信
+### 2.3 短信示例
 ~~~
 /**
  * <p>
@@ -123,16 +127,8 @@ public class SmsController {
 
 }
 ~~~
-### 2.4 支付宝支付
+### 2.4 支付示例
 ~~~
-/**
- * <p>
- * 支付宝 前端控制器
- * </p>
- *
- * @author dsltyyz
- * @date 2021-04-14
- */
 @Api(value = "支付宝controller", tags = {"支付宝"})
 @RestController
 @RequestMapping("alipay")
@@ -141,11 +137,75 @@ public class AliPayController {
     @Resource
     private AliyunPayClient aliyunPayClient;
 
-    @ApiOperation(value = "获取页面支付")
-    @GetMapping(value = "")
-    public CommonResponse<String> createPagePay(@Valid AlipayOrder alipayOrder, String returnUrl) throws AlipayApiException {
-        return new CommonResponse<>(aliyunPayClient.createPagePay(alipayOrder, returnUrl, null));
+    @Resource
+    private AliyunOssClient aliyunOssClient;
+
+    @ApiOperation(value = "获取预支付")
+    @GetMapping(value = "precreate")
+    public CommonResponse<String> createAlipayTradePrecreate(@Valid AlipayOrder alipayOrder) throws AlipayApiException {
+        String s = aliyunPayClient.createAlipayTradePrecreate(alipayOrder, "异步通知url 不通知设置为null");
+        String key = "alipay/" + alipayOrder.getOut_trade_no() + "." + ImageType.JPG;
+        aliyunOssClient.putObject(key, QRCodeUtils.encode(s));
+        return new CommonResponse<>(aliyunOssClient.getResourceUrl(key));
     }
 
+    @ApiOperation(value = "获取页面支付")
+    @GetMapping(value = "page")
+    public String createAlipayTradePagePay(@Valid AlipayOrder alipayOrder, String returnUrl) throws AlipayApiException {
+        return aliyunPayClient.createAlipayTradePagePay(alipayOrder, returnUrl, "异步通知url 不通知设置为null");
+    }
+
+    @ApiOperation(value = "获取APP支付")
+    @GetMapping(value = "app")
+    public String createAlipayTradeAppPay(@Valid AlipayOrder alipayOrder) throws AlipayApiException {
+        return aliyunPayClient.createAlipayTradeAppPay(alipayOrder, "异步通知url 不通知设置为null");
+    }
+
+    @ApiOperation(value = "获取WAP支付")
+    @GetMapping(value = "wap")
+    public String createAlipayTradeAppPay(@Valid AlipayOrder alipayOrder, String returnUrl) throws AlipayApiException {
+        return aliyunPayClient.createAlipayTradeWapPay(alipayOrder, returnUrl, "异步通知url 不通知设置为null");
+    }
+
+    @ApiOperation(value = "获取订单详情")
+    @GetMapping(value = "order")
+    public JSONObject createAlipayTradeAppPay(@RequestParam("outTradeNo") String outTradeNo) throws AlipayApiException {
+        return aliyunPayClient.getAlipayTradeQuery(outTradeNo);
+    }
+
+    @ApiOperation(value = "订单退款")
+    @PostMapping(value = "refund")
+    public JSONObject createAlipayTradeAppPay(@RequestParam("outTradeNo") String outTradeNo, @RequestParam("refundAmount") String refundAmount) throws AlipayApiException {
+        return aliyunPayClient.createAlipayTradeRefund(outTradeNo, refundAmount);
+    }
+
+    @ApiOperation(value = "查询订单退款")
+    @GetMapping(value = "refund")
+    public JSONObject getAlipayTradeFastpayRefundQuery(@RequestParam("outTradeNo") String outTradeNo) throws AlipayApiException {
+        return aliyunPayClient.getAlipayTradeFastpayRefundQuery(outTradeNo);
+    }
+
+    @ApiOperation(value = "异步支付回调")
+    @PostMapping(value = "v1/pay/callback")
+    public String payCallback(HttpServletRequest request) {
+        System.out.println("------------request parameter参数-------------");
+        System.out.println(JSONObject.toJSONString(request.getParameterMap()));
+        // 解析回调数据
+        Map<String, String> params = new HashMap<>();
+        Map<String, String[]> requestParams = request.getParameterMap();
+        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
+            String name = (String) iter.next();
+            String[] values = requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i < values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
+            }
+            params.put(name, valueStr);
+        }
+        AlipayNotifyResult alipayNotifyResult = aliyunPayClient.dealData(params);
+        System.out.println("------------json转对象数据-------------");
+        System.out.println(JSONObject.toJSONString(alipayNotifyResult));
+        return "success";
+    }
 }
 ~~~

@@ -21,6 +21,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class PayProperties {
 
     /**
+     * 公钥模式
+     */
+    public static String KEY_MODE="KEY";
+
+    /**
+     * 证书模式
+     */
+    public static String CERT_MODE="CERT";
+
+    /**
      * 服务器URL
      */
     @ApiModelProperty(value = "服务器URL")
@@ -59,24 +69,34 @@ public class PayProperties {
     private String signType  = "RSA2";
 
     /**
-     * 应用公钥证书文件路径
+     * 模式 公钥 证书
      */
-    @NonNull
-    @ApiModelProperty(value = "应用公钥证书文件路径")
+    @ApiModelProperty(value = "模式 公钥 证书  默认公钥")
+    private String mode = KEY_MODE;
+
+    /**
+     * 模式为1公钥时 支付宝公钥必填
+     */
+    @ApiModelProperty(value = "模式为公钥时 支付宝公钥必填")
+    private String alipayPublicKey;
+
+    /**
+     * 模式为2证书时 应用公钥证书文件路径
+     */
+    @ApiModelProperty(value = "模式为证书时 应用公钥证书文件路径")
     private String certPath;
 
     /**
-     * 支付宝公钥证书文件路径
+     * 模式为2证书时 支付宝公钥证书文件路径
      */
-    @NonNull
-    @ApiModelProperty(value = "支付宝公钥证书文件路径")
+    @ApiModelProperty(value = "模式为证书时 支付宝公钥证书文件路径")
     private String alipayPublicCertPath;
 
     /**
-     * 支付宝根证书文件路径
+     * 模式为2证书时 支付宝根证书文件路径
      */
     @NonNull
-    @ApiModelProperty(value = "支付宝根证书文件路径")
+    @ApiModelProperty(value = "模式为证书时 支付宝根证书文件路径")
     private String rootCertPath;
 
 }

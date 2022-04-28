@@ -2,7 +2,12 @@ package com.dsltyyz.bundle.aliyun.common.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
+import java.io.Serializable;
 
 /**
  * Description:
@@ -15,7 +20,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class OssSignatureVO {
+public class OssSignatureVO implements Serializable {
 
     /**
      * 访问KEY

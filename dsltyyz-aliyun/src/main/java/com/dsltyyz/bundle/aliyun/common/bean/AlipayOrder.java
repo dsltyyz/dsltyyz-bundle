@@ -3,11 +3,16 @@ package com.dsltyyz.bundle.aliyun.common.bean;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Data
-public class AlipayOrder {
+public class AlipayOrder implements Serializable {
+
+    public static String FAST_INSTANT_TRADE_PAY = "FAST_INSTANT_TRADE_PAY";
+    public static String QUICK_WAP_WAY = "QUICK_WAP_WAY";
 
     /**
      * 商户订单号，必填
@@ -42,5 +47,5 @@ public class AlipayOrder {
     /**
      * 产品编号
      */
-    private String product_code= "FAST_INSTANT_TRADE_PAY";
+    private String product_code;
 }
