@@ -5,6 +5,8 @@ import com.github.wxpay.sdk.WXPayConfig;
 import lombok.*;
 import org.springframework.util.StringUtils;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Serializable;
 
@@ -67,7 +69,22 @@ public class WechatPayConfig implements WXPayConfig, Serializable {
         this.mchID = mchID;
         this.key = key;
         if (!StringUtils.isEmpty(certUrl)) {
-            this.certStream = HttpUtils.doGetInputStream(certUrl, null, null);
+            configCertStream(certUrl);
         }
     }
+
+    private void configCertStream(String certUrl){
+        if(certUrl.startsWith("http")||certUrl.startsWith("https")){
+            this.certStream = HttpUtils.doGetInputStream(certUrl, null, null);
+        }else if(certUrl.startsWith("classpath:")){
+            this.certStream = this.getClass().getClassLoader().getResourceAsStream(certUrl.substring(certUrl.indexOf(":")+1));
+        }else{
+            try {
+                this.certStream = new FileInputStream(certUrl);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
