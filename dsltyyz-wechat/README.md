@@ -343,13 +343,23 @@ public class WechatController {
             // 明文传输的消息
             msg = StreamUtils.inputStreamToString(request.getInputStream());
         } else if ("aes".equals(encryptType)) {
-            // aes加密的消息
+            String s = StreamUtils.inputStreamToString(request.getInputStream());
+            System.out.println("------------inputStream内容 aes--------------");
+            System.out.println(s);
             WXBizMsgCrypt wxBizMsgCrypt = new WXBizMsgCrypt(wechatProperties.getOauth().getAppId(), wechatProperties.getOauth().getToken(), wechatProperties.getOauth().getEncodingAesKey());
             String msgSignature = request.getParameter("msg_signature");
-            msg = wxBizMsgCrypt.decryptMsg(msgSignature, timestamp, nonce, StreamUtils.inputStreamToString(request.getInputStream()));
+            if(WechatOauthDataType.XML.equals(wechatProperties.getOauth().getDataType())) {
+                //XML 直接解密消息
+                msg = wxBizMsgCrypt.decryptMsg(msgSignature, timestamp, nonce, s);
+            }else{
+                //JSON 直接解密加密消息
+                msg = wxBizMsgCrypt.decrypt(JSONObject.parseObject(s).getString("Encrypt"));
+            }
         } else {
             return "不可识别的加密类型";
         }
+        System.out.println("------------inputStream内容--------------");
+        System.out.println(msg);
         WechatMessage wechatMessage;
         if(WechatOauthDataType.XML.equals(wechatProperties.getOauth().getDataType())){
             //数据格式为XML
