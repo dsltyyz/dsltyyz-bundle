@@ -38,7 +38,7 @@ import java.util.Map;
  * https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pages/index.shtml
  *
  * @author: dsltyyz
- * @date: 2019-11-12
+ * @date: 2022-5-6
  */
 @Slf4j
 public class WechatPayV3Utils {

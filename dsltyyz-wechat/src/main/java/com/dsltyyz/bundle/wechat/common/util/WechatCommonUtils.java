@@ -7,10 +7,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.AlgorithmParameters;
-import java.security.Key;
-import java.security.MessageDigest;
-import java.security.Security;
+import java.security.*;
 import java.util.Arrays;
 
 /**
@@ -21,6 +18,10 @@ import java.util.Arrays;
  * @date: 2019-11-07
  */
 public class WechatCommonUtils {
+
+    static{
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     /**
      * sha1加密工具方法
@@ -95,18 +96,49 @@ public class WechatCommonUtils {
     }
 
     /***
-     * 微信回调数据解密
+     * 微信退款回调数据解密
      * @param encryptedData
-     * @param keyData
+     * @param mchPrivateKey 商户私钥
      * @return
      * @throws Exception
      */
-    public static String decrypt(String encryptedData, String keyData) throws Exception {
-        Key key = new SecretKeySpec(Base64.decodeBase64(keyData), "AES");
+    public static String decrypt(String encryptedData, String mchPrivateKey) throws Exception {
+        Key key = new SecretKeySpec(getMD5(mchPrivateKey).getBytes(), "AES");
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS7Padding");
         cipher.init(Cipher.DECRYPT_MODE, key);
         byte[] bytes = cipher.doFinal(Base64.decodeBase64(encryptedData));
         return new String(bytes);
+    }
+
+    public static String getMD5(String str) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            String result = MD5(str, md);
+            return result;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String MD5(String strSrc, MessageDigest md) {
+        byte[] bt = strSrc.getBytes();
+        md.update(bt);
+        String strDes = bytes2Hex(md.digest());
+        return strDes;
+    }
+
+    public static String bytes2Hex(byte[] bts) {
+        StringBuffer des = new StringBuffer();
+        String tmp = null;
+        for (int i = 0; i < bts.length; i++) {
+            tmp = (Integer.toHexString(bts[i] & 0xFF));
+            if (tmp.length() == 1) {
+                des.append("0");
+            }
+            des.append(tmp);
+        }
+        return des.toString();
     }
 
 }

@@ -296,7 +296,7 @@ public class WechatUtils {
     }
 
     /**
-     * 【后台】获取模板列表 未测试
+     * 【后台】获取模板列表
      *
      * @param wechatToken 访问口令
      * @return
@@ -309,7 +309,7 @@ public class WechatUtils {
     }
 
     /**
-     * 【后台】获取模板列表 未测试
+     * 【后台】获取模板列表
      *
      * @param wechatToken        访问口令
      * @param wechatTemplateSend 模板信息
