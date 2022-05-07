@@ -30,19 +30,24 @@ public class WechatPayProperties implements Serializable {
     private String mchId;
 
     /**
-     * 商户API私钥
-     */
-    private String mchPrivateKey;
-
-    /**
      * 支付版本 默认V2
      */
     private String version = V2;
 
     /**
-     * 版本为非V3 微信支付平台证书路径
+     * 版本为V2 商户API私钥
+     */
+    private String mchPrivateKey;
+
+    /**
+     * 版本为V2 微信支付平台证书路径
      */
     private String certUrl;
+
+    /**
+     * 版本为V3 商户API私钥
+     */
+    private String mchPrivateKeyCert;
 
     /**
      * 版本为V3 商户API证书的证书序列号

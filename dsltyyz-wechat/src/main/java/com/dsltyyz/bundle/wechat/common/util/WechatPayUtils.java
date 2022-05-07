@@ -1,5 +1,6 @@
 package com.dsltyyz.bundle.wechat.common.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dsltyyz.bundle.common.util.UUIDUtils;
 import com.dsltyyz.bundle.wechat.common.constant.WechatPayFeeType;
 import com.dsltyyz.bundle.wechat.common.constant.WechatPayType;
@@ -40,7 +41,19 @@ public class WechatPayUtils {
     public static Map<String, String> unifiedOrderByJsApi(WechatPayConfig wechatPayConfig, WechatPayOrder wechatPayOrder) {
         WXPay wxPay = new WXPay(wechatPayConfig);
         Map<String, String> data = new HashMap<>();
+        data.put("appid", wechatPayConfig.getAppID());
+        data.put("mch_id", wechatPayConfig.getMchID());
+        data.put("device_info", "WEB");
+        data.put("nonce_str", UUIDUtils.getUUID());
         data.put("body", wechatPayOrder.getTitle());
+        try {
+            //对appid,mch_id,device_info,nonce_str,body进行签名
+            data.put("sign", WXPayUtil.generateSignature(data, wechatPayConfig.getKey()));
+            data.put("sign_type", "MD5");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
         data.put("out_trade_no", wechatPayOrder.getOrderId());
         data.put("fee_type", WechatPayFeeType.CNY);
         data.put("total_fee", wechatPayOrder.getFee());
@@ -71,6 +84,53 @@ public class WechatPayUtils {
     }
 
     /**
+     * 生成App需要的签名
+     *
+     * @param wechatPayConfig 支付配置
+     * @param wechatPayOrder  支付订单信息
+     * @return
+     */
+    public static Map<String, String> unifiedOrderByApp(WechatPayConfig wechatPayConfig, WechatPayOrder wechatPayOrder) {
+        WXPay wxPay = new WXPay(wechatPayConfig);
+        Map<String, String> data = new HashMap<>();
+        data.put("appid", wechatPayConfig.getAppID());
+        data.put("mch_id", wechatPayConfig.getMchID());
+        data.put("device_info", "WEB");
+        data.put("nonce_str", UUIDUtils.getUUID());
+        data.put("body", wechatPayOrder.getTitle());
+        try {
+            //对appid,mch_id,device_info,nonce_str,body进行签名
+            data.put("sign", WXPayUtil.generateSignature(data, wechatPayConfig.getKey()));
+            data.put("sign_type", "MD5");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        data.put("out_trade_no", wechatPayOrder.getOrderId());
+        data.put("fee_type", wechatPayOrder.getFeeType());
+        data.put("total_fee", wechatPayOrder.getFee());
+        data.put("spbill_create_ip", wechatPayOrder.getIp());
+        data.put("notify_url", wechatPayOrder.getNotifyUrl());
+        data.put("trade_type", WechatPayType.APP);
+        log.info("预支付：{}", data.toString());
+        try {
+            Map<String, String> result = wxPay.unifiedOrder(data);
+            if (result == null || !SUCCESS.equals(result.get(RETURN_CODE))) {
+                log.error(result.get(RETURN_MSG));
+                return null;
+            }
+            if (WXPayUtil.isSignatureValid(result, wechatPayConfig.getKey())) {
+                //生成签名
+                return WechatPayUtils.generateSignatureApp(wechatPayConfig.getAppID(), wechatPayConfig.getMchID(), result.get(PREPAY_ID), wechatPayConfig.getKey());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * 生成微信native链接
      *
      * @param wechatPayConfig 支付配置
@@ -80,7 +140,19 @@ public class WechatPayUtils {
     public static String unifiedOrderByNative(WechatPayConfig wechatPayConfig, WechatPayOrder wechatPayOrder) {
         WXPay wxPay = new WXPay(wechatPayConfig);
         Map<String, String> data = new HashMap<>();
+        data.put("appid", wechatPayConfig.getAppID());
+        data.put("mch_id", wechatPayConfig.getMchID());
+        data.put("device_info", "WEB");
+        data.put("nonce_str", UUIDUtils.getUUID());
         data.put("body", wechatPayOrder.getTitle());
+        try {
+            //对appid,mch_id,device_info,nonce_str,body进行签名
+            data.put("sign", WXPayUtil.generateSignature(data, wechatPayConfig.getKey()));
+            data.put("sign_type", "MD5");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
         data.put("out_trade_no", wechatPayOrder.getOrderId());
         data.put("fee_type", WechatPayFeeType.CNY);
         data.put("total_fee", wechatPayOrder.getFee());
@@ -115,12 +187,12 @@ public class WechatPayUtils {
      * @param id 微信的订单号
      * @return
      */
-    public static Map<String, String> getUnifiedOrderById(WechatPayConfig wechatPayConfig, String id) {
+    public static JSONObject getUnifiedOrderById(WechatPayConfig wechatPayConfig, String id) {
         try {
             WXPay wxPay = new WXPay(wechatPayConfig);
             HashMap<String, String> data = new HashMap<>();
             data.put("transaction_id", id);
-            return wxPay.orderQuery(data);
+            return JSONObject.parseObject(JSONObject.toJSONString(wxPay.orderQuery(data)));
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -135,12 +207,12 @@ public class WechatPayUtils {
      * @param outTradeNo 商户系统内部订单号
      * @return
      */
-    public static Map<String, String> getUnifiedOrderByOutTradeNo(WechatPayConfig wechatPayConfig, String outTradeNo) {
+    public static JSONObject getUnifiedOrderByOutTradeNo(WechatPayConfig wechatPayConfig, String outTradeNo) {
         try {
             WXPay wxPay = new WXPay(wechatPayConfig);
             HashMap<String, String> data = new HashMap<>();
             data.put("out_trade_no", outTradeNo);
-            return wxPay.orderQuery(data);
+            return JSONObject.parseObject(JSONObject.toJSONString(wxPay.orderQuery(data)));
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -158,7 +230,7 @@ public class WechatPayUtils {
      * @param notifyUrl       通知URL
      * @return
      */
-    public static Map<String, String> applyRefundById(WechatPayConfig wechatPayConfig, String id, String totalFee, String refundFee, String notifyUrl) {
+    public static JSONObject applyRefundById(WechatPayConfig wechatPayConfig, String id, String totalFee, String refundFee, String notifyUrl) {
         try {
             WXPay wxPay = new WXPay(wechatPayConfig);
             HashMap<String, String> data = new HashMap<>();
@@ -171,7 +243,7 @@ public class WechatPayUtils {
             if(!StringUtils.isEmpty(notifyUrl)){
                 data.put("notify_url", notifyUrl);
             }
-            return wxPay.refund(data);
+            return JSONObject.parseObject(JSONObject.toJSONString(wxPay.refund(data)));
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -189,7 +261,7 @@ public class WechatPayUtils {
      * @param notifyUrl       通知URL
      * @return
      */
-    public static Map<String, String> applyRefundByOutTradeNo(WechatPayConfig wechatPayConfig, String outTradeNo, String totalFee, String refundFee, String notifyUrl) {
+    public static JSONObject applyRefundByOutTradeNo(WechatPayConfig wechatPayConfig, String outTradeNo, String totalFee, String refundFee, String notifyUrl) {
         try {
             WXPay wxPay = new WXPay(wechatPayConfig);
             HashMap<String, String> data = new HashMap<>();
@@ -202,14 +274,13 @@ public class WechatPayUtils {
             if(!StringUtils.isEmpty(notifyUrl)){
                 data.put("notify_url", notifyUrl);
             }
-            return wxPay.refund(data);
+            return JSONObject.parseObject(JSONObject.toJSONString(wxPay.refund(data)));
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
             return null;
         }
     }
-
 
     /**
      * 生成服务号支付签名
@@ -220,10 +291,9 @@ public class WechatPayUtils {
      * @return
      */
     public static Map<String, String> generateSignature(String appId, String prepayId, String key) {
-
         //生成签名
         try {
-            Map<String, String> sign = new HashMap<String, String>();
+            Map<String, String> sign = new HashMap<>();
             sign.put("package", "prepay_id=" + prepayId);
             sign.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
             sign.put("nonceStr", UUIDUtils.getUUID());
@@ -238,4 +308,34 @@ public class WechatPayUtils {
             return null;
         }
     }
+
+    /**
+     * 生成APP支付签名
+     *
+     * @param appId    应用id
+     * @param mchId    商户ID
+     * @param prepayId 预支付id
+     * @param key      支付秘钥
+     * @return
+     */
+    public static Map<String, String> generateSignatureApp(String appId, String mchId, String prepayId, String key) {
+        //生成签名
+        try {
+            Map<String, String> sign = new HashMap<>();
+            sign.put("appid", appId);
+            sign.put("partnerid", mchId);
+            sign.put("prepayid", prepayId);
+            sign.put("package", "Sign=WXPay");
+            sign.put("nonceStr", UUIDUtils.getUUID());
+            sign.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
+            sign.put("sign", WXPayUtil.generateSignature(sign, key));
+            log.info("APP签名：{}", sign.toString());
+            return sign;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
 }

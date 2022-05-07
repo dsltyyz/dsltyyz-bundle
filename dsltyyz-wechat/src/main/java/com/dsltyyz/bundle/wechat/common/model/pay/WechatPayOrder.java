@@ -38,6 +38,11 @@ public class WechatPayOrder implements Serializable {
     private String fee;
 
     /**
+     * 货币类型 默认人民币：CNY
+     */
+    private String feeType = "CNY";
+
+    /**
      * 支付ip
      */
     private String ip;

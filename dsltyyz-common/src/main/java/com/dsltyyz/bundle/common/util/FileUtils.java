@@ -1,6 +1,7 @@
 package com.dsltyyz.bundle.common.util;
 
 import io.jsonwebtoken.lang.Assert;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -209,4 +210,19 @@ public class FileUtils {
         }
     }
 
+    public static InputStream fileToInputStream(String fileUrl){
+        Assert.isTrue(!StringUtils.isEmpty(fileUrl), "文件路径不能为空");
+        if(fileUrl.startsWith("http")||fileUrl.startsWith("https")){
+            return HttpUtils.doGetInputStream(fileUrl, null, null);
+        }else if(fileUrl.startsWith("classpath:")){
+            return FileUtils.class.getClassLoader().getResourceAsStream(fileUrl.substring(fileUrl.indexOf(":")+1));
+        }else{
+            try {
+                return new FileInputStream(fileUrl);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
 }
