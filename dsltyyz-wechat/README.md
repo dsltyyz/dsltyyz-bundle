@@ -47,8 +47,8 @@ wechat:
     mch-private-key: 商户KEY
     version: v2 #默认
     cert-url: 版本为v2 微信支付平台证书路径 #支持三种路径 1.远程URL(http/https) 2.项目resources路径(classpath:) 3.系统绝对路径
-    api-v3-key: 版本为v3 apiV3秘钥 #暂未实现
-    mch-serial-no: 版本为v3 商户API证书的证书序列号 #暂未实现
+    api-v3-key: 版本为v3 apiV3秘钥
+    mch-serial-no: 版本为v3 商户API证书的证书序列号
 ~~~
 #### 2.1.3 服务号示例
 ~~~
