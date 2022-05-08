@@ -56,10 +56,12 @@ public class WechatPayV3Utils {
     private static String RETURN_MSG = "message";
     private static String PREPAY_ID = "prepay_id";
     private static String CODE_URL = "code_url";
+    private static String H5_URL = "h5_url";
 
     public static CloseableHttpClient getHttpClient(WechatProperties wechatProperties) {
         try {
-            InputStream inputStream = FileUtils.fileToInputStream(wechatProperties.getPay().getMchPrivateKeyCert());;
+            InputStream inputStream = FileUtils.fileToInputStream(wechatProperties.getPay().getMchPrivateKeyCert());
+            ;
             PrivateKey merchantPrivateKey = PemUtil.loadPrivateKey(inputStream);
             // 获取证书管理器实例
             CertificatesManager certificatesManager = CertificatesManager.getInstance();
@@ -114,7 +116,7 @@ public class WechatPayV3Utils {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             Map<String, String> result = JSONObject.parseObject(StreamUtils.inputStreamToString(response.getEntity().getContent()), new TypeReference<Map<String, String>>() {
             });
-            if(result.get(RETURN_CODE)!=null){
+            if (result.get(RETURN_CODE) != null) {
                 log.error(result.get(RETURN_MSG));
                 return null;
             }
@@ -128,7 +130,7 @@ public class WechatPayV3Utils {
     }
 
     /**
-     * 生成jsapi需要的签名
+     * 生成App需要的签名
      *
      * @param wechatProperties 微信配置
      * @param wechatPayOrder   支付订单信息
@@ -161,13 +163,13 @@ public class WechatPayV3Utils {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             Map<String, String> result = JSONObject.parseObject(StreamUtils.inputStreamToString(response.getEntity().getContent()), new TypeReference<Map<String, String>>() {
             });
-            if(result.get(RETURN_CODE)!=null){
+            if (result.get(RETURN_CODE) != null) {
                 log.error(result.get(RETURN_MSG));
                 return null;
             }
             WechatPayProperties wechatPayConfig = wechatProperties.getPay();
             //生成签名
-            return generateSignatureApp(wechatProperties.getOauth().getAppId(),wechatProperties.getPay().getMchId(), result.get(PREPAY_ID), wechatPayConfig.getMchPrivateKeyCert());
+            return generateSignatureApp(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), result.get(PREPAY_ID), wechatPayConfig.getMchPrivateKeyCert());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -208,7 +210,7 @@ public class WechatPayV3Utils {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             Map<String, String> result = JSONObject.parseObject(StreamUtils.inputStreamToString(response.getEntity().getContent()), new TypeReference<Map<String, String>>() {
             });
-            if(result.get(RETURN_CODE)!=null){
+            if (result.get(RETURN_CODE) != null) {
                 log.error(result.get(RETURN_MSG));
                 return null;
             }
@@ -220,10 +222,58 @@ public class WechatPayV3Utils {
     }
 
     /**
+     * 生成微信支付H5外部跳转链接
+     *
+     * @param wechatProperties 微信配置
+     * @param wechatPayOrder   支付订单信息
+     * @return
+     */
+    public static String unifiedOrderByH5(WechatProperties wechatProperties, WechatPayOrder wechatPayOrder) {
+        CloseableHttpClient httpClient = getHttpClient(wechatProperties);
+        Assert.notNull(httpClient, "请查看微信配置");
+
+        HttpPost httpPost = new HttpPost("https://api.mch.weixin.qq.com/v3/pay/transactions/h5");
+        httpPost.addHeader("Accept", "application/json");
+        httpPost.addHeader("Content-type", "application/json; charset=utf-8");
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        ObjectNode rootNode = objectMapper.createObjectNode();
+        rootNode.put("mchid", wechatProperties.getPay().getMchId())
+                .put("appid", wechatProperties.getOauth().getAppId())
+                .put("description", wechatPayOrder.getTitle())
+                .put("notify_url", wechatPayOrder.getNotifyUrl())
+                .put("out_trade_no", wechatPayOrder.getOrderId());
+        rootNode.putObject("amount")
+                .put("total", Integer.valueOf(wechatPayOrder.getFee()))
+                .put("currency", wechatPayOrder.getFeeType());
+        rootNode.putObject("scene_info")
+                .put("payer_client_ip", wechatPayOrder.getIp())
+                .putObject("h5_info").put("type", "Wap");
+
+        try {
+            objectMapper.writeValue(bos, rootNode);
+            httpPost.setEntity(new StringEntity(bos.toString("UTF-8"), "UTF-8"));
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            Map<String, String> result = JSONObject.parseObject(StreamUtils.inputStreamToString(response.getEntity().getContent()), new TypeReference<Map<String, String>>() {
+            });
+            if (result.get(RETURN_CODE) != null) {
+                log.error(result.get(RETURN_MSG));
+                return null;
+            }
+            return result.get(H5_URL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 查看订单信息
      *
      * @param wechatProperties
-     * @param id 商户系统内部订单号
+     * @param id               商户系统内部订单号
      * @return
      */
     public static JSONObject getUnifiedOrderById(WechatProperties wechatProperties, String id) {
@@ -231,7 +281,7 @@ public class WechatPayV3Utils {
         Assert.notNull(httpClient, "请查看微信配置");
 
         try {
-            URIBuilder uriBuilder = new URIBuilder("https://api.mch.weixin.qq.com/v3/pay/transactions/id/ID?mchid=MCH".replace("ID",id).replace("MCH", wechatProperties.getPay().getMchId()));
+            URIBuilder uriBuilder = new URIBuilder("https://api.mch.weixin.qq.com/v3/pay/transactions/id/ID?mchid=MCH".replace("ID", id).replace("MCH", wechatProperties.getPay().getMchId()));
             HttpGet httpGet = new HttpGet(uriBuilder.build());
             httpGet.addHeader("Accept", "application/json");
 
@@ -247,7 +297,7 @@ public class WechatPayV3Utils {
      * 查看订单信息
      *
      * @param wechatProperties
-     * @param outTradeNo 商户系统内部订单号
+     * @param outTradeNo       商户系统内部订单号
      * @return
      */
     public static JSONObject getUnifiedOrderByOutTradeNo(WechatProperties wechatProperties, String outTradeNo) {
@@ -255,7 +305,7 @@ public class WechatPayV3Utils {
         Assert.notNull(httpClient, "请查看微信配置");
 
         try {
-            URIBuilder uriBuilder = new URIBuilder("https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/ID?mchid=MCH".replace("ID",outTradeNo).replace("MCH", wechatProperties.getPay().getMchId()));
+            URIBuilder uriBuilder = new URIBuilder("https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/ID?mchid=MCH".replace("ID", outTradeNo).replace("MCH", wechatProperties.getPay().getMchId()));
             HttpGet httpGet = new HttpGet(uriBuilder.build());
             httpGet.addHeader("Accept", "application/json");
 
@@ -288,11 +338,11 @@ public class WechatPayV3Utils {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ObjectNode rootNode = objectMapper.createObjectNode();
-        rootNode.put("funds_account","AVAILABLE")
+        rootNode.put("funds_account", "AVAILABLE")
                 .put("transaction_id", id)
                 .put("out_refund_no", id);
-        if(!StringUtils.isEmpty(notifyUrl)){
-            rootNode.put("notify_url",notifyUrl);
+        if (!StringUtils.isEmpty(notifyUrl)) {
+            rootNode.put("notify_url", notifyUrl);
         }
         rootNode.putObject("amount")
                 .put("refund", Integer.valueOf(refundFee))
@@ -331,11 +381,11 @@ public class WechatPayV3Utils {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ObjectNode rootNode = objectMapper.createObjectNode();
-        rootNode.put("funds_account","AVAILABLE")
+        rootNode.put("funds_account", "AVAILABLE")
                 .put("out_trade_no", outTradeNo)
                 .put("out_refund_no", outTradeNo);
-        if(!StringUtils.isEmpty(notifyUrl)){
-            rootNode.put("notify_url",notifyUrl);
+        if (!StringUtils.isEmpty(notifyUrl)) {
+            rootNode.put("notify_url", notifyUrl);
         }
         rootNode.putObject("amount")
                 .put("refund", Integer.valueOf(refundFee))
@@ -355,16 +405,17 @@ public class WechatPayV3Utils {
 
     /**
      * 微信回调解密V3
+     *
      * @param apiV3Key
      * @param associatedData
      * @param nonce
      * @param ciphertext
      * @return
      */
-    public static String decryptToStringV3(String apiV3Key, String associatedData, String nonce, String ciphertext){
+    public static String decryptToStringV3(String apiV3Key, String associatedData, String nonce, String ciphertext) {
         AesUtil aesUtil = new AesUtil(apiV3Key.getBytes());
         try {
-            return aesUtil.decryptToString(associatedData.getBytes(),nonce.getBytes(),ciphertext);
+            return aesUtil.decryptToString(associatedData.getBytes(), nonce.getBytes(), ciphertext);
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
             return null;
@@ -387,7 +438,7 @@ public class WechatPayV3Utils {
             sign.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
             sign.put("nonceStr", UUIDUtils.getUUID());
             sign.put("package", "prepay_id=" + prepayId);
-            sign.put("paySign", createSign(Arrays.asList(sign.get("appId"),sign.get("timeStamp"),sign.get("nonceStr"),sign.get("package")), certUrl));
+            sign.put("paySign", createSign(Arrays.asList(sign.get("appId"), sign.get("timeStamp"), sign.get("nonceStr"), sign.get("package")), certUrl));
             sign.put("signType", "RSA");
             log.info("签名：{}", sign.toString());
             return sign;
@@ -417,7 +468,7 @@ public class WechatPayV3Utils {
             sign.put("package", "Sign=WXPay");
             sign.put("nonceStr", UUIDUtils.getUUID());
             sign.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
-            sign.put("paySign", createSign(Arrays.asList(sign.get("appid"),sign.get("timeStamp"),sign.get("nonceStr"),sign.get("prepayid")), certUrl));
+            sign.put("paySign", createSign(Arrays.asList(sign.get("appid"), sign.get("timeStamp"), sign.get("nonceStr"), sign.get("prepayid")), certUrl));
             log.info("APP签名：{}", sign.toString());
             return sign;
         } catch (Exception e) {
@@ -429,13 +480,15 @@ public class WechatPayV3Utils {
 
     /**
      * 对字符串列表进行签名
+     *
      * @param list
      * @param certUrl
      * @return
      */
-    public static String createSign(List<String> list, String certUrl){
+    public static String createSign(List<String> list, String certUrl) {
         String s = list.stream().collect(Collectors.joining("\n", "", "\n"));
-        InputStream inputStream = FileUtils.fileToInputStream(certUrl);;
+        InputStream inputStream = FileUtils.fileToInputStream(certUrl);
+        ;
         PrivateKey merchantPrivateKey = PemUtil.loadPrivateKey(inputStream);
         Signature sign = null;
         try {

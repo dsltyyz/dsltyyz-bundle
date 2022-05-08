@@ -30,6 +30,7 @@ public class WechatPayUtils {
     private static String RETURN_MSG = "return_msg";
     private static String PREPAY_ID = "prepay_id";
     private static String CODE_URL = "code_url";
+    private static String MWEV_URL = "mweb_url";
 
     /**
      * 生成jsapi需要的签名
@@ -61,10 +62,6 @@ public class WechatPayUtils {
         data.put("notify_url", wechatPayOrder.getNotifyUrl());
         data.put("trade_type", WechatPayType.JSAPI);
         data.put("openid", wechatPayOrder.getOpenid());
-        //支持子商户号
-        if (wechatPayConfig.getSubMchID() != null) {
-            data.put("sub_mch_id", wechatPayConfig.getSubMchID());
-        }
         log.info("预支付：{}", data.toString());
         try {
             Map<String, String> result = wxPay.unifiedOrder(data);
@@ -159,10 +156,6 @@ public class WechatPayUtils {
         data.put("spbill_create_ip", wechatPayOrder.getIp());
         data.put("notify_url", wechatPayOrder.getNotifyUrl());
         data.put("trade_type", WechatPayType.NATIVE);
-        //支持子商户号
-        if (wechatPayConfig.getSubMchID() != null) {
-            data.put("sub_mch_id", wechatPayConfig.getSubMchID());
-        }
         log.info("预支付：{}", data.toString());
         try {
             Map<String, String> result = wxPay.unifiedOrder(data);
@@ -181,10 +174,57 @@ public class WechatPayUtils {
     }
 
     /**
+     * 生成微信支付H5外部跳转链接
+     *
+     * @param wechatPayConfig 支付配置
+     * @param wechatPayOrder  支付订单信息
+     * @return
+     */
+    public static String unifiedOrderByH5(WechatPayConfig wechatPayConfig, WechatPayOrder wechatPayOrder) {
+        WXPay wxPay = new WXPay(wechatPayConfig);
+        Map<String, String> data = new HashMap<>();
+        data.put("appid", wechatPayConfig.getAppID());
+        data.put("mch_id", wechatPayConfig.getMchID());
+        data.put("device_info", "WEB");
+        data.put("nonce_str", UUIDUtils.getUUID());
+        data.put("body", wechatPayOrder.getTitle());
+        try {
+            //对appid,mch_id,device_info,nonce_str,body进行签名
+            data.put("sign", WXPayUtil.generateSignature(data, wechatPayConfig.getKey()));
+            data.put("sign_type", "MD5");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        data.put("out_trade_no", wechatPayOrder.getOrderId());
+        data.put("fee_type", WechatPayFeeType.CNY);
+        data.put("total_fee", wechatPayOrder.getFee());
+        data.put("spbill_create_ip", wechatPayOrder.getIp());
+        data.put("notify_url", wechatPayOrder.getNotifyUrl());
+        data.put("trade_type", WechatPayType.H5);
+        data.put("scene_info", "{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"https://www.dsltyyz.com\",\"wap_name\": \"微信支付\"}}");
+        log.info("预支付：{}", data.toString());
+        try {
+            Map<String, String> result = wxPay.unifiedOrder(data);
+            if (result == null || !SUCCESS.equals(result.get(RETURN_CODE))) {
+                log.error(result.get(RETURN_MSG));
+                return null;
+            }
+            if (WXPayUtil.isSignatureValid(result, wechatPayConfig.getKey())) {
+                return result.get(MWEV_URL);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * 查看订单信息
      *
      * @param wechatPayConfig
-     * @param id 微信的订单号
+     * @param id              微信的订单号
      * @return
      */
     public static JSONObject getUnifiedOrderById(WechatPayConfig wechatPayConfig, String id) {
@@ -204,7 +244,7 @@ public class WechatPayUtils {
      * 查看订单信息
      *
      * @param wechatPayConfig
-     * @param outTradeNo 商户系统内部订单号
+     * @param outTradeNo      商户系统内部订单号
      * @return
      */
     public static JSONObject getUnifiedOrderByOutTradeNo(WechatPayConfig wechatPayConfig, String outTradeNo) {
@@ -240,7 +280,7 @@ public class WechatPayUtils {
             data.put("refund_fee", refundFee);
             data.put("refund_fee_type", WechatPayFeeType.CNY);
             data.put("op_user_id", wechatPayConfig.getMchID());
-            if(!StringUtils.isEmpty(notifyUrl)){
+            if (!StringUtils.isEmpty(notifyUrl)) {
                 data.put("notify_url", notifyUrl);
             }
             return JSONObject.parseObject(JSONObject.toJSONString(wxPay.refund(data)));
@@ -271,7 +311,7 @@ public class WechatPayUtils {
             data.put("refund_fee", refundFee);
             data.put("refund_fee_type", WechatPayFeeType.CNY);
             data.put("op_user_id", wechatPayConfig.getMchID());
-            if(!StringUtils.isEmpty(notifyUrl)){
+            if (!StringUtils.isEmpty(notifyUrl)) {
                 data.put("notify_url", notifyUrl);
             }
             return JSONObject.parseObject(JSONObject.toJSONString(wxPay.refund(data)));

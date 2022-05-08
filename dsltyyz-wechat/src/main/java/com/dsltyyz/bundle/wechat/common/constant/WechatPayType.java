@@ -23,4 +23,9 @@ public interface WechatPayType {
      * APP支付
      */
     String APP = "APP";
+
+    /**
+     * H5支付
+     */
+    String H5 = "MWEB";
 }
