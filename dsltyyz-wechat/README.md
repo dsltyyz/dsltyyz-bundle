@@ -44,7 +44,7 @@ wechat:
     token: 令牌
     encoding-type: 消息加解密方式
     encoding-aes-key: 消息加解密密钥
-    data-type: XML #默认XML 小程序支持JSON
+    data-type: XML #默认XML 开放平台及小程序支持JSON
   pay:
     mch-id: 商户ID
     version: v2 #默认

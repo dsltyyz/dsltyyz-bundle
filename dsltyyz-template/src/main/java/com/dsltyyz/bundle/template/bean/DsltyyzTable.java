@@ -1,7 +1,6 @@
 package com.dsltyyz.bundle.template.bean;
 
 import com.dsltyyz.bundle.office.excel.annotation.ExcelColumn;
-import com.dsltyyz.bundle.office.excel.annotation.ExportExcel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ import java.util.List;
  * 表
  * @author dsltyyz
  */
-@ExportExcel
 @ApiModel(description = "表")
 @Data
 @NoArgsConstructor

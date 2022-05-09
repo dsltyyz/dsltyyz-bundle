@@ -50,7 +50,7 @@
                 <groupId>com.dsltyyz.bundle</groupId>
                 <artifactId>dsltyyz-template</artifactId>
                 <version>${dsltyyz-bundle.version}</version>
-                <scope>provided</scope>
+                <scope>compile</scope>
             </dependency>
 
             <!--阿里云组件包-->

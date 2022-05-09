@@ -33,7 +33,7 @@
 ~~~
 spring:
   redis:
-    #开启redis作为缓存
+    #开启redis作为缓存 PS:引用spring-boot-starter-data-redis不配置会出现异常 但不影响使用
     enable: true
     database: 0
     host: 127.0.0.1
@@ -57,6 +57,6 @@ spring:
     @ApiModelProperty(value = "创建时间")
     //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //DataFormat等同于JsonFormat 可以自行定义
-    @DataFormat(value = DateDataHelper.class, param = "yyyy-MM-dd HH:mm:ss")
+    @DataFormat(value = DateDataHelper.class, param = DateUtils.PATTERN_DATETIME)
     private LocalDateTime createTime;
 ~~~

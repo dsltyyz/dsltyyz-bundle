@@ -1,6 +1,5 @@
 package com.dsltyyz.bundle.template.bean;
 
-import com.dsltyyz.bundle.office.excel.annotation.ExportExcel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
  * 修订日志
  * @author dsltyyz
  */
-@ExportExcel
 @ApiModel(description = "修订日志")
 @Data
 @NoArgsConstructor

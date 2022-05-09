@@ -6,7 +6,6 @@ import com.dsltyyz.bundle.common.util.ReflexUtils;
 import com.dsltyyz.bundle.common.util.UUIDUtils;
 import com.dsltyyz.bundle.office.excel.annotation.ExcelColumn;
 import com.dsltyyz.bundle.office.excel.annotation.ExcelColumnLocation;
-import com.dsltyyz.bundle.office.excel.annotation.ExportExcel;
 import com.dsltyyz.bundle.office.excel.entity.Excel;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheet;
 import com.dsltyyz.bundle.office.excel.entity.ExcelSheetColumnProperty;
@@ -14,18 +13,15 @@ import com.dsltyyz.bundle.office.excel.handler.DataHandler;
 import com.dsltyyz.bundle.office.excel.handler.DefaultDataHandler;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.formula.ptg.DeletedArea3DPtg;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -41,17 +37,17 @@ public class ExcelUtils {
     public static final String XLS_TYPE = "xls";
     public static final String XLSX_TYPE = "xlsx";
 
+    /*************************按照字段指定行读取单元格**************************/
     /**
-     * 导入excel单sheet
-     *
-     * @param excelInputStream Excel输入流
-     * @param clazz            sheet对应转对象类型
-     * @param excelType        Excel类型
+     * 通过定位并指定首张sheet导入excel 单sheet
+     * @param excelInputStream
+     * @param tClass
+     * @param excelType
      * @return
      * @throws Exception
      */
-    public static ExcelSheet importExcel(InputStream excelInputStream, Class clazz, String excelType) throws Exception {
-        return importExcel(excelInputStream, new ArrayList<>(Arrays.asList(clazz)), excelType).get(0);
+    public static ExcelSheet importExcelByLocation(InputStream excelInputStream, Class tClass, String excelType) throws Exception {
+        return importExcelByLocationWithSheetNum(excelInputStream, 1, tClass, excelType);
     }
 
     /**
@@ -227,6 +223,19 @@ public class ExcelUtils {
         }
         return excelSheetList;
     }
+    /*************************按照单元格对应字段组装对象**************************/
+    /**
+     * 导入excel单sheet
+     *
+     * @param excelInputStream Excel输入流
+     * @param clazz            sheet对应转对象类型
+     * @param excelType        Excel类型
+     * @return
+     * @throws Exception
+     */
+    public static ExcelSheet importExcel(InputStream excelInputStream, Class clazz, String excelType) throws Exception {
+        return importExcel(excelInputStream, new ArrayList<>(Arrays.asList(clazz)), excelType).get(0);
+    }
 
     /**
      * 导入excel 多sheet
@@ -296,6 +305,7 @@ public class ExcelUtils {
         return excelSheetList;
     }
 
+    /****************************通过注解导出对象指定字段数据******************************/
     /**
      * 导出Excel到输出流 单sheet
      *
@@ -519,23 +529,20 @@ public class ExcelUtils {
     private static List<ExcelSheetColumnProperty> getExcelSheetColumnPropertyList(Object obj) {
         List<ExcelSheetColumnProperty> list = new ArrayList<>();
         Class<?> objClass = obj.getClass();
-        boolean flag = objClass.isAnnotationPresent(ExportExcel.class);
         for (Field field : objClass.getDeclaredFields()) {
-            if (flag) {
-                //字段有ExcelColumn注解，跳过标记为false的字段
-                if(field.isAnnotationPresent(ExcelColumn.class) && !field.getAnnotation(ExcelColumn.class).value()){
-                    continue;
-                }
-                ExcelSheetColumnProperty excelSheetColumnProperty = new ExcelSheetColumnProperty();
-                excelSheetColumnProperty.setColumnProperty(field.getName());
-                ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
-                if (apiModelProperty != null) {
-                    excelSheetColumnProperty.setColumnName(apiModelProperty.value());
-                } else {
-                    excelSheetColumnProperty.setColumnName(field.getName());
-                }
-                list.add(excelSheetColumnProperty);
+            //字段有ExcelColumn注解，跳过标记为false的字段
+            if(field.isAnnotationPresent(ExcelColumn.class) && !field.getAnnotation(ExcelColumn.class).value()){
+                continue;
             }
+            ExcelSheetColumnProperty excelSheetColumnProperty = new ExcelSheetColumnProperty();
+            excelSheetColumnProperty.setColumnProperty(field.getName());
+            ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
+            if (apiModelProperty != null) {
+                excelSheetColumnProperty.setColumnName(apiModelProperty.value());
+            } else {
+                excelSheetColumnProperty.setColumnName(field.getName());
+            }
+            list.add(excelSheetColumnProperty);
         }
         return list;
     }

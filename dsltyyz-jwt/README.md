@@ -30,7 +30,7 @@
 ...
 key-pair:
   #仅用于生成公钥私钥文件种子 
-  seed: dsltyyz
+  seed: 种子秘钥（用户设定）
   #生成及加载公钥路径（用于解析token）
   public-key-path: rsa/public.pem
   #生成及加载私钥路径（用于信息组装token）
@@ -39,13 +39,6 @@ key-pair:
 ~~~
 ### 2.2 生成公钥私钥文件 RSAGenerator.java
 ~~~
-/**
- * Description:
- * RSA公钥私钥生成 在resources目录下
- *
- * @author: dsltyyz
- * @date: 2021/04/14
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = XXXApplication.class)
 public class RSAGenerator {
@@ -59,7 +52,8 @@ public class RSAGenerator {
     }
 }
 ~~~
-### 2.3 登录后用户信息组装JwtUser返回JwtToken
+## 3 前台用户
+### 3.1 登录后用户信息组装JwtUser返回JwtToken
 ~~~
     @Resource
     private JwtHelper jwtHelper;
@@ -78,7 +72,11 @@ public class RSAGenerator {
     }
     ...
 ~~~
-### 2.4 需要验证登录方法增加注解@RequireToken
+### 3.2 请求api头部增加Token
+~~~
+Token: 登录后返回的口令
+~~~
+### 3.3 需要验证登录方法增加注解@RequireToken
 ~~~
     //验证登录
     @RequireToken
@@ -91,7 +89,44 @@ public class RSAGenerator {
         return jwtUser;
     }
 ~~~
-### 2.5 *其他服务支持同一套jwt，yaml文件配置
+## 4 后台用户
+### 4.1 登录后用户信息组装JwtUser返回JwtToken
+~~~
+    @Resource
+    private JwtHelper jwtHelper;
+    ...
+
+    /**
+     * 登录模块
+     */
+    public JwtToken signIn(){
+        ...
+        //只验证登录
+        JwtUser jwtUser = new JwtUser(用户ID, 用户名称);
+        //验证登录及权限
+        //JwtUser jwtUser = new JwtUser(用户ID, 用户名称, 权限组（{权限1,权限2}）);
+        return jwtHelper.getToken(jwtUser);
+    }
+    ...
+~~~
+### 4.2 请求api头部增加AdminToken
+~~~
+AdminToken: 登录后返回的口令
+~~~
+### 4.3 需要验证登录方法增加注解@RequireToken
+~~~
+    //验证登录
+    @RequireAdminToken
+    //验证登录及允许权限（与用户权限取交集）
+    //@RequireAdminToken({权限1,权限2})
+    @ApiOperation(value = "获取用户信息")
+    @GetMapping(value = "info")
+    public JwtUser getInfo() {
+        JwtUser jwtUser = (JwtUser) ContextHandler.get(JwtConstant.JWT_ADMIN);
+        return jwtUser;
+    }
+~~~
+## 5 *其他服务支持同一套jwt，yaml文件配置
 ~~~
 ...
 #需要拷贝rsa/public.pem到其他服务resources目录下
