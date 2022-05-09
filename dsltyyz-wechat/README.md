@@ -30,11 +30,11 @@
 ~~~
 ### 2.1 配置 
 #### 2.1.1 传送门
-- [微信公众平台](https://mp.weixin.qq.com/?_blank)
-- [微信OCR文档](https://developers.weixin.qq.com/doc/offiaccount/Intelligent_Interface/OCR.html?_blank)
-- [微信OCR服务](https://fuwu.weixin.qq.com/service/detail/000ce4cec24ca026d37900ed551415?_blank)
-- [微信支付v2文档](https://pay.weixin.qq.com/wiki/doc/api/index.html?_blank)
-- [微信支付v3文档](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pages/index.shtml?_blank)
+- [微信公众平台](https://mp.weixin.qq.com/)
+- [微信OCR文档](https://developers.weixin.qq.com/doc/offiaccount/Intelligent_Interface/OCR.html)
+- [微信OCR服务](https://fuwu.weixin.qq.com/service/detail/000ce4cec24ca026d37900ed551415)
+- [微信支付v2文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+- [微信支付v3文档](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pages/index.shtml)
 #### 2.1.2 配置说明 application.yml
 ~~~
 wechat:
