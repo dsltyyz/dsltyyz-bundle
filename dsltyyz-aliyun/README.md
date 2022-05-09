@@ -22,7 +22,10 @@
     ...
  </dependencies>
 ~~~
-### 2.1 配置yaml文件
+### 2.1 传送门
+- [支付宝支付文档](https://opendocs.alipay.com/open/01zuoj)
+- [支付宝沙盒平台](https://open.alipay.com/develop/sandbox/app)
+### 2.2 配置yaml文件
 ~~~
 ...
 spring:
@@ -33,20 +36,20 @@ spring:
       secret-key: 阿里云secret-key
       #短信  
       sms:
-        enable: true #不用 设置为false 默认为true
+        enable: true #默认 不用设置为false 
         sign-name: 短信签名
       #对象存储
       oss:
-        enabled: true #不用 设置为false 默认为true
-        endpoint: oss-cn-hangzhou.aliyuncs.com
-        bucket-name: dsltyyz
+        enabled: true #默认 不用设置为false 
+        endpoint: 节点域名
+        bucket-name: 包名称
       #支付
       pay:
-        enable: true #不用 设置为false 默认为false
-        server-url: https://openapi.alipay.com/gateway.do #https://openapi.alipaydev.com/gateway.do
+        enable: true #默认为false 启用设置为true
+        server-url: https://openapi.alipay.com/gateway.do #默认 沙盒设置为https://openapi.alipaydev.com/gateway.do
         app-id: 应用ID
         private-key: 应用私钥
-        mode: CERT
+        mode: CERT #默认 公钥设置为KEY
         #MODE KEY
         alipay-public-key: 支付宝公钥
         #MODE CERT
@@ -55,16 +58,9 @@ spring:
         root-cert-path: 文件绝对路径 #alipayRootCert.crt
 ...
 ~~~
-### 2.2 OSS对象存储示例
+## 3 示例
+### 3.1 OSS对象存储
 ~~~
-/**
- * <p>
- * 对象存储 前端控制器
- * </p>
- *
- * @author dsltyyz
- * @date 2021-04-14
- */
 @Api(value = "对象存储controller", tags = {"对象存储"})
 @RestController
 @RequestMapping("oss")
@@ -100,17 +96,9 @@ public class OssController {
 
 }
 ~~~
-### 2.3 短信示例
+### 3.2 短信
 ~~~
-/**
- * <p>
- * 短信消息 前端控制器
- * </p>
- *
- * @author dsltyyz
- * @date 2021-04-14
- */
-@Api(value = "短信消息 controller", tags = {"短信消息"})
+@Api(value = "短信消息controller", tags = {"短信消息"})
 @RestController
 @RequestMapping("sms")
 public class SmsController {
@@ -127,7 +115,7 @@ public class SmsController {
 
 }
 ~~~
-### 2.4 支付示例
+### 3.3 支付
 ~~~
 @Api(value = "支付宝controller", tags = {"支付宝"})
 @RestController
