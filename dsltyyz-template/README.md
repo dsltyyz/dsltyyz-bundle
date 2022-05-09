@@ -30,7 +30,7 @@
  </dependencies>
 ~~~
 ### 2.1 代码生成
-    基于springboot+mybatisplus+druid+msql+swagger代码生成
+    基于springboot+mybatisplus+druid+mysql+swagger代码生成
 #### 2.1.1 配置文件 支持yml>xml
 ##### code-generator.yml
 ~~~
@@ -41,24 +41,23 @@ data-source:
   username: root
   password: root
 strategy:
-  parent-package: com.dsltyyz.sms
-  module-name: app
+  parent-package: 项目包路径
+  module-name: 模块名称
   include-table:
     table:
-      - sms_app
-      - sms_app_token
+      - 该模块包含数据库表
 ~~~
 ##### code-generator.xml
 ~~~
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     <author>coder</author>
-    <datasource>
+    <data-source>
         <url>jdbc:mysql://localhost:3306/test</url>
         <driver-name>com.mysql.cj.jdbc.Driver</driver-name>
         <username>root</username>
         <password>root</password>
-    </datasource>
+    </data-source>
     <strategy>
         <parent-package>项目包路径</parent-package>
         <module-name>模块名称</module-name>
