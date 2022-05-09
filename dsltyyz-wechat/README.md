@@ -29,9 +29,12 @@
  </dependencies>
 ~~~
 ### 2.1 配置 
-#### 2.1.1 配置参数获取
-微信公众平台 https://mp.weixin.qq.com/
-微信支付 https://pay.weixin.qq.com/index.php/core/home/login?return_url=%2F
+#### 2.1.1 传送门
+- [微信公众平台](https://mp.weixin.qq.com/)
+- [微信OCR文档](https://developers.weixin.qq.com/doc/offiaccount/Intelligent_Interface/OCR.html)
+- [微信OCR服务](https://fuwu.weixin.qq.com/service/detail/000ce4cec24ca026d37900ed551415)
+- [微信支付v2文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+- [微信支付v3文档](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pages/index.shtml)
 #### 2.1.2 配置说明 application.yml
 ~~~
 wechat:
@@ -47,15 +50,18 @@ wechat:
     version: v2 #默认
     #v2
     mch-private-key: 版本为v2 商户apiV2秘钥
-    cert-url: 版本为v2 微信支付平台api证书路径 #支持三种路径 1.远程URL(http/https) 2.项目resources路径(classpath:) 3.系统绝对路径
+    #支持三种路径 1.远程URL(http/https) 2.项目resources路径(classpath:) 3.系统绝对路径
+    cert-url: 版本为v2 微信支付平台api证书路径 #apiclient_cert.p12
     #v3
     api-v3-key: 版本为v3 apiV3秘钥
     mch-serial-no: 版本为v3 商户api证书p12序列号
-    mch-private-key-cert: 版本为v3 商户api证书私钥路径
+    #支持三种路径 1.远程URL(http/https) 2.项目resources路径(classpath:) 3.系统绝对路径
+    mch-private-key-cert: 版本为v3 商户api证书私钥路径 #apiclient_key.pem
 ~~~
-#### 2.1.3 服务号示例
+## 3 示例
+### 3.1 服务号
 ~~~
-@Api(value = "微信controller", tags = {"微信"})
+@Api(value = "微信服务号controller", tags = {"微信服务号"})
 @RestController
 @RequestMapping("wechat")
 public class WechatController {
@@ -132,7 +138,7 @@ public class WechatController {
         dataMap.put("activity_name", new WechatDataValue("活动名称"));
         dataMap.put("reserve_results", new WechatDataValue("活动状态"));
         dataMap.put("activity_time", new WechatDataValue(DateUtils.format(new Date(), "yyyy-MM-dd")));
-        dataMap.put("activity_address", new WechatDataValue("成活动地址"));
+        dataMap.put("activity_address", new WechatDataValue("活动地址"));
         dataMap.put("remark", new WechatDataValue("感谢你的参与！"));
         wechatTemplateSend.setData(dataMap);
         wechatClient.sendTemplate(wechatTemplateSend);
@@ -229,103 +235,11 @@ public class WechatController {
         return new CommonResponse<>(wechatClient.getMessageMass(msgId));
     }
 
-    @ApiOperation(value = "二维码支付")
-    @PostMapping(value = "/pay/qrcode")
-    public CommonResponse<String> createPayQrcode(HttpServletResponse response) throws IOException {
-        WechatPayOrder wechatPayOrder = new WechatPayOrder();
-        String orderId  ="dsltyyz_"+ DateUtils.format(new Date(),"yyyyMMddHHmmss");
-        wechatPayOrder.setOrderId(orderId);
-        wechatPayOrder.setFee("1");
-        //本机外网IP 且在微信公众号IP白名单内
-        wechatPayOrder.setIp("外网IP");
-        wechatPayOrder.setTitle("支付测试0.01元");
-        wechatPayOrder.setNotifyUrl("回调URL");
-        String s = wechatClient.unifiedOrderByNative(wechatPayOrder);
-        System.out.println(s);
-        String key = "pay/"+orderId+"."+ ImageType.JPG;
-        aliyunOssClient.putObject(key, QRCodeUtils.encode(s));
-        return new CommonResponse<>(aliyunOssClient.getResourceUrl(key));
-    }
-
-    @ApiOperation(value = "jsapi支付")
-    @PostMapping(value = "/pay/jsapi")
-    public CommonResponse<Map<String, String>> createPayJsapi(HttpServletResponse response) throws IOException {
-        WechatPayOrder wechatPayOrder = new WechatPayOrder();
-        String orderId  ="dsltyyz_"+ DateUtils.format(new Date(),"yyyyMMddHHmmss");
-        wechatPayOrder.setOrderId(orderId);
-        wechatPayOrder.setFee("1");
-        //本机外网IP 且在微信公众号IP白名单内
-        wechatPayOrder.setIp("外网IP");
-        //发起用户openid
-        wechatPayOrder.setOpenid("openid");
-        wechatPayOrder.setTitle("支付测试0.01元");
-        wechatPayOrder.setNotifyUrl("回调URL");
-        return new CommonResponse<>(wechatClient.unifiedOrderByJsApi(wechatPayOrder));
-    }
-    
-    @ApiOperation(value = "微信支付回调")
-    @PostMapping(value = "/v2/pay/callback")
-    public String payCallback(HttpServletRequest request) throws Exception {
-        String msg = StreamUtils.inputStreamToString(request.getInputStream());
-        System.out.println(msg);
-        if(!WXPayUtil.isSignatureValid(msg, wechatProperties.getPay().getMchPrivateKey())){
-            return "验证回调信息失败";
-        }
-        JSONObject jsonObject = XmlUtils.xmlToJSONObject(msg);
-        System.out.println(jsonObject.toJSONString());
-        WechatPayV2Result v2Result = jsonObject.toJavaObject(WechatPayV2Result.class);
-        //TODO 执行业务
-        Map<String,String> result = new HashMap<>();
-        result.put("return_code","SUCCESS");
-        result.put("return_msg","OK");
-        return WXPayUtil.mapToXml(result);
-    }
-
-    @ApiOperation(value = "退款")
-    @PostMapping(value = "/pay/refund")
-    public CommonResponse refund(@RequestParam("outTradeNo") String outTradeNo) {
-        Map<String, String> stringStringMap = wechatClient.applyRefundByOutTradeNo(outTradeNo, "1", "https://wechat.jiaozifin.cn/api/wechat/v2/refund/callback");
-        System.out.println("------------map数据-------------");
-        System.out.println(JSONObject.toJSONString(stringStringMap));
-        WechatRefundV2Result wechatRefundV2Result = JSONObject.parseObject(JSONObject.toJSONString(stringStringMap), WechatRefundV2Result.class);
-        System.out.println("------------json转对象数据-------------");
-        System.out.println(JSONObject.toJSONString(wechatRefundV2Result));
-        return new CommonResponse();
-    }
-
-    @ApiOperation(value = "微信退款回调")
-    @PostMapping(value = "/v2/refund/callback")
-    public String refundCallback(HttpServletRequest request) throws Exception {
-        String msg = StreamUtils.inputStreamToString(request.getInputStream());
-        System.out.println("------------InputStream加密数据-------------");
-        System.out.println(msg);
-        JSONObject jsonObject = XmlUtils.xmlToJSONObject(msg);
-        System.out.println("------------xml转json加密数据-------------");
-        System.out.println(jsonObject.toJSONString());
-        WechatRefundEncryptV2Result encryptV2Result = jsonObject.toJavaObject(WechatRefundEncryptV2Result.class);
-        System.out.println("------------json转对象加密数据-------------");
-        System.out.println(jsonObject.toJSONString());
-        String decrypt = WechatCommonUtils.decrypt(encryptV2Result.getReq_info(), wechatProperties.getPay().getMchPrivateKey());
-        System.out.println("------------退款详细解密数据-------------");
-        System.out.println(decrypt);
-        JSONObject decryptJsonObject = XmlUtils.xmlToJSONObject(decrypt);
-        System.out.println("------------xml转json解密数据-------------");
-        System.out.println(decryptJsonObject.toJSONString());
-        WechatRefundV2Detail detail = decryptJsonObject.toJavaObject(WechatRefundV2Detail.class);
-        System.out.println("------------json转对象解密数据-------------");
-        System.out.println(JSONObject.toJSONString(detail));
-        //TODO 执行业务
-        Map<String, String> result = new HashMap<>();
-        result.put("return_code", "SUCCESS");
-        result.put("return_msg", "OK");
-        return WXPayUtil.mapToXml(result);
-    }
-
 }
 ~~~
-#### 2.1.4 小程序示例
+### 3.2 小程序
 ~~~
-@Api(value = "微信controller", tags = {"微信"})
+@Api(value = "微信小程序controller", tags = {"微信小程序"})
 @RestController
 @RequestMapping("wechat")
 public class WechatController {
@@ -431,17 +345,13 @@ public class WechatController {
 
 }
 ~~~
-#### 2.1.5 OCR示例 
+### 3.3 OCR
 ~~~
-@Api(value = "微信controller", tags = {"微信"})
+@Api(value = "微信OCRcontroller", tags = {"微信OCR"})
 @RestController
-@RequestMapping("wechat")
-public class WechatController {
-
-    //支持小程序和公众号
-    //API文档 https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/ocr/ocr.idcard.html
-    //需要购买服务 100次/天免费 https://fuwu.weixin.qq.com/service/detail/000ce4cec24ca026d37900ed551415
-
+@RequestMapping("wechat/ocr")
+public class WechatOcrController {
+   
     @Resource
     private WechatClient wechatClient;
 
@@ -474,5 +384,267 @@ public class WechatController {
         file.delete();
         return new CommonResponse<>(photo);
     }
+}
+~~~
+### 3.4 微信支付v2
+~~~
+@Api(value = "微信支付v2controller", tags = {"微信支付v2"})
+@RestController
+@RequestMapping("wechat/v2/pay")
+public class WechatPayV2Controller {
+
+    @Resource
+    private WechatProperties wechatProperties;
+
+    @Resource
+    private WechatClient wechatClient;
+
+    @Resource
+    private AliyunOssClient aliyunOssClient;
+
+    @ApiOperation(value = "二维码支付")
+    @PostMapping(value = "qrcode")
+    public CommonResponse<String> createPayQrcode(){
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId = "dsltyyz_" + DateUtils.format(new Date(), "yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        wechatPayOrder.setIp("发起请求外网IP");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("支付通知回调URL /wechat/v2/pay/callback");
+        String s = wechatClient.unifiedOrderByNative(wechatPayOrder);
+        System.out.println(s);
+        //将微信支付链接转为二维码
+        String key = "pay/" + orderId + "." + ImageType.JPG;
+        aliyunOssClient.putObject(key, QRCodeUtils.encode(s));
+        return new CommonResponse<>(aliyunOssClient.getResourceUrl(key));
+    }
+
+    @ApiOperation(value = "[未测试]H5支付")
+    @PostMapping(value = "h5")
+    public CommonResponse<String> createPayH5(){
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId = "dsltyyz_" + DateUtils.format(new Date(), "yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        wechatPayOrder.setIp("发起请求外网IP");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("支付通知回调URL /wechat/v2/pay/callback");
+        return new CommonResponse<>(wechatClient.unifiedOrderByH5(wechatPayOrder));
+    }
+
+    @ApiOperation(value = "jsapi支付")
+    @PostMapping(value = "jsapi")
+    public CommonResponse<Map<String, String>> createPayJsapi(){
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId = "dsltyyz_" + DateUtils.format(new Date(), "yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        wechatPayOrder.setIp("发起请求外网IP");
+        wechatPayOrder.setOpenid("发起用户OPENID");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("支付通知回调URL /wechat/v2/pay/callback");
+        return new CommonResponse<>(wechatClient.unifiedOrderByJsApi(wechatPayOrder));
+    }
+
+    @ApiOperation(value = "[未测试]app支付")
+    @PostMapping(value = "app")
+    public CommonResponse<Map<String, String>> createPayApp() {
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId = "dsltyyz_" + DateUtils.format(new Date(), "yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        wechatPayOrder.setIp("发起请求外网IP");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("支付通知回调URL /wechat/v2/pay/callback");
+        return new CommonResponse<>(wechatClient.unifiedOrderByApp(wechatPayOrder));
+    }
+
+    @ApiOperation(value = "微信支付回调")
+    @PostMapping(value = "callback")
+    public String payCallback(HttpServletRequest request) throws Exception {
+        System.out.println("------------request parameter参数-------------");
+        System.out.println(JSONObject.toJSONString(request.getParameterMap()));
+        String msg = StreamUtils.inputStreamToString(request.getInputStream());
+        System.out.println("------------xml转json数据-------------");
+        System.out.println(XmlUtils.xmlToJSONObject(msg).toJSONString());
+        if (!WXPayUtil.isSignatureValid(msg, wechatProperties.getPay().getMchPrivateKey())) {
+            return "验证回调信息失败";
+        }
+        JSONObject jsonObject = XmlUtils.xmlToJSONObject(msg);
+        System.out.println(jsonObject.toJSONString());
+        WechatPayV2Result v2Result = jsonObject.toJavaObject(WechatPayV2Result.class);
+        System.out.println("------------json转对象数据-------------");
+        System.out.println(JSONObject.toJSONString(v2Result));
+        //TODO 执行业务
+        Map<String, String> result = new HashMap<>();
+        result.put("return_code", "SUCCESS");
+        result.put("return_msg", "OK");
+        return WXPayUtil.mapToXml(result);
+    }
+
+    @ApiOperation(value = "订单查询")
+    @PostMapping(value = "info")
+    public CommonResponse<JSONObject> getOrder(@RequestParam("outTradeNo") String outTradeNo) {
+        JSONObject o = wechatClient.getUnifiedOrderByOutTradeNo(outTradeNo);
+        return new CommonResponse<>(o);
+    }
+
+    @ApiOperation(value = "退款")
+    @PostMapping(value = "refund")
+    public CommonResponse refund(@RequestParam("outTradeNo") String outTradeNo, @RequestParam("totalFee") String totalFee) {
+        JSONObject jsonObject = wechatClient.applyRefundByOutTradeNo(outTradeNo, totalFee, "退款通知回调URL /wechat/v2/pay/refund/callback");
+        System.out.println(jsonObject.toJSONString());
+        return new CommonResponse();
+    }
+
+    @ApiOperation(value = "微信退款回调")
+    @PostMapping(value = "refund/callback")
+    public String refundCallback(HttpServletRequest request) throws Exception {
+        String msg = StreamUtils.inputStreamToString(request.getInputStream());
+        System.out.println("------------InputStream加密数据-------------");
+        System.out.println(msg);
+        JSONObject jsonObject = XmlUtils.xmlToJSONObject(msg);
+        System.out.println("------------xml转json加密数据-------------");
+        System.out.println(jsonObject.toJSONString());
+        WechatRefundEncryptV2Result encryptV2Result = jsonObject.toJavaObject(WechatRefundEncryptV2Result.class);
+        System.out.println("------------json转对象加密数据-------------");
+        System.out.println(jsonObject.toJSONString());
+        String decrypt = WechatCommonUtils.decrypt(encryptV2Result.getReq_info(), wechatProperties.getPay().getMchPrivateKey());
+        System.out.println("------------退款详细解密数据-------------");
+        System.out.println(decrypt);
+        JSONObject decryptJsonObject = XmlUtils.xmlToJSONObject(decrypt);
+        System.out.println("------------xml转json解密数据-------------");
+        System.out.println(decryptJsonObject.toJSONString());
+        WechatRefundV2Detail detail = decryptJsonObject.toJavaObject(WechatRefundV2Detail.class);
+        System.out.println("------------json转对象解密数据-------------");
+        System.out.println(JSONObject.toJSONString(detail));
+        //TODO 执行业务
+        Map<String, String> result = new HashMap<>();
+        result.put("return_code", "SUCCESS");
+        result.put("return_msg", "OK");
+        return WXPayUtil.mapToXml(result);
+    }
+
+}
+~~~
+### 3.5 微信支付v3
+~~~
+@Api(value = "微信支付v3controller", tags = {"微信支付v3"})
+@RestController
+@RequestMapping("wechat/v3/pay")
+public class WechatPayV3Controller {
+
+    @Resource
+    private WechatClient wechatClient;
+
+    @Resource
+    private AliyunOssClient aliyunOssClient;
+
+    @ApiOperation(value = "二维码支付")
+    @PostMapping(value = "qrcode")
+    public CommonResponse<String> createPayQrcode() {
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId = "dsltyyz_" + DateUtils.format(new Date(), "yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        wechatPayOrder.setIp("发起请求外网IP");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("支付通知回调URL /wechat/v3/pay/callback");
+        String s = wechatClient.unifiedOrderByNative(wechatPayOrder);
+        System.out.println(s);
+        //将微信支付链接转为二维码
+        String key = "pay/" + orderId + "." + ImageType.JPG;
+        aliyunOssClient.putObject(key, QRCodeUtils.encode(s));
+        return new CommonResponse<>(aliyunOssClient.getResourceUrl(key));
+    }
+
+    @ApiOperation(value = "[未测试]H5支付")
+    @PostMapping(value = "h5")
+    public CommonResponse<String> createPayH5() {
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId = "dsltyyz_" + DateUtils.format(new Date(), "yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        wechatPayOrder.setIp("发起请求外网IP");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("支付通知回调URL /wechat/v3/pay/callback");
+        return new CommonResponse<>(wechatClient.unifiedOrderByH5(wechatPayOrder));
+    }
+
+    @ApiOperation(value = "jsapi支付")
+    @PostMapping(value = "jsapi")
+    public CommonResponse<Map<String, String>> createPayJsapi(HttpServletResponse response) throws IOException {
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId = "dsltyyz_" + DateUtils.format(new Date(), "yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        wechatPayOrder.setIp("发起请求外网IP");
+        wechatPayOrder.setOpenid("用户OPENID");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("支付通知回调URL /wechat/v3/pay/callback");
+        return new CommonResponse<>(wechatClient.unifiedOrderByJsApi(wechatPayOrder));
+    }
+
+    @ApiOperation(value = "[未测试]app支付")
+    @PostMapping(value = "app")
+    public CommonResponse<Map<String, String>> createPayApp() {
+        WechatPayOrder wechatPayOrder = new WechatPayOrder();
+        String orderId = "dsltyyz_" + DateUtils.format(new Date(), "yyyyMMddHHmmss");
+        wechatPayOrder.setOrderId(orderId);
+        wechatPayOrder.setFee("1");
+        wechatPayOrder.setIp("发起请求外网IP");
+        wechatPayOrder.setTitle("支付测试0.01元");
+        wechatPayOrder.setNotifyUrl("支付通知回调URL /wechat/v3/pay/callback");
+        return new CommonResponse<>(wechatClient.unifiedOrderByApp(wechatPayOrder));
+    }
+
+    @ApiOperation(value = "微信支付回调")
+    @PostMapping(value = "callback")
+    public Map<String, String> payCallbackV3(@RequestBody JSONObject object) {
+        System.out.println(object.toJSONString());
+        JSONObject resource = object.getJSONObject("resource");
+        System.out.println("------------加密内容-------------");
+        System.out.println(resource.toJSONString());
+        String text = wechatClient.decryptToStringV3(resource.getString("associated_data"), resource.getString("nonce"), resource.getString("ciphertext"));
+        System.out.println("------------解密内容-------------");
+        System.out.println(text);
+        Map<String, String> result = new HashMap<>();
+        result.put("code", "SUCCESS");
+        result.put("message", "成功");
+        return result;
+    }
+
+    @ApiOperation(value = "订单查询")
+    @PostMapping(value = "info")
+    public CommonResponse<JSONObject> getOrder(@RequestParam("outTradeNo") String outTradeNo) {
+        JSONObject o = wechatClient.getUnifiedOrderByOutTradeNo(outTradeNo);
+        return new CommonResponse<>(o);
+    }
+
+    @ApiOperation(value = "退款")
+    @PostMapping(value = "refund")
+    public CommonResponse refund(@RequestParam("outTradeNo") String outTradeNo, @RequestParam("totalFee") String totalFee) {
+        JSONObject jsonObject = wechatClient.applyRefundByOutTradeNo(outTradeNo, totalFee, "退款通知回调URL /wechat/v3/pay/refund/callback");
+        System.out.println(jsonObject.toJSONString());
+        return new CommonResponse();
+    }
+
+    @ApiOperation(value = "微信退款回调")
+    @PostMapping(value = "refund/callback")
+    public Map<String, String> refundCallbackV3(@RequestBody JSONObject object) {
+        System.out.println(object.toJSONString());
+        JSONObject resource = object.getJSONObject("resource");
+        System.out.println("------------加密内容-------------");
+        System.out.println(resource.toJSONString());
+        String text = wechatClient.decryptToStringV3(resource.getString("associated_data"), resource.getString("nonce"), resource.getString("ciphertext"));
+        System.out.println("------------解密内容-------------");
+        System.out.println(text);
+        Map<String, String> result = new HashMap<>();
+        result.put("code", "SUCCESS");
+        result.put("message", "成功");
+        return result;
+    }
+
 }
 ~~~

@@ -1,6 +1,7 @@
 package com.dsltyyz.bundle.common.util;
 
 import org.springframework.util.StringUtils;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -10,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2022-5-8
  */
 public class IpUtils {
+
+    private static String LOCALHOST = "0:0:0:0:0:0:0:1";
+    private static String LOCALHOST_IP = "127.0.0.1";
+
     public static String getIpAddress(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
@@ -34,7 +39,7 @@ public class IpUtils {
                 ip = ipArray[0];
             }
         }
-        return ip;
+        return LOCALHOST.equals(ip) ? LOCALHOST_IP : ip;
     }
 
 }
