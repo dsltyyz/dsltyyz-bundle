@@ -66,4 +66,9 @@ public class WechatMessage implements Serializable {
     @ApiModelProperty(value = "状态")
     private String Status;
 
+    @ApiModelProperty(value = "撤销信息")
+    private String RevokeInfo;
+
+    @ApiModelProperty(value = "用户OPENID")
+    private String OpenID;
 }
