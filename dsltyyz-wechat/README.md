@@ -345,7 +345,85 @@ public class WechatController {
 
 }
 ~~~
-### 3.3 OCR
+### 3.3 微信网站应用
+~~~
+@Api(value = "微信网站应用controller", tags = {"微信网站应用"})
+@RestController
+@RequestMapping("wechat")
+public class WechatController {
+
+    @Resource
+    private WechatProperties wechatProperties;
+
+    @Resource
+    private WechatClient wechatClient;
+
+    @ApiOperation(value = "微信请求GET回调")
+    @GetMapping("/check")
+    public String check(@RequestParam("signature") String signature, @RequestParam("timestamp") String timestamp,
+                        @RequestParam("nonce") String nonce, @RequestParam("echostr") String echostr) {
+        return WechatCommonUtils.callbackCheck(signature, timestamp, nonce, echostr, wechatProperties.getOauth().getToken());
+    }
+
+    @ApiOperation(value = "微信消息回调")
+    @PostMapping("/check")
+    public String check(HttpServletRequest request) throws Exception {
+        System.out.println("------------request parameter参数-------------");
+        System.out.println(JSONObject.toJSONString(request.getParameterMap()));
+        String signature = request.getParameter("signature");
+        String timestamp = request.getParameter("timestamp");
+        String nonce = request.getParameter("nonce");
+        if (!WechatCommonUtils.checkSignature(signature, timestamp, nonce, wechatProperties.getOauth().getToken())) {
+            return "消息不合法";
+        }
+
+        String encryptType = request.getParameter("encrypt_type");
+        String msg;
+        if (encryptType == null) {
+            // 明文传输的消息
+            msg = StreamUtils.inputStreamToString(request.getInputStream());
+        } else if ("aes".equals(encryptType)) {
+            String s = StreamUtils.inputStreamToString(request.getInputStream());
+            System.out.println("------------inputStream内容 aes--------------");
+            System.out.println(s);
+            WXBizMsgCrypt wxBizMsgCrypt = new WXBizMsgCrypt(wechatProperties.getOauth().getAppId(), wechatProperties.getOauth().getToken(), wechatProperties.getOauth().getEncodingAesKey());
+            if(WechatOauthDataType.XML.equals(wechatProperties.getOauth().getDataType())) {
+                String msgSignature = request.getParameter("msg_signature");
+                //XML 直接解密消息
+                msg = wxBizMsgCrypt.decryptMsg(msgSignature, timestamp, nonce, s);
+            }else{
+                //JSON 直接解密加密消息
+                msg = wxBizMsgCrypt.decrypt(JSONObject.parseObject(s).getString("Encrypt"));
+            }
+        } else {
+            return "不可识别的加密类型";
+        }
+        System.out.println("------------inputStream内容--------------");
+        System.out.println(msg);
+        WechatMessage wechatMessage;
+        if (WechatOauthDataType.XML.equals(wechatProperties.getOauth().getDataType())) {
+            //数据格式为XML
+            System.out.println("------------xml转json数据-------------");
+            System.out.println(XmlUtils.xmlToJSONObject(msg).toJSONString());
+            wechatMessage = XmlUtils.xmlToJSONObject(msg).toJavaObject(WechatMessage.class);
+        } else {
+            //数据格式为JSON
+            wechatMessage = JSONObject.parseObject(msg, WechatMessage.class);
+        }
+        System.out.println("------------json转对象数据-------------");
+        System.out.println(JSONObject.toJSONString(wechatMessage));
+        return "success";
+    }
+
+    @ApiOperation(value = "获取用户登录信息")
+    @GetMapping("/user/login/{code}")
+    public CommonResponse<WechatUser> login(@PathVariable("code") String code) {
+        return new CommonResponse<>(wechatClient.getUserInfoByCode(code));
+    }
+
+}
+~~~
+### 3.4 OCR
 ~~~
 @Api(value = "微信OCRcontroller", tags = {"微信OCR"})
 @RestController
@@ -386,7 +464,7 @@ public class WechatOcrController {
     }
 }
 ~~~
-### 3.4 微信支付v2
+### 3.5 微信支付v2
 ~~~
 @Api(value = "微信支付v2controller", tags = {"微信支付v2"})
 @RestController
@@ -528,7 +606,7 @@ public class WechatPayV2Controller {
 
 }
 ~~~
-### 3.5 微信支付v3
+### 3.6 微信支付v3
 ~~~
 @Api(value = "微信支付v3controller", tags = {"微信支付v3"})
 @RestController
