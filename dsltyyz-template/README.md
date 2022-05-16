@@ -1,6 +1,6 @@
 # dsltyyz-template
 - 模板包
-  - 当前版本: 2.3.0-SNAPSHOT
+  - 当前版本: 1.0.0
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍

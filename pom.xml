@@ -6,7 +6,7 @@
 
     <groupId>com.dsltyyz.bundle</groupId>
     <artifactId>dsltyyz-bundle</artifactId>
-    <version>2.3.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <name>dsltyyz-bundle</name>
@@ -51,7 +51,7 @@
         <java.version>1.8</java.version>
 
         <!--包-->
-        <dsltyyz-bundle.version>2.3.0-SNAPSHOT</dsltyyz-bundle.version>
+        <dsltyyz-bundle.version>1.0.0</dsltyyz-bundle.version>
 
         <!--组件-->
         <lombok.version>1.18.6</lombok.version>
