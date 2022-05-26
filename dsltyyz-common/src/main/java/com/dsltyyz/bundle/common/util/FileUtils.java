@@ -4,9 +4,11 @@ import io.jsonwebtoken.lang.Assert;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -225,4 +227,44 @@ public class FileUtils {
             }
         }
     }
+
+    /**
+     * 获取文件的MD5 HASH值
+     * @param file
+     * @return
+     */
+    public static String md5HashCode(File file) {
+        try {
+            return md5HashCode(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 获取文件流的MD5 HASH值
+     * @param inputStream
+     * @return
+     */
+    public static String md5HashCode(InputStream inputStream){
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                md.update(buffer, 0, length);
+            }
+            inputStream.close();
+            byte[] md5Bytes  = md.digest();
+            //1代表绝对值
+            BigInteger bigInt = new BigInteger(1, md5Bytes);
+            //转换为16进制
+            return bigInt.toString(16).toUpperCase();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
