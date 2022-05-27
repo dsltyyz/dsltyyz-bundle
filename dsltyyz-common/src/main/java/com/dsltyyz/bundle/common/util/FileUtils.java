@@ -212,13 +212,13 @@ public class FileUtils {
         }
     }
 
-    public static InputStream fileToInputStream(String fileUrl){
+    public static InputStream fileToInputStream(String fileUrl) {
         Assert.isTrue(!StringUtils.isEmpty(fileUrl), "文件路径不能为空");
-        if(fileUrl.startsWith("http")||fileUrl.startsWith("https")){
+        if (fileUrl.startsWith("http") || fileUrl.startsWith("https")) {
             return HttpUtils.doGetInputStream(fileUrl, null, null);
-        }else if(fileUrl.startsWith("classpath:")){
-            return FileUtils.class.getClassLoader().getResourceAsStream(fileUrl.substring(fileUrl.indexOf(":")+1));
-        }else{
+        } else if (fileUrl.startsWith("classpath:")) {
+            return FileUtils.class.getClassLoader().getResourceAsStream(fileUrl.substring(fileUrl.indexOf(":") + 1));
+        } else {
             try {
                 return new FileInputStream(fileUrl);
             } catch (FileNotFoundException e) {
@@ -230,6 +230,7 @@ public class FileUtils {
 
     /**
      * 获取文件的MD5 HASH值
+     *
      * @param file
      * @return
      */
@@ -244,10 +245,11 @@ public class FileUtils {
 
     /**
      * 获取文件流的MD5 HASH值
+     *
      * @param inputStream
      * @return
      */
-    public static String md5HashCode(InputStream inputStream){
+    public static String md5HashCode(InputStream inputStream) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] buffer = new byte[1024];
@@ -256,7 +258,7 @@ public class FileUtils {
                 md.update(buffer, 0, length);
             }
             inputStream.close();
-            byte[] md5Bytes  = md.digest();
+            byte[] md5Bytes = md.digest();
             //1代表绝对值
             BigInteger bigInt = new BigInteger(1, md5Bytes);
             //转换为16进制
@@ -264,6 +266,82 @@ public class FileUtils {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * 文件转base64
+     *
+     * @param file
+     * @return
+     */
+    public static String fileToBase64(File file) {
+        try {
+            return inputStreamToBase64(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 输入流转base64
+     *
+     * @param inputStream
+     * @return
+     */
+    public static String inputStreamToBase64(InputStream inputStream) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            byte[] data = new byte[1024 * 8];
+            int len;
+            while (-1 != (len = inputStream.read(data))) {
+                outputStream.write(data, 0, len);
+            }
+            inputStream.close();
+            return Base64Utils.encode(outputStream.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * BASE64转输入流
+     * @param base64
+     * @return
+     */
+    public static InputStream base64ToInputStream(String base64) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        base64ToOutputStream(base64, outputStream);
+        return StreamUtils.outputStreamToInputStream(outputStream);
+    }
+
+    /**
+     * BASE64转输入流
+     * @param base64
+     * @return
+     */
+    public static void base64ToFile(String base64, File file) {
+        try {
+            base64ToOutputStream(base64, new FileOutputStream(file));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * BASE64转输出流
+     * @param base64
+     * @param outputStream
+     */
+    public static void base64ToOutputStream(String base64, OutputStream outputStream) {
+        try {
+            byte[] bytes = Base64Utils.decode(base64);
+            outputStream.write(bytes);
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
