@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dsltyyz.bundle.common.entity.ReflexParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +20,7 @@ import java.util.*;
  * 反射工具类
  *
  * @author: dsltyyz
- * @since: 2019-04-10
+ * @date: 2019-04-10
  */
 @Slf4j
 public class ReflexUtils {
@@ -42,7 +43,7 @@ public class ReflexUtils {
      * @param property 属性
      * @param value    值
      */
-    public static void setPropertyValueForObject(Object object, String property, String value) throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ParseException {
+    public static void setPropertyValueForObject(Object object, String property, String value) throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Class clazz = object.getClass();
         Field field = clazz.getDeclaredField(property);
         Class<?> typeClazz = field.getType();
@@ -58,26 +59,33 @@ public class ReflexUtils {
      * @param value     值
      * @return Object
      */
-    private static Object getClassTypeValue(Class<?> typeClass, String value) throws ParseException {
-        if (typeClass.isInstance(value)) {
-            return typeClass.cast(value);
-        } else if (typeClass == Integer.class) {
-            return Integer.valueOf(value);
-        } else if (typeClass == Long.class) {
-            return Long.valueOf(value);
-        } else if (typeClass == Double.class) {
-            return Double.valueOf(value);
-        } else if (typeClass == Boolean.class) {
-            return Boolean.valueOf(value);
-        } else if (typeClass == Date.class) {
-            return DateUtils.parse(value);
-        } else if (typeClass == LocalDateTime.class) {
-            return LocalDateTimeUtils.parse(value);
-        } else if (typeClass == BigInteger.class) {
-            return new BigInteger(value);
-        } else if (typeClass == BigDecimal.class) {
-            return new BigDecimal(value);
+    private static Object getClassTypeValue(Class<?> typeClass, String value) {
+        try {
+            if (typeClass == String.class) {
+                return value;
+            } else if (StringUtils.isEmpty(value)) {
+                return null;
+            } else if (typeClass == Integer.class) {
+                return Integer.valueOf(value);
+            } else if (typeClass == Long.class) {
+                return Long.valueOf(value);
+            } else if (typeClass == Double.class) {
+                return Double.valueOf(value);
+            } else if (typeClass == Boolean.class) {
+                return Boolean.valueOf(value);
+            } else if (typeClass == Date.class) {
+                return DateUtils.parse(value);
+            } else if (typeClass == LocalDateTime.class) {
+                return LocalDateTimeUtils.parse(value);
+            } else if (typeClass == BigInteger.class) {
+                return new BigInteger(value);
+            } else if (typeClass == BigDecimal.class) {
+                return new BigDecimal(value);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         return null;
     }
 
@@ -117,7 +125,7 @@ public class ReflexUtils {
      * @return
      */
     public static String getFieldMethod(String field, Class<?> clazz) {
-        return clazz.equals(boolean.class)? ("is" + field.substring(0, 1).toUpperCase() + field.substring(1)) : ("get" + field.substring(0, 1).toUpperCase() + field.substring(1));
+        return clazz.equals(boolean.class) ? ("is" + field.substring(0, 1).toUpperCase() + field.substring(1)) : ("get" + field.substring(0, 1).toUpperCase() + field.substring(1));
     }
 
     /**
