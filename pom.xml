@@ -27,6 +27,7 @@
         <module>dsltyyz-aliyun</module>
         <module>dsltyyz-wechat</module>
         <module>dsltyyz-jwt</module>
+        <module>dsltyyz-cache</module>
     </modules>
 
     <licenses>
