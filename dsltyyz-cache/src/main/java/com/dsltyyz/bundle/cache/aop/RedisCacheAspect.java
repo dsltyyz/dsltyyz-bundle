@@ -43,7 +43,7 @@ public class RedisCacheAspect {
         }
 
         String elResult = ElUitls.parse(redisCache.key(), treeMap);
-        String realKey = String.format("{%s}_{%s}_{%s}", redisCache.cacheName(), redisCache.key(), elResult);
+        String realKey = String.format("%s_%s_%s", redisCache.cacheName(), redisCache.key(), elResult);
 
         //强制更新
         if (redisCache.type() == CacheType.PUT) {
@@ -59,12 +59,12 @@ public class RedisCacheAspect {
         //查询Redis
         Object redisCacheObject = redisTemplate.opsForValue().get(realKey);
         if (Objects.nonNull(redisCacheObject)) {
-            log.info("get data from redis");
+            log.info("{} get data from redis", realKey);
             return redisCacheObject;
         }
 
-        log.info("get data from database");
         Object object = point.proceed();
+        log.info("{} get data from database", realKey);
         if (Objects.nonNull(object)) {
             //写入Redis
             redisTemplate.opsForValue().set(realKey, object, redisCache.redisTimeOut(), TimeUnit.SECONDS);

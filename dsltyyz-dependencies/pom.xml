@@ -37,6 +37,14 @@
                 <scope>compile</scope>
             </dependency>
 
+            <!--CACHE工具包-->
+            <dependency>
+                <groupId>com.dsltyyz.bundle</groupId>
+                <artifactId>dsltyyz-cache</artifactId>
+                <version>${dsltyyz-bundle.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
             <!--office工具包-->
             <dependency>
                 <groupId>com.dsltyyz.bundle</groupId>

@@ -47,7 +47,7 @@ public class CaffeineRedisCacheAspect {
         }
 
         String elResult = ElUitls.parse(caffeineRedisCache.key(), treeMap);
-        String realKey = String.format("{%s}_{%s}_{%s}", caffeineRedisCache.cacheName(), caffeineRedisCache.key(), elResult);
+        String realKey = String.format("%s_%s_%s", caffeineRedisCache.cacheName(), caffeineRedisCache.key(), elResult);
 
         //强制更新
         if (caffeineRedisCache.type() == CacheType.PUT) {
@@ -66,20 +66,20 @@ public class CaffeineRedisCacheAspect {
         //读写，查询Caffeine
         Object caffeineCacheObject = cache.getIfPresent(realKey);
         if (Objects.nonNull(caffeineCacheObject)) {
-            log.info("get data from caffeine");
+            log.info("{} get data from caffeine", realKey);
             return caffeineCacheObject;
         }
 
         //查询Redis
         Object redisCacheObject = redisTemplate.opsForValue().get(realKey);
         if (Objects.nonNull(redisCacheObject)) {
-            log.info("get data from redis");
+            log.info("{} get data from redis", realKey);
             cache.put(realKey, redisCacheObject);
             return redisCacheObject;
         }
 
-        log.info("get data from database");
         Object object = point.proceed();
+        log.info("{} get data from database", realKey);
         if (Objects.nonNull(object)) {
             //写入Redis
             redisTemplate.opsForValue().set(realKey, object, caffeineRedisCache.redisTimeOut(), TimeUnit.SECONDS);
