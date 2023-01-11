@@ -86,4 +86,10 @@ public class DefaultExceptionHandler {
         return new CommonResponse(504L, e.getMessage());
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    public CommonResponse handlerRuntimeException(NullPointerException e) {
+        log.error(e.getMessage());
+        return new CommonResponse(505L, "空指针异常");
+    }
+
 }

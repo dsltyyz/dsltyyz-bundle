@@ -40,14 +40,14 @@ public class DsltyyzMetaObjectHandler implements MetaObjectHandler {
         boolean deletedHasSetter = metaObject.hasSetter("deleted");
         //是否存在这个属性方法
         if (deletedHasSetter) {
-            strictInsertFill(metaObject, "deleted", Integer.class, new Integer(0));
+            strictInsertFill(metaObject, "deleted", Integer.class, 0);
         }
 
         //乐观锁
         boolean versionHasSetter = metaObject.hasSetter("version");
         //是否存在这个属性方法
         if (versionHasSetter) {
-            strictInsertFill(metaObject, "version", Integer.class, new Integer(1));
+            strictInsertFill(metaObject, "version", Integer.class, 1);
         }
     }
 
@@ -58,9 +58,6 @@ public class DsltyyzMetaObjectHandler implements MetaObjectHandler {
         if (updateTimeHasSetter) {
             //强行更新
             setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
-            //如下方法 在updateTime不为空时不填充
-            //strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-
         }
     }
 }

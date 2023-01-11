@@ -3,6 +3,7 @@ package com.dsltyyz.bundle.template.enums;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,13 +30,23 @@ public enum CommonStatus {
      * 值
      */
     @EnumValue
-    @JsonValue
     private int value;
 
     /**
      * 名称
      */
+    @JsonValue
     private String name;
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static CommonStatus convert(String name) {
+        for (CommonStatus e : CommonStatus.values()) {
+            if(e.toString().equalsIgnoreCase(name)){
+                return e;
+            }
+        }
+        return null;
+    }
 
     /**
      * 获取枚举JSON数组
@@ -44,8 +55,8 @@ public enum CommonStatus {
         JSONArray jsonArray = new JSONArray();
         for (CommonStatus e : CommonStatus.values()) {
             JSONObject object = new JSONObject();
-            object.put("value", e.getValue());
             object.put("name", e.getName());
+            object.put("enum", e.toString());
             jsonArray.add(object);
         }
         return jsonArray;
