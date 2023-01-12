@@ -20,11 +20,11 @@ public enum CommonStatus {
     /**
      * 不可用
      */
-    DISABLE(-1, "不可用"),
+    DISABLE(-1, "不可用", "DISABLE"),
     /**
      * 可用
      */
-    ENABLE(1, "可用");
+    ENABLE(1, "可用", "ENABLE");
 
     /**
      * 值
@@ -35,13 +35,18 @@ public enum CommonStatus {
     /**
      * 名称
      */
-    @JsonValue
     private String name;
+
+    /**
+     * 枚举名称
+     */
+    @JsonValue
+    private String enumName;
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static CommonStatus convert(String name) {
         for (CommonStatus e : CommonStatus.values()) {
-            if(e.toString().equalsIgnoreCase(name)){
+            if(e.enumName.equalsIgnoreCase(name)){
                 return e;
             }
         }
