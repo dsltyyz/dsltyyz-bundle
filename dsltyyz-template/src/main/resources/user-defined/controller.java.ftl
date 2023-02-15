@@ -27,41 +27,41 @@ public class ${table.controllerName} {
     @Autowired
     private ${table.serviceName} ${table.serviceName?uncap_first};
 
-    @ApiOperation(value = "增")
+    @ApiOperation(value = "新建${table.comment!}")
     @PostMapping(value = "")
-    public CommonResponse create(@RequestBody ${entity}DTO dto){
+    public CommonResponse create${entity}(@RequestBody ${entity}DTO dto){
         ${table.serviceName?uncap_first}.create${entity}(dto);
         return new CommonResponse();
     }
 <#list table.fields as field>
     <#if field.keyFlag>
 
-    @ApiOperation(value = "删")
+    @ApiOperation(value = "删除${table.comment!}")
     @DeleteMapping(value = "{${field.propertyName}}")
-    public CommonResponse delete(@PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}){
+    public CommonResponse delete${entity}(@PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}){
         ${table.serviceName?uncap_first}.delete${entity}(${field.propertyName});
         return new CommonResponse();
     }
 
-    @ApiOperation(value = "改")
+    @ApiOperation(value = "更新${table.comment!}")
     @PutMapping(value = "{${field.propertyName}}")
-    public CommonResponse update(@PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}, @Valid @RequestBody ${entity}DTO dto){
+    public CommonResponse update${entity}(@PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}, @Valid @RequestBody ${entity}DTO dto){
         dto.set${field.propertyName?cap_first}(${field.propertyName});
         ${table.serviceName?uncap_first}.update${entity}(dto);
         return new CommonResponse();
     }
 
-    @ApiOperation(value = "查")
+    @ApiOperation(value = "获取${table.comment!}详情")
     @GetMapping(value = "{${field.propertyName}}")
-    public CommonResponse<${entity}VO> info(@PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}){
+    public CommonResponse<${entity}VO> get${entity}(@PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}){
         return new CommonResponse<>(${table.serviceName?uncap_first}.get${entity}ById(${field.propertyName}));
     }
     </#if>
 </#list>
 
-    @ApiOperation(value = "分页")
+    @ApiOperation(value = "获取${table.comment!}分页列表")
     @GetMapping(value = "")
-    public CommonResponse<PageVO<${entity}VO>> page(@Valid ${entity}PageDTO pageDTO){
+    public CommonResponse<PageVO<${entity}VO>> get${entity}ByPage(@Valid ${entity}PageDTO pageDTO){
         return new CommonResponse<>(${table.serviceName?uncap_first}.get${entity}ListByPage(pageDTO));
     }
 
