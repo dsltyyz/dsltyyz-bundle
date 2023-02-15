@@ -49,7 +49,7 @@ public class ${entity} implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     <#else>
     <#-- 普通字段 -->
-    @TableField("${field.name}")
+    @TableField(value = "${field.name}")
     </#if>
     private <#if field.name == "status">CommonStatus<#else>${field.propertyType}</#if> ${field.propertyName};
 
