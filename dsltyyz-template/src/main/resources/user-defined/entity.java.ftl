@@ -16,12 +16,12 @@ import com.dsltyyz.bundle.common.util.DateUtils;
 import com.dsltyyz.bundle.template.enums.*;
 
 /**
- * ${table.comment!}
+ * ${table.comment!} Entity
  *
  * @author ${author}
  * @date ${date}
  */
-@ApiModel(description = "${table.comment!}")
+@ApiModel(description = "${table.comment!} Entity")
 @Data
 @TableName(value = "${table.name}", autoResultMap = true)
 public class ${entity} implements Serializable {

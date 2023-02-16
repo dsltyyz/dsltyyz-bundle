@@ -18,9 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import java.util.ArrayList;
 
 /**
- * <p>
- * ${table.comment!} Service Impl
- * </p>
+ * ${table.comment!} ServiceImpl
  *
  * @author ${author}
  * @date ${date}
@@ -71,7 +69,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     /**
-     * 查询${table.comment!}
+     * 获取${table.comment!}详情
      *
      * @param ${field.propertyName}
      * @return
@@ -88,7 +86,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     </#if>
 </#list>
     /**
-     * 分页查询${table.comment!}
+     * 获取${table.comment!}分页列表
      *
      * @param pageDTO
      * @return

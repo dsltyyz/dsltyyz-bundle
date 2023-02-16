@@ -11,12 +11,12 @@ import com.dsltyyz.bundle.common.util.DateUtils;
 import com.dsltyyz.bundle.template.enums.*;
 
 /**
- * ${table.comment!}DTO
+ * ${table.comment!} DTO
  *
  * @author ${author}
  * @date ${date}
  */
-@ApiModel(description = "${table.comment!}DTO")
+@ApiModel(description = "${table.comment!} DTO")
 @Data
 public class ${entity}DTO implements Serializable {
 

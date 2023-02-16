@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @author ${author}
  * @date ${date}
  */
-@Api(value = "${table.comment!}控制器", tags = {"${table.comment!}"})
+@Api(value = "${table.comment!} Controller", tags = {"${table.comment!}"})
 @RestController
 @RequestMapping("${package.ModuleName}/${entity?uncap_first}")
 public class ${table.controllerName} {

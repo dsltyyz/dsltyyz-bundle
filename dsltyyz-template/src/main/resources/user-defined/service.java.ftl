@@ -7,9 +7,7 @@ import com.dsltyyz.bundle.template.page.*;
 import ${superServiceClassPackage};
 
 /**
- * <p>
  * ${table.comment!} Service
- * </p>
  *
  * @author ${author}
  * @date ${date}
@@ -40,7 +38,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     void delete${entity}(${field.propertyType} ${field.propertyName});
 
     /**
-     * 查询${table.comment!}
+     * 获取${table.comment!}详情
      *
      * @param ${field.propertyName}
      * @return
@@ -50,7 +48,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     </#if>
 </#list>
     /**
-     * 分页查询${table.comment!}
+     * 获取${table.comment!}分页列表
      *
      * @param pageDTO
      * @return

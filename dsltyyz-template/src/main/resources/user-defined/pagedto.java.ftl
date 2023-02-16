@@ -12,12 +12,12 @@ import com.dsltyyz.bundle.common.util.DateUtils;
 import com.dsltyyz.bundle.template.enums.*;
 
 /**
- * ${table.comment!} Page DTO
+ * ${table.comment!} PageDTO
  *
  * @author ${author}
  * @date ${date}
  */
-@ApiModel(description = "${table.comment!}分页DTO")
+@ApiModel(description = "${table.comment!} PageDTO")
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ${entity}PageDTO extends PageDTO implements Serializable {
