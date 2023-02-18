@@ -13,7 +13,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import com.dsltyyz.bundle.common.util.DateUtils;
-import com.dsltyyz.bundle.template.enums.*;
+import com.dsltyyz.bundle.common.enums.*;
 
 /**
  * ${table.comment!} Entity

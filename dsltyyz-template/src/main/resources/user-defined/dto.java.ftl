@@ -8,7 +8,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import com.dsltyyz.bundle.common.util.DateUtils;
-import com.dsltyyz.bundle.template.enums.*;
+import com.dsltyyz.bundle.common.enums.*;
 
 /**
  * ${table.comment!} DTO

@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.template.enums;
+package com.dsltyyz.bundle.common.enums;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
