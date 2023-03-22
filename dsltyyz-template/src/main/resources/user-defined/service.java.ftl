@@ -3,7 +3,7 @@ package ${package.Service};
 import ${package.Entity}.*;
 import ${package.Entity?replace('entity','dto')}.*;
 import ${package.Entity?replace('entity','vo')}.*;
-import com.dsltyyz.bundle.template.page.*;
+import com.dsltyyz.bundle.common.page.*;
 import ${superServiceClassPackage};
 
 /**

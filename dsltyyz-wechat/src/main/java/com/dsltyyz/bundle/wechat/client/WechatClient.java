@@ -37,6 +37,7 @@ import com.dsltyyz.bundle.wechat.common.property.WechatProperties;
 import com.dsltyyz.bundle.wechat.common.util.WechatPayUtils;
 import com.dsltyyz.bundle.wechat.common.util.WechatPayV3Utils;
 import com.dsltyyz.bundle.wechat.common.util.WechatUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 
@@ -55,6 +56,7 @@ import java.util.stream.Collectors;
  * @author: dsltyyz
  * @date: 2019-11-22
  */
+@Slf4j
 public class WechatClient {
 
     @Resource
@@ -62,6 +64,9 @@ public class WechatClient {
 
     @Resource
     private CacheClient cacheClient;
+
+    public WechatClient(){log.info("微信客户端已加载");}
+
 
     /**
      * 【服务号-后台】获取access_token
@@ -566,9 +571,13 @@ public class WechatClient {
     public JSONObject applyRefundByOutTradeNo(String outTradeNo, String totalFee, String refuseFee, String notifyUrl) {
         if (WechatPayProperties.V2.equals(wechatProperties.getPay().getVersion())) {
             WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
-            return WechatPayUtils.applyRefundByOutTradeNo(wechatPayConfig, outTradeNo, totalFee, refuseFee, notifyUrl);
+            JSONObject jsonObject = WechatPayUtils.applyRefundByOutTradeNo(wechatPayConfig, outTradeNo, totalFee, refuseFee, notifyUrl);
+            Assert.isTrue(jsonObject.getString("result_code").equals("SUCCESS"), "微信退款失败");
+            return jsonObject;
         } else {
-            return WechatPayV3Utils.applyRefundByOutTradeNo(wechatProperties, outTradeNo, totalFee, refuseFee, notifyUrl);
+            JSONObject jsonObject = WechatPayV3Utils.applyRefundByOutTradeNo(wechatProperties, outTradeNo, totalFee, refuseFee, notifyUrl);
+            Assert.isTrue(jsonObject.getString("status").equals("SUCCESS")||jsonObject.getString("status").equals("PROCESSING"), "微信退款失败");
+            return jsonObject;
         }
     }
 

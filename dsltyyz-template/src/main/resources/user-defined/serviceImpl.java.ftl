@@ -3,7 +3,7 @@ package ${package.ServiceImpl};
 import ${package.Entity}.*;
 import ${package.Entity?replace('entity','dto')}.*;
 import ${package.Entity?replace('entity','vo')}.*;
-import com.dsltyyz.bundle.template.page.*;
+import com.dsltyyz.bundle.common.page.*;
 import com.dsltyyz.bundle.template.util.PageUtil;
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};

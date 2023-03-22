@@ -2,7 +2,7 @@ package com.dsltyyz.bundle.template.util;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.dsltyyz.bundle.template.page.PageDTO;
+import com.dsltyyz.bundle.common.page.PageDTO;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
