@@ -3,6 +3,7 @@ package com.dsltyyz.bundle.wechat.common.util;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.dsltyyz.bundle.common.util.HttpUtils;
+import com.dsltyyz.bundle.common.util.UUIDUtils;
 import com.dsltyyz.bundle.wechat.common.constant.WechatAccessUrl;
 import com.dsltyyz.bundle.wechat.common.constant.WechatMsgType;
 import com.dsltyyz.bundle.wechat.common.model.article.WechatArticle;
@@ -13,6 +14,7 @@ import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterialSend;
 import com.dsltyyz.bundle.wechat.common.model.menu.WechatMenu;
 import com.dsltyyz.bundle.wechat.common.model.ocr.WechatBankcardResult;
 import com.dsltyyz.bundle.wechat.common.model.ocr.WechatBizlicenseResult;
+import com.dsltyyz.bundle.wechat.common.model.ocr.WechatDrivingResult;
 import com.dsltyyz.bundle.wechat.common.model.ocr.WechatIdcardResult;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
@@ -23,11 +25,16 @@ import com.dsltyyz.bundle.wechat.common.model.template.*;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUserSubscribe;
+import com.dsltyyz.bundle.wechat.common.model.voice.WechatTranslateContent;
+import com.dsltyyz.bundle.wechat.common.model.voice.WechatVoiceToText;
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -396,81 +403,171 @@ public class WechatUtils {
 
     /**
      * 【小程序】发送订阅消息
+     *
      * @param token
      * @param wechatMiniTemplateSend
      * @return
      */
-    public static WechatResult sendNewTmpl(String token, WechatMiniTemplateSend wechatMiniTemplateSend){
+    public static WechatResult sendNewTmpl(String token, WechatMiniTemplateSend wechatMiniTemplateSend) {
         String url = WechatAccessUrl.SEND_NEW_TMPL_URL.replace("ACCESS_TOKEN", token);
-        return HttpUtils.doPostJson(url, null, null,wechatMiniTemplateSend, new TypeReference<WechatResult>() {
+        return HttpUtils.doPostJson(url, null, null, wechatMiniTemplateSend, new TypeReference<WechatResult>() {
+        });
+    }
+
+    /*******************AI***********/
+    /**
+     * 【公众号】【小程序】【APP】提交语音
+     *
+     * @param token
+     * @param voiceId
+     * @param content
+     * @return
+     */
+    public static WechatResult addVoiceToText(String token, String voiceId, byte[] content) {
+        String url = WechatAccessUrl.AI_VOICE_TO_TEXT_URL.replace("ACCESS_TOKEN", token).replace("VOICE_ID", voiceId);
+        return HttpUtils.doPostByte(url, null, null, content, new TypeReference<WechatResult>() {
+        });
+    }
+
+    /**
+     * 【公众号】【小程序】【APP】获取语音识别结果
+     *
+     * @param token
+     * @param voiceId
+     * @return
+     */
+    public static WechatVoiceToText getVoiceToText(String token, String voiceId) {
+        String url = WechatAccessUrl.AI_VOICE_TO_TEXT_RESULT_URL.replace("ACCESS_TOKEN", token).replace("VOICE_ID", voiceId);
+        return HttpUtils.doPost(url, null, null, null, new TypeReference<WechatVoiceToText>() {
+        });
+    }
+
+    /**
+     * 【公众号】【小程序】【APP】微信翻译
+     *
+     * @param token
+     * @param lfrom
+     * @param lto
+     * @param content
+     * @return
+     */
+    public static WechatTranslateContent translateContent(String token, String lfrom, String lto, String content) {
+        String url = WechatAccessUrl.AI_TRANSLATE_CONTENT_URL.replace("ACCESS_TOKEN", token).replace("LFROM", lfrom).replace("LTO", lto);
+        return HttpUtils.doPostText(url, null, null, content, new TypeReference<WechatTranslateContent>() {
         });
     }
 
     /*******************OCR***********/
     /**
      * 获取银行卡号
+     *
      * @param token
      * @param type
      * @param imgUrl
      * @param img
      * @return
      */
-    public static WechatBankcardResult getBankcard(String token, String type, String imgUrl, File img){
+    public static WechatBankcardResult getBankcard(String token, String type, String imgUrl, File img) {
         String url = WechatAccessUrl.OCR_BANKCARD_URL;
         Map<String, Object> query = new HashMap<>();
         Map<String, File> file = new HashMap<>();
         query.put("access_token", token);
         query.put("type", type);
-        if(!StringUtils.isEmpty(imgUrl)){
+        if (!StringUtils.isEmpty(imgUrl)) {
             query.put("img_url", imgUrl);
-        }else{
+        } else {
             file.put("img", img);
         }
-        return HttpUtils.doPostFile(url, null, query, null,file, new TypeReference<WechatBankcardResult>() {
+        return HttpUtils.doPostFile(url, null, query, null, file, new TypeReference<WechatBankcardResult>() {
         });
     }
 
     /**
      * 获取身份证号
+     *
      * @param token
      * @param type
      * @param imgUrl
      * @param img
      * @return
      */
-    public static WechatIdcardResult getIdcard(String token, String type, String imgUrl, File img){
+    public static WechatIdcardResult getIdcard(String token, String type, String imgUrl, File img) {
         String url = WechatAccessUrl.OCR_IDCARD_URL;
         Map<String, Object> query = new HashMap<>();
         Map<String, File> file = new HashMap<>();
         query.put("access_token", token);
         query.put("type", type);
-        if(!StringUtils.isEmpty(imgUrl)){
+        if (!StringUtils.isEmpty(imgUrl)) {
             query.put("img_url", imgUrl);
-        }else{
+        } else {
             file.put("img", img);
         }
-        return HttpUtils.doPostFile(url, null, query, null,file, new TypeReference<WechatIdcardResult>() {
+        return HttpUtils.doPostFile(url, null, query, null, file, new TypeReference<WechatIdcardResult>() {
         });
     }
 
     /**
      * 获取营业执照
+     *
      * @param token
      * @param imgUrl
      * @param img
      * @return
      */
-    public static WechatBizlicenseResult getBizLicense(String token, String imgUrl, File img){
+    public static WechatBizlicenseResult getBizLicense(String token, String imgUrl, File img) {
         String url = WechatAccessUrl.OCR_BIZLICENSE_URL;
         Map<String, Object> query = new HashMap<>();
         Map<String, File> file = new HashMap<>();
         query.put("access_token", token);
-        if(!StringUtils.isEmpty(imgUrl)){
+        if (!StringUtils.isEmpty(imgUrl)) {
             query.put("img_url", imgUrl);
-        }else{
+        } else {
             file.put("img", img);
         }
-        return HttpUtils.doPostFile(url, null, query, null,file, new TypeReference<WechatBizlicenseResult>() {
+        return HttpUtils.doPostFile(url, null, query, null, file, new TypeReference<WechatBizlicenseResult>() {
         });
+    }
+
+    /**
+     * 获取行驶证
+     *
+     * @param token
+     * @param imgUrl
+     * @param img
+     * @return
+     */
+    public static WechatDrivingResult getDriving(String token, String imgUrl, File img) {
+        String url = WechatAccessUrl.OCR_DRIVING_URL;
+        Map<String, Object> query = new HashMap<>();
+        Map<String, File> file = new HashMap<>();
+        query.put("access_token", token);
+        if (!StringUtils.isEmpty(imgUrl)) {
+            query.put("img_url", imgUrl);
+        } else {
+            file.put("img", img);
+        }
+        return HttpUtils.doPostFile(url, null, query, null, file, new TypeReference<WechatDrivingResult>() {
+        });
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        WechatToken wechatToken = getAccessToken("wxf9ead30dc754400d", "78b9b09346c435fbb2413be8440b24d5");
+        String uuid = UUIDUtils.getUUID();
+        File file = new File("C:\\Users\\Administrator\\Desktop\\Media\\父亲写的散文诗-13.mp3");
+        byte[] bytes = Files.readAllBytes(Paths.get(file.getPath()));
+        WechatResult wechatResult = addVoiceToText(wechatToken.getAccess_token(), uuid, bytes);
+        System.out.println(wechatResult);
+        int i=0;
+        WechatVoiceToText voiceToText = getVoiceToText(wechatToken.getAccess_token(), uuid);
+        System.out.println(voiceToText);
+        while (!voiceToText.getIsEnd()){
+            Thread.sleep(500);
+            i++;
+            voiceToText = getVoiceToText(wechatToken.getAccess_token(), uuid);
+        }
+        System.out.println(voiceToText);
+        System.out.println(i*500);
+
+
     }
 }

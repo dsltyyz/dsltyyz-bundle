@@ -17,6 +17,7 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -239,10 +240,10 @@ public class HttpUtils {
      * @param url 访问url
      * @param header 头部参数
      * @param query 指该参数需在请求URL传参
-     * @param param 主体参数
+     * @param body 主体参数
      * @return
      */
-    public static String doPostJson(String url, Map<String, String> header, Map<String, Object> query, Object param) {
+    public static String doPostJson(String url, Map<String, String> header, Map<String, Object> query, Object body) {
         HttpClient httpClient = getHttpclient(url);
 
         // 由客户端执行(发送)Post请求
@@ -256,8 +257,124 @@ public class HttpUtils {
                 }
             }
             //第三步：给httpPost设置JSON格式的参数
-            StringEntity requestEntity = new StringEntity(JSONObject.toJSONString(param), "utf-8");
+            StringEntity requestEntity = new StringEntity(JSONObject.toJSONString(body), "UTF-8");
             httpPost.setHeader("Content-type", "application/json");
+            httpPost.setEntity(requestEntity);
+
+            // 响应模型
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            String result = EntityUtils.toString(entity, "UTF-8");
+            log.info(result);
+            if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 发送text数据 post请求
+     *
+     * @param url 访问url
+     * @param header 头部参数
+     * @param query 指该参数需在请求URL传参
+     * @param body 主体参数
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPostText(String url, Map<String, String> header, Map<String, Object> query, String body, TypeReference<T> typeReference) {
+        String result = doPostText(url, header, query, body);
+        if (null == result) {
+            return null;
+        }
+        return JSONObject.parseObject(result, typeReference);
+    }
+
+    /**
+     * 发送text数据 post请求
+     *
+     * @param url 访问url
+     * @param header 头部参数
+     * @param query 指该参数需在请求URL传参
+     * @param body 主体参数
+     * @return
+     */
+    public static String doPostText(String url, Map<String, String> header, Map<String, Object> query, String body) {
+        HttpClient httpClient = getHttpclient(url);
+
+        // 由客户端执行(发送)Post请求
+        try {
+            // 创建Post请求
+            log.info(url);
+            HttpPost httpPost = new HttpPost(url+ buildUrlParam(query));
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpPost.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+            //第三步：给httpPost设置text的参数
+            StringEntity requestEntity = new StringEntity(body, "UTF-8");
+            httpPost.setEntity(requestEntity);
+
+            // 响应模型
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            String result = EntityUtils.toString(entity, "UTF-8");
+            log.info(result);
+            if (HttpStatus.OK == response.getStatusLine().getStatusCode()) {
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 发送byte数据 post请求
+     *
+     * @param url 访问url
+     * @param header 头部参数
+     * @param query 指该参数需在请求URL传参
+     * @param body 主体参数
+     * @param typeReference
+     * @return
+     */
+    public static <T> T doPostByte(String url, Map<String, String> header, Map<String, Object> query, byte[] body, TypeReference<T> typeReference) {
+        String result = doPostByte(url, header, query, body);
+        if (null == result) {
+            return null;
+        }
+        return JSONObject.parseObject(result, typeReference);
+    }
+
+    /**
+     * 发送byte数据 post请求
+     *
+     * @param url 访问url
+     * @param header 头部参数
+     * @param query 指该参数需在请求URL传参
+     * @param body 主体参数
+     * @return
+     */
+    public static String doPostByte(String url, Map<String, String> header, Map<String, Object> query, byte[] body) {
+        HttpClient httpClient = getHttpclient(url);
+
+        // 由客户端执行(发送)Post请求
+        try {
+            // 创建Post请求
+            log.info(url);
+            HttpPost httpPost = new HttpPost(url+ buildUrlParam(query));
+            if (null != header) {
+                for (Map.Entry<String, String> entry : header.entrySet()) {
+                    httpPost.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+            //第三步：给httpPost设置text的参数
+            ByteArrayEntity requestEntity = new ByteArrayEntity(body);
             httpPost.setEntity(requestEntity);
 
             // 响应模型
@@ -568,7 +685,7 @@ public class HttpUtils {
                 }
             }
             //第三步：给httpPut设置JSON格式的参数
-            StringEntity requestEntity = new StringEntity(JSONObject.toJSONString(param), "utf-8");
+            StringEntity requestEntity = new StringEntity(JSONObject.toJSONString(param), "UTF-8");
             httpPut.setHeader("Content-type", "application/json");
             httpPut.setEntity(requestEntity);
 
