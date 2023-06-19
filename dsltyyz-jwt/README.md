@@ -4,7 +4,7 @@
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-jwt ___Java Web Token___
+- dsltyyz-jwt ___Java Web Token包___
   - config ___配置___
   - constant ___常量___
   - entity ___实体___

@@ -1,10 +1,10 @@
-# dsltyyz-common
+# dsltyyz-common包
 - 公共包
   - 当前版本: 1.0.0
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-common ___公共模块___
+- dsltyyz-common ___公共包___
   - cache ___公共缓存___
   - config ___缓存自动注入___
   - constant ___常量定义包___

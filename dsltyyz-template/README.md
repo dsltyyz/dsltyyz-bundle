@@ -1,10 +1,10 @@
-# dsltyyz-template
+# dsltyyz-template包
 - 模板包
   - 当前版本: 1.0.0
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-template ___代码模板模块___
+- dsltyyz-template ___代码模板包___
   - bean ___对象包___
   - config ___配置___
   - enums ___枚举___

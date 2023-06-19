@@ -1,10 +1,10 @@
-# dsltyyz-wechat
+# dsltyyz-wechat包
 - 模板包
   - 当前版本: 1.0.0
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-wechat ___微信模块___
+- dsltyyz-wechat ___微信包___
   - aes ___安全模式AES___
   - client ___客户端___
   - common ___通用___

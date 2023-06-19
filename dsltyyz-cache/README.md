@@ -1,10 +1,10 @@
 # dsltyyz-cache
-- 数据库缓存模块
+- 数据库缓存包
   - 当前版本: 1.0.0
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-cache ___数据库缓存模块___
+- dsltyyz-cache ___数据库缓存包___
   - config ___配置___
   - enums ___枚举___
   - annotation ___注解___
