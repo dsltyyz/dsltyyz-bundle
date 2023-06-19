@@ -1,10 +1,10 @@
-# dsltyyz-aliyun包
-- aliyun包
+# dsltyyz-aliyun模块
+- aliyun模块
   - 当前版本: 1.0.0
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-aliyun ___阿里云组件___
+- dsltyyz-aliyun ___阿里云模块___
   - client ___客户端___
   - common ___对象定义___
   - config ___条件注入___

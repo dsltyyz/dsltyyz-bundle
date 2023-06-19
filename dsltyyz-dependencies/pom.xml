@@ -15,10 +15,6 @@
     <name>dsltyyz-dependencies</name>
     <description>Dsltyyz Bundle Dependencies</description>
 
-    <properties>
-        <dsltyyz-bundle.version>1.0.0</dsltyyz-bundle.version>
-    </properties>
-
     <dependencyManagement>
         <dependencies>
             <!--通用工具包-->

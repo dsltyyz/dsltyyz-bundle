@@ -11,8 +11,15 @@
   - config ___条件注入___
   - resources ___资源包___
       - META-INF ___初始化配置___
+- dsltyyz-cache ___数据库缓存模块___
+  - config ___配置___
+  - enums ___枚举___
+  - annotation ___注解___
+  - aop ___AOP___
+  - resources ___资源包___
+      - META-INF ___初始化配置___
 - dsltyyz-common ___公共模块___
-  - cache ___缓存___
+  - cache ___公共缓存___
   - config ___缓存自动注入___
   - constant ___常量定义包___
   - data ___数据格式包___
@@ -99,17 +106,21 @@
 </dependencyManagement>
 <dependencies>
     ...
+    </dependency>
+        <groupId>com.dsltyyz.bundle</groupId>
+        <artifactId>dsltyyz-aliyun</artifactId>
+    </dependency>
+    </dependency>
+        <groupId>com.dsltyyz.bundle</groupId>
+        <artifactId>dsltyyz-cache</artifactId>
+    </dependency>
     <dependency>
         <groupId>com.dsltyyz.bundle</groupId>
         <artifactId>dsltyyz-common</artifactId>
-    </dependency>
+    <dependency>
     <dependency>
         <groupId>com.dsltyyz.bundle</groupId>
         <artifactId>dsltyyz-jwt</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.dsltyyz.bundle</groupId>
-        <artifactId>dsltyyz-aliyun</artifactId>
     </dependency>
     <dependency>
         <groupId>com.dsltyyz.bundle</groupId>

@@ -5,7 +5,7 @@
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
 - dsltyyz-common ___公共模块___
-  - cache ___缓存___
+  - cache ___公共缓存___
   - config ___缓存自动注入___
   - constant ___常量定义包___
   - entity ___实体包___
