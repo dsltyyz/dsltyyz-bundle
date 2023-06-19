@@ -1,11 +1,11 @@
-# dsltyyz-common
+# dsltyyz-common包
 - 公共包
   - 当前版本: 2.3.0-SNAPSHOT
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-common ___公共模块___
-  - cache ___缓存___
+- dsltyyz-common ___公共包___
+  - cache ___公共缓存___
   - config ___缓存自动注入___
   - constant ___常量定义包___
   - entity ___实体包___

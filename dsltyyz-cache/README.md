@@ -1,10 +1,10 @@
-# dsltyyz-cache
-- Java Web Token包
+# dsltyyz-cache包
+- 数据库缓存模块
   - 当前版本: 2.3.0-SNAPSHOT
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-cache ___缓存包___
+- dsltyyz-cache ___数据库缓存包___
   - config ___配置___
   - enums ___枚举___
   - annotation ___注解___

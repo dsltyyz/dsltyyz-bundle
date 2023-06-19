@@ -1,10 +1,10 @@
-# dsltyyz-jwt
+# dsltyyz-jwt包
 - Java Web Token包
   - 当前版本: 2.3.0-SNAPSHOT
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-jwt ___Java Web Token___
+- dsltyyz-jwt ___Java Web Token包___
   - config ___配置___
   - constant ___常量___
   - entity ___实体___

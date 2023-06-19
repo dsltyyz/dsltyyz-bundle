@@ -4,7 +4,7 @@
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-aliyun ___阿里云组件___
+- dsltyyz-aliyun ___阿里云包___
   - client ___客户端___
   - common ___对象定义___
   - config ___条件注入___

@@ -1,10 +1,10 @@
-# dsltyyz-office
+# dsltyyz-office包
 - OFFICE包
   - 当前版本: 2.3.0-SNAPSHOT
   - 开发人员:
     - [yangyuanliang](mailto:yangyuanliang@dsltyyz.com) 
 ## 1 目录介绍
-- dsltyyz-office ___office办公模块___
+- dsltyyz-office ___office办公包___
   - zip ___zip文件工具包(渲染word和EXCEL模板)___
   - excel ___excel工具包___
     - annotation ___注解___
