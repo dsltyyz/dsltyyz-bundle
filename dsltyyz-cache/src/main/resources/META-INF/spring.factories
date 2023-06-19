@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.dsltyyz.bundle.cache.config.CaffeineCacheConfig,\
+  com.dsltyyz.bundle.cache.aop.CaffeineRedisCacheAspect,\
+  com.dsltyyz.bundle.cache.aop.RedisCacheAspect

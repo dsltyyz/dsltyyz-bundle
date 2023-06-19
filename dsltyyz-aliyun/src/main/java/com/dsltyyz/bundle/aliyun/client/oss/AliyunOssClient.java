@@ -5,8 +5,8 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.*;
 import com.dsltyyz.bundle.aliyun.common.properties.OssProperties;
-import com.dsltyyz.bundle.aliyun.common.vo.OssSignatureVO;
-import com.dsltyyz.bundle.aliyun.common.vo.OssVO;
+import com.dsltyyz.bundle.common.vo.OssSignatureVO;
+import com.dsltyyz.bundle.common.vo.OssVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -16,7 +16,9 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Future;
 
 /**
@@ -152,5 +154,26 @@ public class AliyunOssClient {
         } catch (Exception e) {
             log.info("Delete Object [{}] to bucket [{}] Error:{}", key, ossProperties.getBucketName(), e.getMessage());
         }
+    }
+
+    /**
+     * 获取当前包下面的文件
+     * @param prefix
+     * @return
+     */
+    public List<OssVO> getObjectList(String prefix) {
+        List<OssVO> voList = new ArrayList<>();
+        ListObjectsRequest listObjectsRequest = new ListObjectsRequest();
+        listObjectsRequest.setBucketName(ossProperties.getBucketName());
+        listObjectsRequest.setPrefix(prefix);
+        ObjectListing objectListing = ossClient.listObjects(listObjectsRequest);
+        List<OSSObjectSummary> ossObjectSummaryList = objectListing.getObjectSummaries();
+        ossObjectSummaryList.stream().forEach(s -> {
+            OssVO vo = new OssVO();
+            vo.setKey(s.getKey());
+            vo.setUrl(getResourceUrl(vo.getKey()));
+            voList.add(vo);
+        });
+        return voList;
     }
 }

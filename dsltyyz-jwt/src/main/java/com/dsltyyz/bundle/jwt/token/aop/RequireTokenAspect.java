@@ -2,12 +2,16 @@ package com.dsltyyz.bundle.jwt.token.aop;
 
 import com.dsltyyz.bundle.common.cache.client.CacheClient;
 import com.dsltyyz.bundle.common.handler.ContextHandler;
+import com.dsltyyz.bundle.common.response.CommonResponse;
 import com.dsltyyz.bundle.common.util.EncryptUtils;
 import com.dsltyyz.bundle.jwt.constant.JwtConstant;
 import com.dsltyyz.bundle.jwt.entity.JwtUser;
 import com.dsltyyz.bundle.jwt.helper.JwtHelper;
 import com.dsltyyz.bundle.jwt.token.annotation.RequireToken;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -50,15 +54,24 @@ public class RequireTokenAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader(HEADER_TOKEN);
         if (StringUtils.isEmpty(token)) {
-            throw new JwtException("缺少Token参数");
+            return new CommonResponse<>(1L,"缺少Token参数");
         }
-        JwtUser jwtUser = jwtHelper.parserToken(token);
-        ContextHandler.set(JwtConstant.JWT_USER, jwtUser);
+        JwtUser jwtUser = null;
+        try {
+            jwtUser = jwtHelper.parserToken(token);
+            ContextHandler.set(JwtConstant.JWT_USER, jwtUser);
+        } catch (MalformedJwtException | SignatureException e) {
+            return new CommonResponse<>(1L, "Token非法签名");
+        } catch (ExpiredJwtException e) {
+            return new CommonResponse<>(2L, "Token已过期，请重新登录");
+        } catch (JwtException e){
+            return new CommonResponse<>(3L, "Token出错啦");
+        }
 
         //需要权限 且 需要权限与用户权限没有交集
         Boolean flag = requireToken.value().length != 0 && (jwtUser.getRole().length == 0 || !Arrays.asList(requireToken.value()).retainAll(Arrays.asList(jwtUser.getRole())));
         if (flag) {
-            throw new JwtException("权限不足");
+            return new CommonResponse<>(3L,"权限不足");
         }
 
         //防止重复提交
@@ -66,7 +79,9 @@ public class RequireTokenAspect {
         //标识ADMIN_TOKEN_KEY 出现异常移除
         ContextHandler.set(TOKEN_KEY, key);
         String value = cacheClient.getEntity(key, String.class);
-        Assert.isNull(value, "操作过于频繁，请稍后重试");
+        if(value!=null){
+            return new CommonResponse<>(4L, "操作过于频繁，请稍后重试");
+        }
         //添加标识
         cacheClient.putEntity(key, key);
 

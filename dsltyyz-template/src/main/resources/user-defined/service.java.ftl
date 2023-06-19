@@ -3,13 +3,11 @@ package ${package.Service};
 import ${package.Entity}.*;
 import ${package.Entity?replace('entity','dto')}.*;
 import ${package.Entity?replace('entity','vo')}.*;
-import com.dsltyyz.bundle.template.page.*;
+import com.dsltyyz.bundle.common.page.*;
 import ${superServiceClassPackage};
 
 /**
- * <p>
  * ${table.comment!} Service
- * </p>
  *
  * @author ${author}
  * @date ${date}
@@ -17,14 +15,14 @@ import ${superServiceClassPackage};
 public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
 
     /**
-     * 新建
+     * 新建${table.comment!}
      *
      * @param dto
      */
     void create${entity}(${entity}DTO dto);
 
     /**
-     * 更新
+     * 更新${table.comment!}
      *
      * @param dto
      */
@@ -33,14 +31,14 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
 <#list table.fields as field>
     <#if field.keyFlag>
     /**
-     * 删除
+     * 删除${table.comment!}
      *
      * @param ${field.propertyName}
      */
     void delete${entity}(${field.propertyType} ${field.propertyName});
 
     /**
-     * 查询
+     * 获取${table.comment!}详情
      *
      * @param ${field.propertyName}
      * @return
@@ -50,7 +48,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     </#if>
 </#list>
     /**
-     * 分页查询
+     * 获取${table.comment!}分页列表
      *
      * @param pageDTO
      * @return

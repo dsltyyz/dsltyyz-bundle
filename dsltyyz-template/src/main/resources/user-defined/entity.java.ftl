@@ -13,15 +13,15 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import com.dsltyyz.bundle.common.util.DateUtils;
-import com.dsltyyz.bundle.template.enums.*;
+import com.dsltyyz.bundle.common.enums.*;
 
 /**
- * ${table.comment!}
+ * ${table.comment!} Entity
  *
  * @author ${author}
  * @date ${date}
  */
-@ApiModel(description = "${table.comment!}")
+@ApiModel(description = "${table.comment!} Entity")
 @Data
 @TableName(value = "${table.name}", autoResultMap = true)
 public class ${entity} implements Serializable {
@@ -49,7 +49,7 @@ public class ${entity} implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     <#else>
     <#-- 普通字段 -->
-    @TableField("${field.name}")
+    @TableField(value = "${field.name}")
     </#if>
     private <#if field.name == "status">CommonStatus<#else>${field.propertyType}</#if> ${field.propertyName};
 

@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.template.page;
+package com.dsltyyz.bundle.common.page;
 
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import io.swagger.annotations.ApiModel;

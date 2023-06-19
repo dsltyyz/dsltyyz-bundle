@@ -5,6 +5,7 @@ import com.dsltyyz.bundle.common.cache.client.CacheClient;
 import com.dsltyyz.bundle.common.util.FileUtils;
 import com.dsltyyz.bundle.common.util.HttpUtils;
 import com.dsltyyz.bundle.common.util.PatternUtils;
+import com.dsltyyz.bundle.common.util.UUIDUtils;
 import com.dsltyyz.bundle.wechat.common.constant.WechatMaterialType;
 import com.dsltyyz.bundle.wechat.common.model.article.WechatArticle;
 import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
@@ -16,6 +17,7 @@ import com.dsltyyz.bundle.wechat.common.model.material.WechatMaterialSend;
 import com.dsltyyz.bundle.wechat.common.model.menu.WechatMenu;
 import com.dsltyyz.bundle.wechat.common.model.ocr.WechatBankcardResult;
 import com.dsltyyz.bundle.wechat.common.model.ocr.WechatBizlicenseResult;
+import com.dsltyyz.bundle.wechat.common.model.ocr.WechatDrivingResult;
 import com.dsltyyz.bundle.wechat.common.model.ocr.WechatIdcardResult;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatMiniOpenId;
 import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
@@ -32,11 +34,14 @@ import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUserSubscribe;
+import com.dsltyyz.bundle.wechat.common.model.voice.WechatTranslateContent;
+import com.dsltyyz.bundle.wechat.common.model.voice.WechatVoiceToText;
 import com.dsltyyz.bundle.wechat.common.property.WechatPayProperties;
 import com.dsltyyz.bundle.wechat.common.property.WechatProperties;
 import com.dsltyyz.bundle.wechat.common.util.WechatPayUtils;
 import com.dsltyyz.bundle.wechat.common.util.WechatPayV3Utils;
 import com.dsltyyz.bundle.wechat.common.util.WechatUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 
@@ -55,6 +60,7 @@ import java.util.stream.Collectors;
  * @author: dsltyyz
  * @date: 2019-11-22
  */
+@Slf4j
 public class WechatClient {
 
     @Resource
@@ -62,6 +68,11 @@ public class WechatClient {
 
     @Resource
     private CacheClient cacheClient;
+
+    public WechatClient() {
+        log.info("微信客户端已加载");
+    }
+
 
     /**
      * 【服务号-后台】获取access_token
@@ -421,6 +432,65 @@ public class WechatClient {
         return WechatUtils.getBizLicense(wechatToken.getAccess_token(), imgUrl, img);
     }
 
+    /**
+     * 获取行驶证
+     *
+     * @param imgUrl
+     * @param img
+     * @return
+     */
+    public WechatDrivingResult getDriving(String imgUrl, File img) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.getDriving(wechatToken.getAccess_token(), imgUrl, img);
+    }
+
+    /*******************AI***********/
+    /**
+     * 【公众号】【小程序】【APP】语音转文本
+     *
+     * @param content
+     * @return
+     */
+    public WechatVoiceToText getVoiceToText(byte[] content) {
+        WechatToken wechatToken = getWechatToken();
+        String uuid = UUIDUtils.getUUID();
+        WechatResult wechatResult = WechatUtils.addVoiceToText(wechatToken.getAccess_token(), uuid, content);
+        Assert.isTrue(wechatResult.getErrcode() == 0, wechatResult.getErrmsg());
+        WechatVoiceToText voiceToText = WechatUtils.getVoiceToText(wechatToken.getAccess_token(), uuid);
+        while (!voiceToText.getIsEnd()) {
+            try {
+                Thread.sleep(500);
+                voiceToText = WechatUtils.getVoiceToText(wechatToken.getAccess_token(), uuid);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return voiceToText;
+    }
+
+    /**
+     * 【公众号】【小程序】【APP】微信翻译(中文转英文)
+     *
+     * @param content
+     * @return
+     */
+    public WechatTranslateContent translateContentCnToEn(String content) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.translateContent(wechatToken.getAccess_token(), "zh_CN", "en_US", content);
+    }
+
+    /**
+     * 【公众号】【小程序】【APP】微信翻译(中文转英文)
+     *
+     * @param content
+     * @return
+     */
+    public WechatTranslateContent translateContentEnToCn(String content) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.translateContent(wechatToken.getAccess_token(), "en_US", "zh_CN", content);
+    }
+
     /***************支付**************/
     /**
      * 【微信支付】统一下单JSAPI
@@ -566,9 +636,13 @@ public class WechatClient {
     public JSONObject applyRefundByOutTradeNo(String outTradeNo, String totalFee, String refuseFee, String notifyUrl) {
         if (WechatPayProperties.V2.equals(wechatProperties.getPay().getVersion())) {
             WechatPayConfig wechatPayConfig = new WechatPayConfig(wechatProperties.getOauth().getAppId(), wechatProperties.getPay().getMchId(), wechatProperties.getPay().getMchPrivateKey(), wechatProperties.getPay().getCertUrl());
-            return WechatPayUtils.applyRefundByOutTradeNo(wechatPayConfig, outTradeNo, totalFee, refuseFee, notifyUrl);
+            JSONObject jsonObject = WechatPayUtils.applyRefundByOutTradeNo(wechatPayConfig, outTradeNo, totalFee, refuseFee, notifyUrl);
+            Assert.isTrue(jsonObject.getString("result_code").equals("SUCCESS"), "微信退款失败");
+            return jsonObject;
         } else {
-            return WechatPayV3Utils.applyRefundByOutTradeNo(wechatProperties, outTradeNo, totalFee, refuseFee, notifyUrl);
+            JSONObject jsonObject = WechatPayV3Utils.applyRefundByOutTradeNo(wechatProperties, outTradeNo, totalFee, refuseFee, notifyUrl);
+            Assert.isTrue(jsonObject.getString("status").equals("SUCCESS") || jsonObject.getString("status").equals("PROCESSING"), "微信退款失败");
+            return jsonObject;
         }
     }
 

@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 import com.dsltyyz.bundle.template.page.PageDTO;
 import com.dsltyyz.bundle.common.util.DateUtils;
-import com.dsltyyz.bundle.template.enums.*;
+import com.dsltyyz.bundle.common.enums.*;
 
 /**
- * ${table.comment!} Page DTO
+ * ${table.comment!} PageDTO
  *
  * @author ${author}
  * @date ${date}
  */
-@ApiModel(description = "${table.comment!}分页DTO")
+@ApiModel(description = "${table.comment!} PageDTO")
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ${entity}PageDTO extends PageDTO implements Serializable {

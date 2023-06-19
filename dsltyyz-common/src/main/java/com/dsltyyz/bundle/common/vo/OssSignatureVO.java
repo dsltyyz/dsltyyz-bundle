@@ -1,4 +1,4 @@
-package com.dsltyyz.bundle.aliyun.common.vo;
+package com.dsltyyz.bundle.common.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

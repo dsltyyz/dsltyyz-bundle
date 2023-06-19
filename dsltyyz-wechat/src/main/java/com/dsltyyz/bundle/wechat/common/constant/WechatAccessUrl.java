@@ -144,4 +144,24 @@ public interface WechatAccessUrl {
      * 【OCR】识别营业执照
      */
     String OCR_BIZLICENSE_URL = "https://api.weixin.qq.com/cv/ocr/bizlicense";
+
+    /**
+     * 【OCR】识别驾驶证
+     */
+    String OCR_DRIVING_URL = "https://api.weixin.qq.com/cv/ocr/driving";
+
+    /**
+     * 【AI】提交语音
+     */
+    String AI_VOICE_TO_TEXT_URL = "https://api.weixin.qq.com/cgi-bin/media/voice/addvoicetorecofortext?access_token=ACCESS_TOKEN&format=mp3&voice_id=VOICE_ID&lang=zh_CN";
+
+    /**
+     * 【AI】获取语音识别结果
+     */
+    String AI_VOICE_TO_TEXT_RESULT_URL = "https://api.weixin.qq.com/cgi-bin/media/voice/queryrecoresultfortext?access_token=ACCESS_TOKEN&voice_id=VOICE_ID&lang=zh_CN";
+
+    /**
+     * 【AI】微信翻译
+     */
+    String AI_TRANSLATE_CONTENT_URL = "https://api.weixin.qq.com/cgi-bin/media/voice/translatecontent?access_token=ACCESS_TOKEN&lfrom=LFROM&lto=LTO";
 }

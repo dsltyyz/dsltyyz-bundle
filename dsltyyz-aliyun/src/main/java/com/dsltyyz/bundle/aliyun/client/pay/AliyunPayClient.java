@@ -106,7 +106,7 @@ public class AliyunPayClient {
         } else {
             result = alipayClient.certificateExecute(request).getBody();
         }
-        System.out.println(result);
+
         JSONObject jsonObject = JSONObject.parseObject(result);
         JSONObject alipayTradePrecreateResponse = jsonObject.getJSONObject("alipay_trade_precreate_response");
         Assert.isTrue(alipayTradePrecreateResponse.getString("code").equals("10000"), alipayTradePrecreateResponse.getString("msg"));

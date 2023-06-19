@@ -5,7 +5,7 @@ import com.dsltyyz.bundle.template.mybatisplus.dao.DsltyyzDAO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * ${table.comment!} Dao
+ * ${table.comment!} DAO
  *
  * @author ${author}
  * @date ${date}

@@ -3,7 +3,7 @@ package ${package.ServiceImpl};
 import ${package.Entity}.*;
 import ${package.Entity?replace('entity','dto')}.*;
 import ${package.Entity?replace('entity','vo')}.*;
-import com.dsltyyz.bundle.template.page.*;
+import com.dsltyyz.bundle.common.page.*;
 import com.dsltyyz.bundle.template.util.PageUtil;
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
@@ -18,9 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import java.util.ArrayList;
 
 /**
- * <p>
- * ${table.comment!} Service Impl
- * </p>
+ * ${table.comment!} ServiceImpl
  *
  * @author ${author}
  * @date ${date}
@@ -32,7 +30,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     private ${table.mapperName} ${table.mapperName?uncap_first};
 
     /**
-     * 新建
+     * 新建${table.comment!}
      *
      * @param dto
      */
@@ -46,7 +44,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 <#list table.fields as field>
     <#if field.keyFlag>
     /**
-     * 更新
+     * 更新${table.comment!}
      *
      * @param dto
      */
@@ -59,7 +57,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     /**
-     * 删除
+     * 删除${table.comment!}
      *
      * @param ${field.propertyName}
      */
@@ -71,7 +69,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     /**
-     * 查询
+     * 获取${table.comment!}详情
      *
      * @param ${field.propertyName}
      * @return
@@ -88,7 +86,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     </#if>
 </#list>
     /**
-     * 分页查询
+     * 获取${table.comment!}分页列表
      *
      * @param pageDTO
      * @return
@@ -96,7 +94,6 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     @Override
     public PageVO<${entity}VO> get${entity}ListByPage(${entity}PageDTO pageDTO){
         PageVO<${entity}VO> vo = new PageVO<>();
-
         IPage<${entity}> iPage = new Page<>();
         //排序字段转换
         PageUtil.convertOrderItem(pageDTO, ${entity}.class);
