@@ -21,7 +21,8 @@ public class IdCardDataMaskHelper implements DataHelper {
     @Override
     public Object deal(Object o, String param) {
         if (o != null && !StringUtils.isEmpty(o.toString()) && o.toString().length() == LENGTH) {
-            return o.toString().substring(0, 6) + "********" + o.toString().substring(14, 18);
+            String s = o.toString();
+            return s.replace(s.substring(6,14),"********");
         }
         return o;
     }

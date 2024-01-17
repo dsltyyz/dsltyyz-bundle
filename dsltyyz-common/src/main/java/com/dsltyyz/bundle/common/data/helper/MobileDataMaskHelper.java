@@ -21,7 +21,8 @@ public class MobileDataMaskHelper implements DataHelper {
     @Override
     public Object deal(Object o, String param) {
         if (!StringUtils.isEmpty(o.toString()) && o.toString().length() == LENGTH) {
-            return o.toString().substring(0, 3) + "****" + o.toString().substring(7, 11);
+            String s = o.toString();
+            return s.replace(s.substring(3, 7),"****");
         }
         return o;
     }

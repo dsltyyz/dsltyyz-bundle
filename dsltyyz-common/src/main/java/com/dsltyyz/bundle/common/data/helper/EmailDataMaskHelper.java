@@ -2,15 +2,18 @@ package com.dsltyyz.bundle.common.data.helper;
 
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
+
 /**
- * 姓名数据处理
+ * 邮箱数据处理
  *
  * @author dsltyyz
  */
-public class NameDataMaskHelper implements DataHelper {
+public class EmailDataMaskHelper implements DataHelper {
+
 
     /**
-     * 姓名数据处理
+     * 数据处理
      *
      * @param o
      * @param param
@@ -20,9 +23,9 @@ public class NameDataMaskHelper implements DataHelper {
     public Object deal(Object o, String param) {
         if (o != null && !StringUtils.isEmpty(o.toString())) {
             String s = o.toString();
-            return s.replace(s.substring(1, 2),"*");
+            String s1 = s.substring(0, s.indexOf("@"));
+            return s.replace(s1, String.join("", Collections.nCopies(s1.length(), "*")));
         }
         return o;
     }
-
 }
