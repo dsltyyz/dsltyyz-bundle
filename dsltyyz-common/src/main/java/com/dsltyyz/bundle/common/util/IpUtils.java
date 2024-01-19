@@ -3,7 +3,6 @@ package com.dsltyyz.bundle.common.util;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 
 /**
  * 获取用户访问IP
@@ -43,10 +42,4 @@ public class IpUtils {
         return LOCALHOST.equals(ip) ? LOCALHOST_IP : ip;
     }
 
-
-    public static void main(String[] args) {
-        String s = "13684008780@163.com";
-        String s1 = s.substring(0, s.indexOf("@"));
-        System.out.println(s.replace(s1, String.join("", Collections.nCopies(s1.length(), "*"))));
-    }
 }
