@@ -2,10 +2,10 @@ package com.dsltyyz.bundle.wechat.common.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.dsltyyz.bundle.common.util.DateUtils;
 import com.dsltyyz.bundle.common.util.HttpUtils;
 import com.dsltyyz.bundle.common.util.UUIDUtils;
-import com.dsltyyz.bundle.wechat.common.constant.WechatAccessUrl;
-import com.dsltyyz.bundle.wechat.common.constant.WechatMsgType;
+import com.dsltyyz.bundle.wechat.common.constant.*;
 import com.dsltyyz.bundle.wechat.common.model.article.WechatArticle;
 import com.dsltyyz.bundle.wechat.common.model.common.WechatResult;
 import com.dsltyyz.bundle.wechat.common.model.draft.WechatDraftDetailVO;
@@ -21,6 +21,7 @@ import com.dsltyyz.bundle.wechat.common.model.openid.WechatOpenId;
 import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatMass;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatPublish;
+import com.dsltyyz.bundle.wechat.common.model.shipping.*;
 import com.dsltyyz.bundle.wechat.common.model.template.*;
 import com.dsltyyz.bundle.wechat.common.model.token.WechatToken;
 import com.dsltyyz.bundle.wechat.common.model.user.WechatUser;
@@ -35,9 +36,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * Description:
@@ -414,6 +414,73 @@ public class WechatUtils {
         });
     }
 
+    /**
+     * 【小程序】【实物电商类】发货信息录入
+     *
+     * @param token
+     * @param uploadShipping
+     * @return
+     */
+    public static WechatResult uploadShippingInfo(String token, UploadShipping uploadShipping) {
+        String url = WechatAccessUrl.UPLOAD_SHIPPING_INFO_URL.replace("ACCESS_TOKEN", token);
+        return HttpUtils.doPostJson(url, null, null, uploadShipping, new TypeReference<WechatResult>() {
+        });
+    }
+
+    /**
+     * 【小程序】【实物电商类】查询订单发货状态
+     *
+     * @param token
+     * @param searchOrder
+     * @return
+     */
+    public static WechatOrderResult getOrder(String token, SearchOrder searchOrder) {
+        String url = WechatAccessUrl.GET_ORDER_URL.replace("ACCESS_TOKEN", token);
+        return HttpUtils.doPostJson(url, null, null, searchOrder, new TypeReference<WechatOrderResult>() {
+        });
+    }
+
+    /**
+     * 【小程序】【实物电商类】查询订单列表
+     *
+     * @param token
+     * @param orderQuery
+     * @return
+     */
+    public static WechatOrderListResult getOrderList(String token, OrderQuery orderQuery) {
+        String url = WechatAccessUrl.GET_ORDER_LIST_URL.replace("ACCESS_TOKEN", token);
+        return HttpUtils.doPostJson(url, null, null, orderQuery, new TypeReference<WechatOrderListResult>() {
+        });
+    }
+
+    /**
+     * 【小程序】【实物电商类】确认收货提醒接口
+     * 如你已经从你的快递物流服务方获知到用户已经签收相关商品，可以通过该接口提醒用户及时确认收货，以提高资金结算效率，每个订单仅可调用一次。
+     *
+     * @param token
+     * @param confirmOrderKey
+     * @return
+     */
+    public static WechatResult notifyConfirmReceive(String token, ConfirmOrderKey confirmOrderKey) {
+        String url = WechatAccessUrl.NOTIFY_CONFIRM_RECEIVE_URL.replace("ACCESS_TOKEN", token);
+        return HttpUtils.doPostJson(url, null, null, confirmOrderKey, new TypeReference<WechatResult>() {
+        });
+    }
+
+
+    /**
+     * 【小程序】【实物电商类】特殊发货报备
+     *
+     * @param token
+     * @param specialOrder
+     * @return
+     */
+    public static WechatResult opSpecialOrder(String token, SpecialOrder specialOrder) {
+        String url = WechatAccessUrl.OPSPECIALORDER_URL.replace("ACCESS_TOKEN", token);
+        return HttpUtils.doPostJson(url, null, null, specialOrder, new TypeReference<WechatResult>() {
+        });
+    }
+
     /*******************AI***********/
     /**
      * 【公众号】【小程序】【APP】提交语音
@@ -550,24 +617,4 @@ public class WechatUtils {
         });
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        WechatToken wechatToken = getAccessToken("wxf9ead30dc754400d", "78b9b09346c435fbb2413be8440b24d5");
-        String uuid = UUIDUtils.getUUID();
-        File file = new File("C:\\Users\\Administrator\\Desktop\\Media\\父亲写的散文诗-13.mp3");
-        byte[] bytes = Files.readAllBytes(Paths.get(file.getPath()));
-        WechatResult wechatResult = addVoiceToText(wechatToken.getAccess_token(), uuid, bytes);
-        System.out.println(wechatResult);
-        int i=0;
-        WechatVoiceToText voiceToText = getVoiceToText(wechatToken.getAccess_token(), uuid);
-        System.out.println(voiceToText);
-        while (!voiceToText.getIsEnd()){
-            Thread.sleep(500);
-            i++;
-            voiceToText = getVoiceToText(wechatToken.getAccess_token(), uuid);
-        }
-        System.out.println(voiceToText);
-        System.out.println(i*500);
-
-
-    }
 }

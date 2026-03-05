@@ -73,6 +73,10 @@
             <version>1.5.21</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
