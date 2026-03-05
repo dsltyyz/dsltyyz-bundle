@@ -131,6 +131,37 @@ public interface WechatAccessUrl {
     String SEND_NEW_TMPL_URL = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=ACCESS_TOKEN";
 
     /**
+     * 【小程序】【实物电商类】发货信息录入
+     */
+    String UPLOAD_SHIPPING_INFO_URL = "https://api.weixin.qq.com/wxa/sec/order/upload_shipping_info?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【小程序】【实物电商类】发货信息更新录入
+     * 如果你已经录入发货信息，在用户尚未确认收货的情况下可以通过该接口修改发货信息，但一个支付单只能更新一次发货信息，请谨慎操作。
+     */
+    String UPLOAD_COMBINED_SHIPPING_INFO_URL = "https://api.weixin.qq.com/wxa/sec/order/upload_combined_shipping_info?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【小程序】【实物电商类】查询订单发货状态
+     */
+    String GET_ORDER_URL = "https://api.weixin.qq.com/wxa/sec/order/get_order?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【小程序】【实物电商类】查询订单列表
+     */
+    String GET_ORDER_LIST_URL = "https://api.weixin.qq.com/wxa/sec/order/get_order_list?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【小程序】【实物电商类】确认收货提醒接口
+     */
+    String NOTIFY_CONFIRM_RECEIVE_URL = "https://api.weixin.qq.com/wxa/sec/order/notify_confirm_receive?access_token=ACCESS_TOKEN";
+
+    /**
+     * 【小程序】【实物电商类】特殊发货报备
+     */
+    String OPSPECIALORDER_URL = "https://api.weixin.qq.com/wxa/sec/order/opspecialorder?access_token=ACCESS_TOKEN";
+
+    /**
      * 【OCR】识别银行卡
      */
     String OCR_BANKCARD_URL = "https://api.weixin.qq.com/cv/ocr/bankcard";

@@ -48,7 +48,6 @@
     - annotation ___注解___
     - entity ___实体___
     - util ___工具类___
-  - pdf ___PDF工具包___
 - dsltyyz-template ___代码模板模块___
   - bean ___对象包___
   - config ___配置___

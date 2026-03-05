@@ -45,7 +45,6 @@ public class PageUtil {
             pageDTO.getOrders().forEach(orderItem -> {
                 try {
                     Field declaredField = entityClass.getDeclaredField(orderItem.getColumn());
-                    boolean annotationPresent = declaredField.isAnnotationPresent(TableId.class);
                     if (declaredField.isAnnotationPresent(TableId.class)) {
                         orderItem.setColumn(declaredField.getAnnotation(TableId.class).value());
                     } else if(declaredField.isAnnotationPresent(TableField.class)){

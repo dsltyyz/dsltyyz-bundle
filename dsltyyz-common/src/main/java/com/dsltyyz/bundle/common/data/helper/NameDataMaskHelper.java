@@ -19,7 +19,8 @@ public class NameDataMaskHelper implements DataHelper {
     @Override
     public Object deal(Object o, String param) {
         if (o != null && !StringUtils.isEmpty(o.toString())) {
-            return o.toString().substring(0, 1) + "*" + o.toString().substring(2);
+            String s = o.toString();
+            return s.replace(s.substring(1, 2),"*");
         }
         return o;
     }

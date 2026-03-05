@@ -27,6 +27,7 @@ import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhone;
 import com.dsltyyz.bundle.wechat.common.model.phone.WechatPhoneInfo;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatMass;
 import com.dsltyyz.bundle.wechat.common.model.publish.WechatPublish;
+import com.dsltyyz.bundle.wechat.common.model.shipping.*;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatMiniTemplate;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatMiniTemplateSend;
 import com.dsltyyz.bundle.wechat.common.model.template.WechatTemplate;
@@ -391,6 +392,62 @@ public class WechatClient {
     public WechatResult sendNewTmpl(WechatMiniTemplateSend wechatMiniTemplateSend) {
         WechatToken wechatToken = getWechatToken();
         return WechatUtils.sendNewTmpl(wechatToken.getAccess_token(), wechatMiniTemplateSend);
+    }
+
+    /**
+     * 【小程序】【实物电商类】发货信息录入
+     *
+     * @param uploadShipping
+     * @return
+     */
+    public WechatResult uploadShippingInfo(UploadShipping uploadShipping) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.uploadShippingInfo(wechatToken.getAccess_token(), uploadShipping);
+    }
+
+    /**
+     * 【小程序】【实物电商类】查询订单发货状态
+     *
+     * @param searchOrder
+     * @return
+     */
+    public WechatOrderResult getOrder( SearchOrder searchOrder) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.getOrder(wechatToken.getAccess_token(), searchOrder);
+    }
+
+    /**
+     * 【小程序】【实物电商类】查询订单列表
+     *
+     * @param orderQuery
+     * @return
+     */
+    public WechatOrderListResult getOrderList(OrderQuery orderQuery) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.getOrderList(wechatToken.getAccess_token(), orderQuery);
+    }
+
+    /**
+     * 【小程序】【实物电商类】确认收货提醒接口
+     * 如你已经从你的快递物流服务方获知到用户已经签收相关商品，可以通过该接口提醒用户及时确认收货，以提高资金结算效率，每个订单仅可调用一次。
+     *
+     * @param confirmOrderKey
+     * @return
+     */
+    public WechatResult notifyConfirmReceive(ConfirmOrderKey confirmOrderKey) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.notifyConfirmReceive(wechatToken.getAccess_token(), confirmOrderKey);
+    }
+
+    /**
+     * 【小程序】【实物电商类】特殊发货报备
+     *
+     * @param specialOrder
+     * @return
+     */
+    public WechatResult opSpecialOrder(SpecialOrder specialOrder) {
+        WechatToken wechatToken = getWechatToken();
+        return WechatUtils.opSpecialOrder(wechatToken.getAccess_token(), specialOrder);
     }
 
     /*******************OCR***********/
